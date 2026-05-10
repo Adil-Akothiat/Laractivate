@@ -125,6 +125,12 @@ docs/
 docker-compose down
 ```
 
+### Run Containers
+
+```bash
+docker-compose up
+```
+
 ### View Logs
 
 ```bash

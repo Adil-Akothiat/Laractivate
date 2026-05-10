@@ -18,7 +18,7 @@ This document covers Docker installation, container architecture, and troublesho
 1. Download and install **Docker Desktop**
 2. During setup, the installer will show a Configuration screen:
 
-   ![Docker installer config](../assets/docker_installer_config.png)
+   ![Docker installer config](../assets/docker-installer-config.png)
 
    - **Hyper-V (default):** Leave "Use WSL 2 instead of Hyper-V" unchecked. No extra setup needed.
    - **WSL2 (optional):** Check "Use WSL 2 instead of Hyper-V" — requires WSL2 to be installed first via the link above.

@@ -1,9 +1,3 @@
-# AuthPanel Documentation Registry
-
-This registry provides quick access to documentation folders across the repository. Click the links below to navigate to the respective `docs/` directories.
-
----
-
 ## 🏗️ Backend Documentation (Laravel)
 Documentation for the core architectural layers.
 
