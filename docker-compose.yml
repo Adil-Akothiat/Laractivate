@@ -1,0 +1,62 @@
+services:
+  # 1. Laravel Backend
+  app:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: authpanel-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./server:/var/www
+    networks:
+      - authpanel-network
+
+  # 2. Nginx Server
+  nginx:
+    image: nginx:alpine
+    container_name: authpanel-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./server:/var/www
+      - ./docker-conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - authpanel-network
+
+  # 3. Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: authpanel-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-authpanel_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "3307:3306"
+    networks:
+      - authpanel-network
+
+  # 4. React Frontend
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: authpanel-client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - app
+    networks:
+      - authpanel-network
+
+networks:
+  authpanel-network:
+    driver: bridge

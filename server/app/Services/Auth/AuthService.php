@@ -1,0 +1,71 @@
+<?php
+namespace App\Services\Auth;
+
+use App\Models\RefreshToken;
+use App\Services\System\SystemSupportService;
+use Illuminate\Auth\Events\{Login, Logout};
+use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Services\Jwt\JwtService;
+
+class AuthService
+{
+    public function __construct(
+        protected SystemSupportService $notification,
+        protected JwtService $jwtService,
+    ) {}
+     /**
+     * Handle Login Logic.
+     * Returns array with tokens/user OR 2FA requirement.
+     */
+    public function login(array $credentials, array $metadata): array
+    {
+        if (!JWTAuth::attempt($credentials)) {
+            throw ValidationException::withMessages(['email' => ['Invalid credentials']]);
+        }
+        $user = auth()->user();
+        $refreshTokenArray = $this->jwtService->create($user->id, $metadata);
+        $refreshToken = $refreshTokenArray['token'];
+        $id = $refreshTokenArray['id'];
+        $token = JWTAuth::claims(['rtid' => $id])->attempt($credentials);
+        
+        if (!$user->is_active) {
+            JWTAuth::setToken($token)->invalidate();
+            throw ValidationException::withMessages(['email' => ['Account disabled! Please contact an administrator.']]);
+        }
+
+        // Handle 2FA Requirement
+        if ($user->two_factor_enabled) {
+            return [
+                'requires_2fa' => true,
+                'id' => encrypt($user->id)
+            ];
+        }
+        // Fire Business Events for log tracker
+        event(new Login('api', $user, false));
+        // Send Business Notifications
+        $this->notification->welcome($user, "Welcome {$user->full_name}!", 'Check out your dashboard');
+        $this->notification->emailVerification($user, 'Email verification', 'Please verify your mail address!');
+        return [
+            'requires_2fa' => false,
+            'access_token' => $token,
+            'refresh_token' => $refreshToken,
+            'user' => $user
+        ];
+    }
+
+    public function logout(?string $accessToken, ?string $refreshTokenString): void
+    {
+        $user = auth()->user();
+        if($accessToken):
+            JWTAuth::setToken($accessToken)->invalidate();
+        endif;
+        if($refreshTokenString):
+            RefreshToken::where('token_hash', hash('sha256', $refreshTokenString))->delete();
+        endif;
+        if ($user):
+            // 3. Fire Logout Event
+            event(new Logout('api', $user, false));
+        endif;
+    }
+}
