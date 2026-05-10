@@ -1,7 +1,5 @@
 # 📦 Laractivate Boilerplate
 
-Laractivate is a full-stack SaaS authentication boilerplate built with:
-
 - Laravel API
 - React + Vite Client
 - MySQL
@@ -22,7 +20,7 @@ Before running the project, make sure **Docker** is installed and running on you
 ### 1. Clone the Repository
 
 ```bash
-git https://github.com/Adil-Akothiat/Laractivate.git
+git clone https://github.com/Adil-Akothiat/Laractivate.git
 cd laractivate
 ```
 
@@ -123,12 +121,6 @@ docs/
 
 ```bash
 docker-compose down
-```
-
-### Run Containers
-
-```bash
-docker-compose up
 ```
 
 ### View Logs
