@@ -13,7 +13,7 @@ Laractivate is a full-stack SaaS authentication boilerplate built with:
 
 Before running the project, make sure **Docker** is installed and running on your machine.
 
-> 📖 See the [Docker Setup Guide](./docs/docker/doc.md) for installation instructions (Docker Desktop, WSL2, and troubleshooting).
+> 📖 See the [Docker Setup Guide](./docs/docker/doc.md) for installation instructions (Docker Desktop, Hyper-V vs WSL2, and troubleshooting).
 
 ---
 

@@ -9,17 +9,19 @@ This document covers Docker installation, container architecture, and troublesho
 | Requirement              | Link                                                                 |
 | :----------------------- | :------------------------------------------------------------------- |
 | Docker Desktop           | https://www.docker.com/products/docker-desktop/                     |
-| WSL2 (Windows required)  | https://learn.microsoft.com/en-us/windows/wsl/install               |
+| WSL2 (optional)          | https://learn.microsoft.com/en-us/windows/wsl/install               |
 
-> **Windows users:** WSL2 is required for Docker Desktop to run Linux containers reliably. Install it before Docker Desktop.
+> **Windows users:** Docker Desktop works with either **Hyper-V** or **WSL2** as the backend. Both are valid — pick one based on your setup.
 
 ### Install Steps
 
-1. Install WSL2 (Windows only) using the link above
-2. Download and install **Docker Desktop**
-3. During Docker Desktop setup, enable the WSL2 backend when prompted
+1. Download and install **Docker Desktop**
+2. During setup, the installer will show a Configuration screen:
 
-   ![Docker installer config](../assets/docker_installer_config.png)
+   ![Docker installer config](/docs/assets/docker_installer_config.png)
+
+   - **Hyper-V (default):** Leave "Use WSL 2 instead of Hyper-V" unchecked. No extra setup needed.
+   - **WSL2 (optional):** Check "Use WSL 2 instead of Hyper-V" — requires WSL2 to be installed first via the link above.
 
 4. After installation, verify Docker is running:
 
