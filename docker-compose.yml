@@ -4,59 +4,59 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: authpanel-api
+    container_name: ${PROJECT_NAME}-api
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./server:/var/www
     networks:
-      - authpanel-network
+      - ${PROJECT_NAME}-network
 
   # 2. Nginx Server
   nginx:
     image: nginx:alpine
-    container_name: authpanel-nginx
+    container_name: ${PROJECT_NAME}-nginx
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "${APP_PORT}:80"
     volumes:
       - ./server:/var/www
       - ./docker-conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
-      - authpanel-network
+      - ${PROJECT_NAME}-network
 
   # 3. Database (MySQL)
   db:
     image: mysql:8.0
-    container_name: authpanel-db
+    container_name: ${PROJECT_NAME}-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-authpanel_db}
+      MYSQL_DATABASE: ${DB_DATABASE:-${PROJECT_NAME}_db}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
     ports:
-      - "3307:3306"
+      - "${DB_PORT}:3306"
     networks:
-      - authpanel-network
+      - ${PROJECT_NAME}-network
 
   # 4. React Frontend
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
-    container_name: authpanel-client
+    container_name: ${PROJECT_NAME}-client
     restart: unless-stopped
     ports:
-      - "5173:5173"
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
     volumes:
       - ./client:/app
       - /app/node_modules
     depends_on:
       - app
     networks:
-      - authpanel-network
+      - ${PROJECT_NAME}-network
 
 networks:
-  authpanel-network:
+  laractivate-network:
     driver: bridge

@@ -1,0 +1,32 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Docker
+docker-data/
+*.pid
+
+# Node package managers
+pnpm-lock.yaml
+
+# Temporary
+tmp/
+temp/
+
+# Coverage
+coverage/
+
+# Build artifacts
+dist/
+build/ghgdffmjhùry
