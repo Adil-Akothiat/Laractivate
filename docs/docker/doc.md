@@ -1,15 +1,15 @@
-# 🐳 Docker & Infrastructure
+# Docker & Infrastructure
 
-This document covers Docker installation, container architecture, and troubleshooting for AuthPanel.
+This document covers Docker installation, container architecture, and troubleshooting for Laractivate.
 
 ---
 
-## 📌 Installation Requirements
+## Installation Requirements
 
-| Requirement              | Link                                                                 |
-| :----------------------- | :------------------------------------------------------------------- |
-| Docker Desktop           | https://www.docker.com/products/docker-desktop/                     |
-| WSL2 (optional)          | https://learn.microsoft.com/en-us/windows/wsl/install               |
+| Requirement     | Link                                                            |
+| :-------------- | :-------------------------------------------------------------- |
+| Docker Desktop  | https://www.docker.com/products/docker-desktop/                 |
+| WSL2 (optional) | https://learn.microsoft.com/en-us/windows/wsl/install           |
 
 > **Windows users:** Docker Desktop works with either **Hyper-V** or **WSL2** as the backend. Both are valid — pick one based on your setup.
 
@@ -18,12 +18,12 @@ This document covers Docker installation, container architecture, and troublesho
 1. Download and install **Docker Desktop**
 2. During setup, the installer will show a Configuration screen:
 
-   ![Docker installer config](../assets/dockerconfinstaller.jpg)
+   ![Docker installer config](/docs/assets/dockerconfinstaller.jpg)
 
    - **Hyper-V (default):** Leave "Use WSL 2 instead of Hyper-V" unchecked. No extra setup needed.
    - **WSL2 (optional):** Check "Use WSL 2 instead of Hyper-V" — requires WSL2 to be installed first via the link above.
 
-4. After installation, verify Docker is running:
+3. After installation, verify Docker is running:
 
 ```bash
 docker --version
@@ -32,21 +32,21 @@ docker-compose --version
 
 ---
 
-## 🏗️ Container Architecture
+## Container Architecture
 
-AuthPanel runs three containers orchestrated via `docker-compose`:
+Laractivate runs three containers orchestrated via `docker-compose`:
 
-| Container | Service  | Description                        |
-| :-------- | :------- | :--------------------------------- |
-| `app`     | Laravel  | PHP API server                     |
-| `client`  | React    | Vite dev server (port 5173)        |
-| `db`      | MySQL    | Database                           |
+| Container | Service | Description                  |
+| :-------- | :------ | :--------------------------- |
+| `app`     | Laravel | PHP API server               |
+| `client`  | React   | Vite dev server              |
+| `db`      | MySQL   | Database                     |
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
-Environment variables are managed via `.env` at the project root. Key variables:
+Environment variables are managed via `.env` at the project root.
 
 | Variable        | Default       | Description              |
 | :-------------- | :------------ | :----------------------- |
@@ -57,11 +57,13 @@ Environment variables are managed via `.env` at the project root. Key variables:
 | `APP_PORT`      | `8000`        | Laravel API port         |
 | `CLIENT_PORT`   | `5173`        | Vite frontend port       |
 
+> To find your running URLs after setup, check `APP_PORT` and `CLIENT_PORT` in your `.env` — these are the ports your services are bound to.
+
 ---
 
-## 🛠️ Common Commands
+## Common Commands
 
-### Start containers (detached, with build)
+### Start containers
 
 ```bash
 docker-compose up -d --build
@@ -73,24 +75,22 @@ docker-compose up -d --build
 docker-compose down
 ```
 
-### View all container logs (live)
-
-```bash
-docker-compose logs -f
-```
-
-### View logs for a specific service
-
-```bash
-docker-compose logs -f app
-docker-compose logs -f client
-docker-compose logs -f db
-```
-
 ### Check container status
 
 ```bash
 docker-compose ps
+```
+
+### View logs
+
+```bash
+# All services
+docker-compose logs -f
+
+# Specific service
+docker-compose logs -f app
+docker-compose logs -f client
+docker-compose logs -f db
 ```
 
 ### Restart a specific service
@@ -101,28 +101,38 @@ docker-compose restart client
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Port already in use
 
-If `8000` or `5173` are occupied, update `APP_PORT` / `CLIENT_PORT` in `.env` and restart containers.
+Update `APP_PORT` or `CLIENT_PORT` in `.env` to a free port, then restart:
+
+```bash
+docker-compose down
+docker-compose up -d --build
+```
 
 ### `docker-compose exec` fails with "no such service"
 
-The container may have exited. Run `docker-compose ps` to check status, then `docker-compose up -d` to bring it back up.
+The container may have exited. Check its status then bring it back up:
+
+```bash
+docker-compose ps
+docker-compose up -d
+```
 
 ### Database connection refused
 
-Make sure the `db` container is fully started before running migrations. The `app` container has a health check that waits, but if you run commands immediately after `up`, add a small delay:
+If you run migrations immediately after `up`, the `db` container may not be fully ready. Add a short delay:
 
 ```bash
 docker-compose up -d --build && sleep 5 && docker-compose exec app php artisan migrate --seed
 ```
 
-### Resetting everything from scratch
+### Reset everything from scratch
 
 ```bash
-docker-compose down -v   # removes containers AND volumes (wipes the database)
+docker-compose down -v        # removes containers AND volumes (wipes the database)
 docker-compose up -d --build
 docker-compose exec app php artisan migrate --seed
 ```

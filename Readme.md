@@ -63,28 +63,19 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 ---
 
-# 🌐 Application URLs
-
-| Service      | URL                    |
-| :----------- | :--------------------- |
-| Frontend     | http://localhost:5173  |
-| Backend API  | http://localhost:8000  |
-
----
-
 # 📚 Documentation
 
 ## 🖥️ Backend (Laravel)
 
 | Component           | Link                                        |
 | :------------------ | :------------------------------------------ |
-| Core Server Docs    | [./docs/server/doc.md](./docs/server/doc.md) |
+| Core Server Docs    | [./server/README.md](./server/README.md) |
 
 ## 💻 Frontend (React.js)
 
 | Component           | Link                                        |
 | :------------------ | :------------------------------------------ |
-| Core Client Docs    | [./docs/client/doc.md](./docs/client/doc.md) |
+| Core Client Docs    | [./client/README.md](./client/README.md) |
 
 ## 🐳 Docker & Infrastructure
 
