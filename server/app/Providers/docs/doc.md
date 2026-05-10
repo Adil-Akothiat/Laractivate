@@ -1,68 +1,57 @@
-
-# Service Providers
+# Providers
 
 ## Purpose
-- **Central Connection Hub**: Providers bind classes into the container and "boot" all decoupled application logic (Observers, Events, Database defaults).
+The central connection hub. Binds classes into the container and boots all decoupled application logic — observers, events, and database defaults.
 
 ## Include
-- **Model Observers**: Wiring models like `User` to their respective Observers.
-- **Event Mapping**: Connecting system events (Login, Logout) to their Listeners.
-- **Database Configuration**: Setting global schema defaults such as UUID morph keys and string lengths.
-- **Service Registration**: Binding complex services or third-party integrations into the Laravel Container.
+- **Model Observers** — Wiring models like `User` to their respective observers.
+- **Event Mapping** — Connecting system events (Login, Logout) to their listeners.
+- **Database Configuration** — Setting global schema defaults such as UUID morph keys and string lengths.
+- **Service Registration** — Binding complex services or third-party integrations into the Laravel container.
 
 ## Do NOT Include
-- **Business Logic**: Never write "if/else" business rules here; call a service instead.
-- **Routing**: Keep route definitions in `routes/*.php` or `bootstrap/app.php`.
-
----
-
-## Standard Implementation: AppServiceProvider
-
-In **AuthPanel**, we utilize the `boot` method to initialize the security and auditing perimeter.
-
-### Implementation Guide
-
-- **Schema Tuning**: Force UUID as the default morph key type to align with our security-first database architecture.
-- **Observer Activation**: Register the `UserObserver` here to ensure account security events are captured globally.
-- **Event Discovery**: Use the functional `Event::listen` approach to connect authentication lifecycle events to logging listeners.
-
-### Example Configuration
-
-```php
-public function boot(): void
-{
-    // 1. Database Defaults
-    Schema::defaultStringLength(191);
-    Schema::defaultMorphKeyType('uuid');
-
-    // 2. Register Model Observers
-    User::observe(UserObserver::class);
-
-    // 3. Map Events to Listeners
-    Event::listen(Login::class, LogSuccessfulLogin::class);
-    Event::listen(Logout::class, LogSuccessfulLogout::class);
-    Event::listen(PasswordReset::class, LogResetPassword::class);
-}
-```
-
----
-
-## Best Practices
-
-- **Keep Boot Clean**: If the `boot` method becomes too large, create specialized providers (e.g., `EventServiceProvider`, `ObserverServiceProvider`).
-- **Avoid Database Queries**: Do not run queries inside a Provider; only use them for configuration and registration.
-- **Order of Operations**: Set Schema defaults at the very top of the `boot` method to avoid migration or relationship conflicts.
-
----
+- **Business Logic** — No `if/else` rules here. Call a service instead.
+- **Database Queries** — Providers are for configuration and registration only, never data retrieval.
+- **Routing** — Keep route definitions in `routes/*.php` or `bootstrap/app.php`.
 
 ## Directory Structure
 
+```
 Providers/
-├─ AppServiceProvider.php      # Main provider for bootstrapping and wiring
+├─ AppServiceProvider.php     ← main provider for bootstrapping and wiring
 └─ docs/
-    ├─ doc.md
-    └─ providers.md             # Implementation guide and code samples
+   ├─ doc.md
+   └─ providers.md
+```
 
----
+## Docker Commands
 
-Check: [Providers Implementation Guide](./providers.md)
+```bash
+# Create a new service provider
+docker-compose exec app php artisan make:provider EventServiceProvider
+docker-compose exec app php artisan make:provider ObserverServiceProvider
+```
+
+> The standard `AppServiceProvider::boot()` wires the entire security and auditing perimeter in one place. Follow this order — schema defaults first, then observers, then events:
+>
+> ```php
+> public function boot(): void
+> {
+>     // 1. Database defaults — always first to avoid migration conflicts
+>     Schema::defaultStringLength(191);
+>     Schema::defaultMorphKeyType('uuid');
+>
+>     // 2. Model observers
+>     User::observe(UserObserver::class);
+>
+>     // 3. Event → Listener mapping
+>     Event::listen(Login::class, LogSuccessfulLogin::class);
+>     Event::listen(Logout::class, LogSuccessfulLogout::class);
+>     Event::listen(PasswordReset::class, LogResetPassword::class);
+> }
+> ```
+>
+> If `boot()` grows too large, split into dedicated providers (e.g., `EventServiceProvider`, `ObserverServiceProvider`) rather than leaving one bloated file.
+
+## Further Reading
+- [Providers Implementation Guide](./providers.md)

@@ -1,30 +1,50 @@
 # Middleware
 
-## Purpose: 
-The gatekeepers of the application. Middleware acts as a series of filters that every request must pass through before reaching the Controller.
+## Purpose
+The gatekeepers of the application. Acts as a series of filters every request must pass through before reaching a Controller.
 
+## Include
+- **Authentication & Authorization** — Verifying JWTs and checking user permissions.
+- **Request Preparation** — Extracting tokens from cookies or modifying headers.
+- **Security Checks** — Verifying if a session or token has been revoked in the database.
+- **Sanitization** — Stripping tags or trimming strings from incoming request data.
 
-## Include:
-- **Authentication & Authorization**: Verifying JWTs and checking User Permissions.
-- **Request Preparation**: Extracting tokens from cookies or modifying headers.
-- **Security Checks**: Verifying if a session or token has been revoked in the database.
-- **Sanitization**: Stripping tags or trimming strings from incoming data.
-
-## Do NOT Include:
-- **Database State Changes**: Use Services or Observers for logging or data updates.
-- **Business Logic**: Rules like "Calculate tax" belong in Services, not here.
+## Do NOT Include
+- **Database State Changes** — Use Services or Observers for logging or data updates.
+- **Business Logic** — Rules like "calculate tax" belong in Services, not here.
 
 ## Directory Structure
+
+```
 Middleware/
-├─ docs/
-│  ├─ doc.md
-│  └─ middlewares.md
 ├─ JwtFromCookie.php
 ├─ PermissionMiddleware.php
-└─ TokenRevocationMiddleware.php
+├─ TokenRevocationMiddleware.php
+└─ docs/
+   ├─ doc.md
+   └─ middlewares.md
+```
 
-## Pro-Tip for AuthPanel V1:
-To keep your `routes/api.php` clean, you should register these in `bootstrap/app.php` using descriptive aliases like `permission`, and `check.revocation`.
+## Docker Commands
 
-Check: [Middleware Guide Impementation](./middlewares.md)
-Check: [Middleware Registration Guide](../../../../bootstrap/docs/doc.md)
+```bash
+# Create a new middleware
+docker-compose exec app php artisan make:middleware JwtFromCookie
+docker-compose exec app php artisan make:middleware PermissionMiddleware
+docker-compose exec app php artisan make:middleware TokenRevocationMiddleware
+```
+
+> After creating, register middleware aliases in `bootstrap/app.php` — not in `routes/api.php` — to keep routes clean:
+>
+> ```php
+> ->withMiddleware(function (Middleware $middleware) {
+>     $middleware->alias([
+>         'permission'       => \App\Http\Middleware\PermissionMiddleware::class,
+>         'check.revocation' => \App\Http\Middleware\TokenRevocationMiddleware::class,
+>     ]);
+> })
+> ```
+
+## Further Reading
+- [Middleware Implementation Guide](./middlewares.md)
+- [Middleware Registration Guide](../../../../bootstrap/docs/doc.md)
