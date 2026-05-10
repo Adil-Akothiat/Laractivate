@@ -22,7 +22,7 @@ Before running the project, make sure **Docker** is installed and running on you
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/laractivate.git
+git https://github.com/Adil-Akothiat/Laractivate.git
 cd laractivate
 ```
 
