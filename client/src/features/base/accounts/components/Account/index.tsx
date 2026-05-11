@@ -4,7 +4,7 @@ import { Breadcrumb, LoadingOverlay } from "../../../../../components";
 import AccountProfile from "./Profile/AccountProfile";
 import AccountSecurity from "./Security/AccountSecurity";
 import AccountDangerZone from "./DangerZone/AccountDangerZone";
-import Tabs from "../../../../../components/Tabs";
+import Tabs from "../../../../../components/Tabs/Tabs";
 import {
     IdCard,
     LayoutDashboard,

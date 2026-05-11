@@ -1,4 +1,5 @@
 services:
+
   # 1. Laravel Backend
   app:
     build:
@@ -7,10 +8,14 @@ services:
     container_name: ${PROJECT_NAME}-api
     restart: unless-stopped
     working_dir: /var/www
+    env_file:
+      - ./server/.env
     volumes:
       - ./server:/var/www
+    depends_on:
+      - db
     networks:
-      - ${PROJECT_NAME}-network
+      - app-network
 
   # 2. Nginx Server
   nginx:
@@ -25,7 +30,7 @@ services:
     depends_on:
       - app
     networks:
-      - ${PROJECT_NAME}-network
+      - app-network
 
   # 3. Database (MySQL)
   db:
@@ -33,12 +38,12 @@ services:
     container_name: ${PROJECT_NAME}-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-${PROJECT_NAME}_db}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "${DB_PORT}:3306"
     networks:
-      - ${PROJECT_NAME}-network
+      - app-network
 
   # 4. React Frontend
   client:
@@ -49,14 +54,16 @@ services:
     restart: unless-stopped
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
+    env_file:
+      - ./client/.env
     volumes:
       - ./client:/app
       - /app/node_modules
     depends_on:
       - app
     networks:
-      - ${PROJECT_NAME}-network
+      - app-network
 
 networks:
-  laractivate-network:
+  app-network:
     driver: bridge

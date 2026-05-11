@@ -1,11 +1,11 @@
 import { Mail, CheckCircle, XCircle, Edit } from "lucide-react";
 import type { User } from "../../../../settings";
 import { Badge, Button, Card } from "../../../../../../components";
-import AvatarUploader from "../../../../../../components/AvatarUploader";
 import { useParams } from "react-router-dom";
 import { useAccounts } from "../../../hooks";
 import { useToastContext } from "../../../../../../app/hooks/useToastContext";
 import { getErrorsMessages } from "../../../../../../app/utils";
+import AvatarUploader from "../../../../../../components/FileUploader/AvatarUploader";
 
 type Props = {
     user:    User;

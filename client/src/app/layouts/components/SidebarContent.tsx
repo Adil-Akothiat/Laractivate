@@ -51,12 +51,6 @@ export default function SidebarContent() {
                     href: "/settings/profile",
                     icon: <Settings size={16} />,
                     show: true,
-                },
-                {
-                    label: "Help",
-                    href: "/help",
-                    icon: <LifeBuoy size={16} />,
-                    show: true,
                 }
             ],
         },

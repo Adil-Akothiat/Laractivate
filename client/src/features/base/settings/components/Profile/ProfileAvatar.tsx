@@ -1,6 +1,6 @@
+import AvatarUploader from "../../../../../components/FileUploader/AvatarUploader";
 import { useUpdateAvatarProfile } from "../../hooks";
 import type { User } from "../../types";
-import AvatarUploader from "../../../../../components/AvatarUploader"; // adjust path
 
 export default function ProfileAvatar({ user }: { user: User }) {
     const {

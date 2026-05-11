@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollContainer } from "./ScrollContainer";
+import { ScrollContainer } from "../ScrollContainer";
 
 export interface TabItem {
   key: string;

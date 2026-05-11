@@ -1,110 +1,147 @@
-# authclient
+# Laractivate Client (React + Vite)
 
-This is a simple React client for the authentication API provided by the Laravel backend in the parent repository.
+The frontend application built with React 19, Vite, TailwindCSS, and DaisyUI.
 
-## Features
+---
 
-- Login, registration, forgot password, and reset password pages
-- Dashboard protected by JWT token
-- Tailwind CSS with DaisyUI for quick styling
-- Axios instance with base URL and authorization header
-- Authentication context for managing user state
+## Dependencies
 
-## Setup
+### Core
 
-1. Copy or create an `.env` file at the project root:
-   ```
-   VITE_API_URL="http://localhost:8000/api"
-   ```
-   Adjust to match your backend host if needed.
+| Package | Version | Purpose |
+| :--- | :--- | :--- |
+| `react` | 19 | UI framework |
+| `react-dom` | 19 | DOM rendering |
+| `react-router-dom` | 7 | Client-side routing |
+| `@tanstack/react-query` | 5 | Server state management |
+| `axios` | 1 | HTTP client |
+| `tailwindcss` | 4 | Utility CSS framework |
+| `daisyui` | 5 | Component library built on Tailwind |
+| `lucide-react` | 0.575 | Icon library |
+| `recharts` | 3 | Chart library |
+| `qrcode.react` | 4 | QR code rendering (used in 2FA setup) |
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+### Dev
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+| Package | Purpose |
+| :--- | :--- |
+| `vite` | Build tool and dev server |
+| `typescript` | Type checking |
+| `@vitejs/plugin-react` | React fast refresh in Vite |
+| `eslint` + plugins | Linting |
 
-4. Open [http://localhost:5173](http://localhost:5173) (default Vite port) in your browser.
+---
 
-## Notes
+## Installing Dependencies
 
-- JWT access token is stored in `localStorage` under `access_token`.
-- The `AuthContext` automatically fetches the current user on startup if a token exists.
-- Protected routes redirect to `/login` when unauthenticated.
-- Use the API endpoints defined under `routes/api.php` in the Laravel project.
+Since the client runs inside Docker, all package management must go through the container:
 
-Feel free to extend or restyle components according to your needs.
+```bash
+# Install a new dependency
+docker-compose exec client npm install <package-name>
 
-Currently, two official plugins are available:
+# Install a dev dependency
+docker-compose exec client npm install -D <package-name>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Remove a dependency
+docker-compose exec client npm uninstall <package-name>
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Install all dependencies (after cloning or pulling changes)
+docker-compose exec client npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> Never run `npm install` directly on your machine — always go through the container to keep the lock file consistent across environments.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
+
 ```
+Laractivate/               ← repo root
+├─ client/                 ← React app root
+│  ├─ src/                 ← all application source code
+│  ├─ .env                 ← environment variables (see below)
+│  ├─ index.html
+│  ├─ package.json
+│  ├─ tailwind.config.ts
+│  ├─ tsconfig.json
+│  └─ vite.config.ts
+├─ docker-config/                 ← nginx
+├─ docs/                 ← include docker documentation (setup)
+├─ server/                 ← Laravel API
+├─ docker-compose.yml
+└─ .env                    ← Docker / Laravel environment variables
+```
+
+---
+
+## Environment Variables (`client/.env`)
+
+| Variable | Description |
+| :--- | :--- |
+| `VITE_API_URL` | Base URL for all API calls — used by Axios |
+| `VITE_PUBLIC_API` | Base URL for public assets (e.g. avatar images served by Laravel) |
+
+> All Vite environment variables must be prefixed with `VITE_` to be accessible in the browser. Variables without this prefix are ignored at build time.
+
+---
+
+## Src Structure
+
+## 📁 Project Structure Overview
+
+The `src` directory is organized into four main pillars to ensure a clean separation of concerns, global state management, and feature-driven development.
+
+| Folder | Responsibility | Documentation |
+| :--- | :--- | :--- |
+| `/app` | **The Core Layer.** Contains global configurations, providers, and logic that powers the entire application. | [View Docs](./src/app/doc.md) |
+| `/assets` | **Static Files.** Storage for images, icons, and SVG files used throughout the UI. | [View Docs](./src/assets/doc.md) |
+| `/components` | **UI Library.** A collection of pure, reusable atomic components (Buttons, Inputs, Modals) that have no business logic. | [View Docs](./src/components/docs/doc.md) |
+| `/features` | **Domain Logic.** Where the actual product lives. Split into `base` (core system) and `app` (custom developer features). | [View Docs](./src/features/docs/doc.md) |
+
+---
+
+# 🚀 The `/app` Layer (Global Context)
+
+The `/app` folder is the most important part of the architecture. It acts as the "glue" that holds the application together.
+
+Anything placed here is intended to be globally accessible or used to wrap the entire application tree.
+
+## Key Responsibilities of the `/app` Layer
+
+- **Infrastructure**  
+  Setting up how the app communicates with the outside world (API services, Axios instances).
+
+- **Security**  
+  Handling route protection and access control (middlewares/guards).
+
+- **Context**  
+  Providing global state to every component (Auth providers, Theme providers, Toast notifications).
+
+- **Navigation**  
+  Defining the routing table and global layouts (Sidebars, Footers) that persist across different pages.
+
+- **Standardization**  
+  Managing global TypeScript types, utility functions, and application-wide constants.
+
+---
+
+# 📄 Entry Files
+
+### `main.tsx`
+
+The critical entry point of the application.
+
+Responsible for:
+
+- Initializing the React DOM
+- Wrapping the application with global providers defined inside `/app`
+
+### `index.css`
+
+The global stylesheet of the application.
+
+Responsible for:
+
+- Injecting Tailwind CSS
+- Defining base application styles

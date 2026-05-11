@@ -4,7 +4,7 @@ import { ComponentLoader } from "../../../../../components/Loaders";
 import type { ActivityLogProps } from "../../types";
 import LogCard from "../../../shared/components/LogCard";
 import SettingsContainer from "../Shared/SettingsContainer";
-import Pagination from "../../../../../components/Pagination";
+import Pagination from "../../../../../components/Pagination/Pagination";
 import { useProfileActivityLogs } from "../../hooks";
 
 export default function ActivityLogs() {

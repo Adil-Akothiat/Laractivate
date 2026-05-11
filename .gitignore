@@ -12,6 +12,8 @@ Thumbs.db
 # Environment
 .env
 .env.*
+/client/.env
+/server/.env
 
 # Docker
 docker-data/

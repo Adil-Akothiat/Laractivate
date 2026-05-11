@@ -13,7 +13,6 @@ type Props = {
 };
 
 export function RecentActivity({ activities }: Props) {
-    console.log(activities)
     return (
         <div className="rounded-2xl border border-base-300 bg-base-100 overflow-hidden">
             {/* Header */}
