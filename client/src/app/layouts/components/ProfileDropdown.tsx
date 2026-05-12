@@ -1,11 +1,10 @@
 import { useRef, useEffect, useState } from "react";
 import {
-    ChevronDown,
     LogOut,
     HelpCircle,
     Settings,
 } from "lucide-react";
-import Avatar from "../../../components/Avatar";
+import Avatar from "@/components/Avatar";
 
 interface ProfileDropdownProps {
     name: string;

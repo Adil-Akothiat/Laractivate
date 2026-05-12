@@ -1,7 +1,7 @@
 import {
     Users, Monitor, ShieldCheck, Bell, TrendingUp
 } from "lucide-react";
-import type { StatItem } from "../../types";
+import type { StatItem } from "@/features/base/dashboard/types";
 
 const iconMap: Record<string, React.ReactNode> = {
     users:          <Users size={18} />,

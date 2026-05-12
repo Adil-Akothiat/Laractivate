@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { getErrorsMessages } from "../../../../app/utils";
-import { Button, Input } from "../../../../components";
-import { FormControl } from "../../../../components/FormControls";
-import { useToastContext } from "../../../../app/hooks/useToastContext";
+import { getErrorsMessages } from "@/app/utils";
+import { Button, Input } from "@/components";
+import { FormControl } from "@/components/FormControls";
+import { useToastContext } from "@/app/hooks/useToastContext";
 
 export default function ResetPasswordForm() {
     const [searchParams] = useSearchParams();

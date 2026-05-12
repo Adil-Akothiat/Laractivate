@@ -2,7 +2,7 @@ import {
     UserPlus, RefreshCw, Settings,
     Zap, ChevronRight, type LucideIcon
 } from "lucide-react";
-import type { QuickAction } from "../../types";
+import type { QuickAction } from "@/features/base/dashboard/types";
 
 const iconMap: Record<string, LucideIcon> = {
     "user-plus":  UserPlus,

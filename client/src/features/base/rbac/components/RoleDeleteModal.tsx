@@ -1,8 +1,8 @@
 import { useRef, useEffect } from 'react'
 import { useRoles } from '../index';
 import type { RoleProps } from '../types'
-import { getErrorsMessages } from '../../../../app/utils';
-import { Button } from '../../../../components';
+import { getErrorsMessages } from '@/app/utils';
+import { Button } from '@/components';
 
 interface Props {
   role: RoleProps

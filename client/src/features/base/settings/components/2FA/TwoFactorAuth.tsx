@@ -4,10 +4,10 @@ import StepScan from "./StepScan";
 import StepVerify from "./StepVerify";
 import StepSuccess from "./StepSuccess";
 import { FingerprintPattern } from "lucide-react";
-import { useMe } from "../../../../../app/middlewares/hooks/useMe";
-import { useTwoFactor } from "../../../auth/hooks/useTwoFactor";
-import { ComponentLoader } from "../../../../../components/Loaders";
-import { Modal } from "../../../../../components";
+import { useMe } from "@/app/middlewares/hooks/useMe";
+import { useTwoFactor } from "@/features/base/auth/hooks/useTwoFactor";
+import { ComponentLoader } from "@/components/Loaders";
+import { Modal } from "@/components";
 
 type Step = "intro" | "scan" | "verify" | "success";
 

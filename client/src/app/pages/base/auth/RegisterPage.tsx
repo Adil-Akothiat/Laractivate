@@ -1,5 +1,5 @@
-import { RegisterForm } from "../../../../features/base/auth";
-import AuthBanner from "../../../../features/base/auth/components/shared/AuthBanner";
+import { RegisterForm } from "@/features/base/auth";
+import AuthBanner from "@/features/base/auth/components/shared/AuthBanner";
 
 export default function RegisterPage() {
     return (

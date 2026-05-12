@@ -1,8 +1,8 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { User, RectangleEllipsis, FingerprintPattern, UserKey, Logs } from "lucide-react";
-import { ScrollContainer } from "../../../../../components/ScrollContainer";
+import { ScrollContainer } from "@/components/ScrollContainer";
 import { useState } from "react";
-import { Button } from "../../../../../components";
+import { Button } from "@/components";
 
 export type SidebarItem = {
     label: string;

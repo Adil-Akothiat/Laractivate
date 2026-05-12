@@ -1,9 +1,9 @@
 import { Filter } from "lucide-react";
-import { Button, Modal } from "../../../../../components";
+import { Button, Modal } from "@/components";
 import { useState } from "react";
 import FilterAccounts from "./FilterAccounts";
 import SearchAccounts from "./SearchAccounts";
-import type { RoleProps } from "../../../rbac";
+import type { RoleProps } from "@/features/base/rbac";
 
 type Props = {
     roles: RoleProps[];

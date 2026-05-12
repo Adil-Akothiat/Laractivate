@@ -1,5 +1,5 @@
 import { WelcomeBanner } from "../shared/WelcomeBanner";
-import type { PersonalDashboardData } from "../../types";
+import type { PersonalDashboardData } from "@/features/base/dashboard/types";
 import { PersonalStatsGrid } from "./PersonalStatsGrid";
 
 type Props = { data: PersonalDashboardData };

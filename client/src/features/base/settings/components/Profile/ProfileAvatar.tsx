@@ -1,8 +1,8 @@
-import AvatarUploader from "../../../../../components/FileUploader/AvatarUploader";
-import { useUpdateAvatarProfile } from "../../hooks";
-import type { User } from "../../types";
+import AvatarUploader from "@/components/FileUploader/AvatarUploader";
+import { useUpdateAvatarProfile } from "@/features/base/settings";
+import type { UserProps } from "@/features/base/shared";
 
-export default function ProfileAvatar({ user }: { user: User }) {
+export default function ProfileAvatar({ user }: { user: UserProps }) {
     const {
         mutate: uploadAvatar,
         isPending: isUploading,

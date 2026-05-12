@@ -1,4 +1,4 @@
-import { api } from "../../../../app/services/api";
+import { api } from "@/app/services/api";
 import type { FilterRolesParams, StoreRolePayload, UpdateRolePayload } from "../types";
 
 const route = '/access/rbac';

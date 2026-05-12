@@ -1,13 +1,12 @@
-import type { ManagedUser } from '../../types';
-import { DataTable } from '../../../../../components/Table/index';
+import { type ManagedUser ,useAccounts, useAccountsFilter } from '@/features/base/accounts';
+import { DataTable } from '@/components/Table/index';
 import AccountsHeader from './AccountsHeader';
 import { columns } from './AccountColumns';
 import { useState } from 'react';
 import CreateAccount from './CreateAccount';
-import { useAccounts, useAccountsFilter } from '../../hooks';
-import { Pagination } from '../../../../../components';
-import { useDebounce } from '../../../../../app/hooks/useDebounce';
-import { ScrollContainer } from '../../../../../components/ScrollContainer';
+import { Pagination } from '@/components';
+import { useDebounce } from '@/app/hooks/useDebounce';
+import { ScrollContainer } from '@/components/ScrollContainer';
   
 export default function AccountsTable() {
   const [open, setOpen] = useState(false);

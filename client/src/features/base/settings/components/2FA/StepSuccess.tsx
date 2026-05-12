@@ -1,5 +1,5 @@
 import { CheckCircle2, ShieldCheck } from "lucide-react";
-import { Button } from "../../../../../components";
+import { Button } from "@/components";
 
 type StepSuccessProps = {
   closeHandler:()=>void;

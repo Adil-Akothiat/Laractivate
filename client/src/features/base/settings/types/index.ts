@@ -1,23 +1,3 @@
-import type { PermissionProps, RoleProps } from "../../rbac";
-
-export interface User {
-  id: string;
-  first_name: string;
-  last_name: string;
-  full_name?: string;
-  email: string;
-  avatar?: string;
-  roles?:RoleProps[];
-  rolesSet:string[];
-  permissionsSet: string[];
-  permissions: PermissionProps[];
-  is_active?: boolean;
-  owner?: boolean;
-  two_factor_enabled?: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
 export interface UpdateProfilePayload {
   first_name: string;
   last_name: string;

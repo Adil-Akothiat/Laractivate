@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSuperAdminDashboard, getUserDashboard } from "../api";
-import { useMe } from "../../../../app/middlewares/hooks/useMe";
+import { useMe } from "@/app/middlewares/hooks/useMe";
 
 export const useDashboard = () => { 
   const { data } = useMe();

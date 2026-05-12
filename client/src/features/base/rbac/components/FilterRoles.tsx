@@ -1,7 +1,7 @@
 import { usePermissions, useRolesFilter } from "../hooks";
-import { Button, Select } from "../../../../components";
+import { Button, Select } from "@/components";
 import { useState } from "react";
-import type { PermissionProps } from "../types";
+import type { PermissionProps } from "../../shared";
 
 interface FilterRolesProps {
     onApply?: () => void;
@@ -10,16 +10,16 @@ interface FilterRolesProps {
 export default function FilterRoles({ onApply }: FilterRolesProps) {
     const { data } = usePermissions.getPermissions();
     const {
-        group: groupProp,
-        permission: permissionProp,
+        group: groupData,
+        permission: permissionData,
         setFilters,
     } = useRolesFilter();
 
     const groups = data?.grouped ? Object.keys(data.grouped) : [];
     const permissions = data?.permissions ?? [];
 
-    const [group, setGroup] = useState(groupProp);
-    const [permission, setPermission] = useState(permissionProp);
+    const [group, setGroup] = useState(groupData);
+    const [permission, setPermission] = useState(permissionData);
     const [applying, setApplying] = useState(false);
 
     const handleReset = () => {

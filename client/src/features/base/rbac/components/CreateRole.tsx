@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRoles } from "../index";
-import { Input, Button, Modal } from "../../../../components";
-import { FormControl } from "../../../../components/FormControls";
+import { Input, Button, Modal } from "@/components";
+import { FormControl } from "@/components/FormControls";
 import { usePermissions } from "../hooks";
 import PermissionsCheckbox from "./PermissionsCheckBox";
-import { getErrorsMessages } from "../../../../app/utils";
-import { Can } from "../../../../components/Guard/Can";
+import { getErrorsMessages } from "@/app/utils";
+import { Can } from "@/components/Guard/Can";
 
 interface Props {
     onSuccess?: (msg:string) => void;

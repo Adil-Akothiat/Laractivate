@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { Button, Input } from "../../../../components";
+import { Button, Input } from "@/components";
 import { useState } from "react";
 import { useRolesFilter } from "../hooks";
 

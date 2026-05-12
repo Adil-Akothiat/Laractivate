@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import { AppChart } from "../../../../../components/Chart";
+import { AppChart } from "@/components/Chart";
 
 type Props = {
     userGrowth: { date: string; count: number }[];

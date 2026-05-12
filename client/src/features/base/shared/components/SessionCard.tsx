@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import type { UserSession } from "../../settings/types";
 import DeviceIcon from "../../settings/components/Sessions/DeviceIcon";
 import SessionMeta from "../../settings/components/Sessions/SessionMeta";
-import { Button } from "../../../../components";
+import { Button } from "@/components";
 
 interface SessionCardProps {
     session:    UserSession;

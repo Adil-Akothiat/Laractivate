@@ -1,8 +1,8 @@
 import { LayoutDashboard, UserPlus, Users } from "lucide-react";
-import { Breadcrumb, Button } from "../../../../../components";
+import { Breadcrumb, Button } from "@/components";
 import FilterAndSearchAccounts from "./FilterAndSearchAccounts";
-import { Can } from "../../../../../components/Guard/Can";
-import type { RoleProps } from "../../../rbac";
+import { Can } from "@/components/Guard/Can";
+import type { RoleProps } from "@/features/base/rbac";
 
 type Props = {
     newAccountHandler: () => void;

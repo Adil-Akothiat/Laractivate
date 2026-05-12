@@ -4,12 +4,12 @@ import Sidebar from "../../layouts/Sidebar";
 import AuthGuard from "../../middlewares/AuthGuard";
 import PermissionGuard from "../../middlewares/PermissionGuard";
 import { ResetPasswordGuard } from "../../middlewares/ResetPasswordGuard";
-import MiniSidebar from "../../../features/base/settings/components/Shared/MiniSidebar";
-import TwoFactorAuth from "../../../features/base/settings/components/2FA/TwoFactorAuth";
+import MiniSidebar from "@/features/base/settings/components/Shared/MiniSidebar";
+import TwoFactorAuth from "@/features/base/settings/components/2FA/TwoFactorAuth";
 
-import Dashboard from "../../../features/base/dashboard";
-import Notification from "../../../features/base/notifications";
-import ActivityLogs from "../../../features/base/settings/components/ActivityLogs/ActivityLogs";
+import Dashboard from "@/features/base/dashboard";
+import Notification from "@/features/base/notifications";
+import ActivityLogs from "@/features/base/settings/components/ActivityLogs/ActivityLogs";
 
 import LoginPage from "../../pages/base/auth/LoginPage";
 import RegisterPage from "../../pages/base/auth/RegisterPage";

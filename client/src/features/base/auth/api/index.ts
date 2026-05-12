@@ -1,4 +1,4 @@
-import { api } from '../../../../app/services/api';
+import { api } from '@/app/services/api';
 import type { RegisterPayloadType } from '../types';
 
 export const login = (email: string, password: string) => {

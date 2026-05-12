@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { ShieldCheck, X } from 'lucide-react';
 import OtpInput from '../../settings/components/2FA/OtpInput';
 import { useTwoFactor } from '../../auth/hooks/useTwoFactor';
-import { getErrorsMessages } from '../../../../app/utils';
-import { Alert } from '../../../../components';
+import { getErrorsMessages } from '@/app/utils';
+import { Alert } from '@/components';
 
 interface Props {
   userId:string|null;

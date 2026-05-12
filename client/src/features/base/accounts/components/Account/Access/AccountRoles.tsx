@@ -1,18 +1,17 @@
 import { Shield, Plus } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Button, EmptyState } from "../../../../../../components";
-import { useRoles } from "../../../../rbac/hooks";
-import { useAccounts } from "../../../hooks";
-import type { User } from "../../../../settings";
-import type { RoleProps } from "../../../../rbac";
+import { Card, Button, EmptyState } from "@/components";
+import { useRoles } from "@/features/base/rbac";
+import { useAccounts } from "@/features/base/accounts";
 import { RoleListItem } from "./RoleListItem";
 import { AssignRoleModal } from "./AssignRoleModal";
 import { RemoveRoleConfirmModal } from "./RemoveRoleConfirmModal";
 import type { RemoveGuard } from "./RemoveRoleConfirmModal";
+import type { RoleProps, UserProps } from "@/features/base/shared";
 
 interface Props {
-    user: User;
+    user: UserProps;
 }
 
 export default function AccountRoles({ user }: Props) {

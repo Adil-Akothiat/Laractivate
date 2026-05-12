@@ -1,10 +1,10 @@
 import { Logs } from "lucide-react";
 import { useState } from "react";
-import type { ActivityLogProps } from "../../../../settings/types";
-import LogCard from "../../../../shared/components/LogCard";
-import { ComponentLoader } from "../../../../../../components/Loaders";
-import { useAccounts } from "../../../hooks";
-import { Pagination } from "../../../../../../components";
+import type { ActivityLogProps } from "@/features/base/settings/types";
+import LogCard from "@/features/base/shared/components/LogCard";
+import { ComponentLoader } from "@/components/Loaders";
+import { useAccounts } from "@/features/base/accounts";
+import { Pagination } from "@/components";
 
 type Props = {
     userId:string;

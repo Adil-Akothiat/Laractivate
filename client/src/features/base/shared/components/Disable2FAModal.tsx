@@ -1,6 +1,6 @@
 import { Key } from "lucide-react";
 import { useState } from "react";
-import { Alert, Input, Modal } from "../../../../components";
+import { Alert, Input, Modal } from "@/components";
 
 interface Props {
     isOpen: boolean;

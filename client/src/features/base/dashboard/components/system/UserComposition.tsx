@@ -1,6 +1,6 @@
 import { Users } from "lucide-react";
-import { AppChart } from "../../../../../components/Chart";
-import type { CompositionItem } from "../../types";
+import { AppChart } from "@/components/Chart";
+import type { CompositionItem } from "@/features/base/dashboard/types";
 
 type Props = {
     composition: CompositionItem[];

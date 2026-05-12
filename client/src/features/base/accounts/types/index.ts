@@ -1,4 +1,4 @@
-import type { RoleProps } from "../../rbac";
+import type { RoleProps } from "@/features/base/rbac";
 
 export interface ManagedUser {
     id: number;

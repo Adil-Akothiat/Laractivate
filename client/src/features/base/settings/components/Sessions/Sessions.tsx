@@ -1,5 +1,5 @@
 import { History } from "lucide-react";
-import { ComponentLoader } from "../../../../../components/Loaders";
+import { ComponentLoader } from "@/components/Loaders";
 import type { SessionsData } from "../../types";
 import SessionHistory from "./SessionHistory";
 import ActiveSessions from "./ActiveSessions";

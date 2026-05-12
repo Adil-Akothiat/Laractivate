@@ -1,14 +1,14 @@
 import { Mail, CheckCircle, XCircle, Edit } from "lucide-react";
-import type { User } from "../../../../settings";
-import { Badge, Button, Card } from "../../../../../../components";
+import { Badge, Button, Card } from "@/components";
 import { useParams } from "react-router-dom";
-import { useAccounts } from "../../../hooks";
-import { useToastContext } from "../../../../../../app/hooks/useToastContext";
-import { getErrorsMessages } from "../../../../../../app/utils";
-import AvatarUploader from "../../../../../../components/FileUploader/AvatarUploader";
+import { useAccounts } from "@/features/base/accounts";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { getErrorsMessages } from "@/app/utils";
+import AvatarUploader from "@/components/FileUploader/AvatarUploader";
+import type { UserProps } from "@/features/base/shared";
 
 type Props = {
-    user:    User;
+    user:    UserProps;
     onEdit:  () => void;
 };
 

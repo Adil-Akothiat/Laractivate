@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
-import { imageRender } from "../../app/utils/imagePreviewHandler";
-import { getErrorsMessages } from "../../app/utils";
+import { imageRender } from "@/app/utils/imagePreviewHandler";
+import { getErrorsMessages } from "@/app/utils";
 import { Alert } from "../Alert";
 
 interface Props {

@@ -7,13 +7,13 @@ import {
     Card,
     Input,
     Modal,
-} from "../../../../../../components";
-import { Can } from "../../../../../../components/Guard/Can";
-import { useAccounts } from "../../../hooks";
-import type { User } from "../../../../settings";
+} from "@/components";
+import { Can } from "@/components/Guard/Can";
+import { useAccounts } from "@/features/base/accounts";
+import type { UserProps } from "@/features/base/shared";
 
 interface Props {
-    user: User;
+    user: UserProps;
 }
 
 export default function AccountDangerZone({ user }: Props) {

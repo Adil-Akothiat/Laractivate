@@ -1,10 +1,10 @@
 import { ShieldBan, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { useTwoFactor } from "../../../auth/hooks/useTwoFactor";
-import { Badge, Button } from "../../../../../components";
-import { useToastContext } from "../../../../../app/hooks/useToastContext";
-import { getErrorsMessages } from "../../../../../app/utils";
-import Disable2FAModal from "../../../shared/components/Disable2FAModal";
+import { useTwoFactor } from "@/features/base/auth/hooks/useTwoFactor";
+import { Badge, Button } from "@/components";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { getErrorsMessages } from "@/app/utils";
+import Disable2FAModal from "@/features/base/shared/components/Disable2FAModal";
 
 interface Props {
     isPending: boolean;

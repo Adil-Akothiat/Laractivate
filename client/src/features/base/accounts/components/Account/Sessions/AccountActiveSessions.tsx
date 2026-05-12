@@ -1,7 +1,7 @@
 import { LogOut, WifiOff } from "lucide-react";
-import { Button, Card, EmptyState } from "../../../../../../components";
-import type { UserSession } from "../../../../settings/types";
-import SessionCard from "../../../../shared/components/SessionCard";
+import { Button, Card, EmptyState } from "@/components";
+import type { UserSession } from "@/features/base/settings/types";
+import SessionCard from "@/features/base/shared/components/SessionCard";
 
 interface Props {
     sessions:       UserSession[];

@@ -1,5 +1,5 @@
-import { LoginForm } from "../../../../features/base/auth";
-import AuthBanner from "../../../../features/base/auth/components/shared/AuthBanner";
+import { LoginForm } from "@/features/base/auth";
+import AuthBanner from "@/features/base/auth/components/shared/AuthBanner";
 
 export default function LoginPage() {
     return (

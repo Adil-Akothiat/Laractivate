@@ -5,12 +5,12 @@ import {
     Button,
     Input,
     Modal,
-    Alert,
-} from "../../../../../../components";
-import { useAccounts } from "../../../hooks";
+    Alert
+} from "@/components";
+import { useAccounts } from "@/features/base/accounts"
 import { useParams } from "react-router-dom";
-import { getErrorsMessages } from "../../../../../../app/utils";
-import { FormControl } from "../../../../../../components/FormControls";
+import { getErrorsMessages } from "@/app/utils";
+import { FormControl } from "@/components/FormControls";
 
 export default function AccountPasswordCard() {
     const { id } = useParams<{ id: string }>();

@@ -1,9 +1,8 @@
 import { useState, type FormEvent } from 'react';
-import type { CreateUserPayload } from '../../types';
+import { type CreateUserPayload, useAccounts } from '@/features/base/accounts';
 import AccountForm from './AccountForm';
-import type { RoleProps } from '../../../rbac';
-import { Modal } from '../../../../../components';
-import { useAccounts } from '../../hooks';
+import type { RoleProps } from '@/features/base/rbac';
+import { Modal } from '@/components';
 
 interface Props {
   isOpen: boolean;

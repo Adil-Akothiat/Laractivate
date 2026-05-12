@@ -1,9 +1,9 @@
 import { useGetNotifications, useMarkAllRead } from "./hooks/useNotification";
-import { ScrollContainer } from "../../../components/ScrollContainer";
+import { ScrollContainer } from "@/components/ScrollContainer";
 import { Bell, RefreshCw } from "lucide-react";
 import type { NotificationProps } from "./types";
 import { groupByDate } from "./utils/notification";
-import { Button } from "../../../components";
+import { Button } from "@/components";
 import { NotificationItem } from "./components/NotificationItem";
 
 export default function NotificationsPage() {

@@ -1,14 +1,14 @@
 import { Menu, ShieldIcon } from "lucide-react";
 import { ProfileDropdown } from "./ProfileDropdown";
-import type { User } from "../../../features/base/settings";
 import { imageRender } from "../../utils/imagePreviewHandler";
 import { useNavigate } from "react-router-dom";
-import NotificationBell from "../../../features/base/notifications/components/NotificationBell";
+import NotificationBell from "@/features/base/notifications/components/NotificationBell";
+import type { UserProps } from "@/features/base/shared/types";
 
 type Props = {
     setDrawerOpen:(open:boolean)=>void;
     setIsLogoutModalOpen:(open:boolean)=>void;
-    user:User | null;
+    user:UserProps | null;
 }
 export default function PageHeader({ setDrawerOpen, setIsLogoutModalOpen, user }:Props) {
     const navigate = useNavigate();

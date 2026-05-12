@@ -1,7 +1,7 @@
 import { Clock, Trash2 } from "lucide-react";
-import { Badge, Button, Card, EmptyState } from "../../../../../../components";
-import type { UserSession } from "../../../../settings/types";
-import SessionCard from "../../../../shared/components/SessionCard";
+import { Badge, Button, Card, EmptyState } from "@/components";
+import type { UserSession } from "@/features/base/settings/types";
+import SessionCard from "@/features/base/shared/components/SessionCard";
 
 interface Props {
     sessions:        UserSession[];

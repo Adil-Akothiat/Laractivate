@@ -1,5 +1,5 @@
 import { Filter } from "lucide-react";
-import { Button, Modal } from "../../../../components";
+import { Button, Modal } from "@/components";
 import { useState } from "react";
 import FilterRoles from "./FilterRoles";
 import SearchRoles from "./SearchRoles";

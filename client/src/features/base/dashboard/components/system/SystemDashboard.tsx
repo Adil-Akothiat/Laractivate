@@ -3,7 +3,7 @@ import { RecentActivity } from "../shared/RecentActivity";
 import { SystemStatsGrid } from "./SystemStatsGrid";
 import { UserComposition } from "./UserComposition";
 import { SystemHealth } from "./SystemHealth";
-import type { SystemDashboardData } from "../../types";
+import type { SystemDashboardData } from "@/features/base/dashboard/types";
 import { UserGrowthChart } from "./UserGrowChart";
 
 type Props = { data: SystemDashboardData };

@@ -1,6 +1,6 @@
 import { Activity, Clock, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { ActivityLogProps } from "../../../settings";
+import type { ActivityLogProps } from "@/features/base/settings";
 
 const eventStyle: Record<string, string> = {
     "auth.login":      "bg-emerald-500/10 text-emerald-600",

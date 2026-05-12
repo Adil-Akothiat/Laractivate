@@ -1,9 +1,9 @@
-import type { User } from "../../../../settings";
+import type { UserProps } from "@/features/base/shared";
 import AccountPermissions from "./AccountPermissions";
 import AccountRoles from "./AccountRoles";
 
 interface Props {
-    user: User;
+    user: UserProps;
 }
 
 export default function AccountAccess({ user }: Props) {

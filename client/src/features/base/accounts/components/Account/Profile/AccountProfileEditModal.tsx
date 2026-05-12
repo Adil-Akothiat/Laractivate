@@ -1,15 +1,15 @@
 import { Mail } from "lucide-react";
-import type { User } from "../../../../settings";
-import { Button, Input, Modal, Switch } from "../../../../../../components";
+import { Button, Input, Modal, Switch } from "@/components";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { useAccounts } from "../../../hooks";
-import { getErrorsMessages } from "../../../../../../app/utils";
-import { useToastContext } from "../../../../../../app/hooks/useToastContext";
-import { FormControl } from "../../../../../../components/FormControls";
+import { useAccounts } from "@/features/base/accounts";
+import { getErrorsMessages } from "@/app/utils";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { FormControl } from "@/components/FormControls";
+import type { UserProps } from "@/features/base/shared";
 
 type Props = {
-    user:    User;
+    user:    UserProps;
     isOpen:  boolean;
     onClose: () => void;
 };

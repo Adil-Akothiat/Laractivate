@@ -97,6 +97,6 @@ Hides the helper text ("Profile photo · JPG, PNG...") — useful in tight layou
 - The `FormData` key is `"avatar"` — your API endpoint should expect `request()->file('avatar')`
 
 ## Related
-- [`imagePreviewHandler`](../../app/utils/imagePreviewHandler.tsx) — handles URL normalization before rendering
-- [`Alert`](../Alert.tsx) — used to display upload errors
-- [`getErrorsMessages`](../../app/utils/index.ts) — parses Laravel validation error shapes into string arrays
+- [`imagePreviewHandler`] — handles URL normalization before rendering
+- [`Alert`] — used to display upload errors
+- [`getErrorsMessages`] — parses Laravel validation error shapes into string arrays

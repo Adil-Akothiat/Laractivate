@@ -1,4 +1,4 @@
-import { api } from "../../../../app/services/api";
+import { api } from "@/app/services/api";
 
 const route = '/system/dashboard';
 export const getUserDashboard = ()=> api.get(route);

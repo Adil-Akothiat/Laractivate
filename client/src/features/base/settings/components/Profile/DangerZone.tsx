@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useDeactivateAccount, useDeleteAccount } from "../../hooks";
+import { useDeactivateAccount, useDeleteAccount } from "@/features/base/settings";
 import { useState } from "react";
-import Modal from "../../../../../components/Modal";
-import { getErrorsMessages } from "../../../../../app/utils";
+import Modal from "@/components/Modal";
+import { getErrorsMessages } from "@/app/utils";
 import { Trash2 } from "lucide-react";
-import { Alert, Button } from "../../../../../components";
-import { Input } from "../../../../../components";
+import { Alert, Button, Input } from "@/components";
 
 type Props = {
     roles?: string[];

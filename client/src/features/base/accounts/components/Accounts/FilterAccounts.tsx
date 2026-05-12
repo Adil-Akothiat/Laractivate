@@ -1,6 +1,6 @@
-import { useAccountsFilter } from "../..";
-import { type RoleProps } from "../../../rbac";
-import { Button, Select } from "../../../../../components";
+import { useAccountsFilter } from "@/features/base/accounts";
+import { type RoleProps } from "@/features/base/rbac";
+import { Button, Select } from "@/components";
 import { useState } from "react";
 
 const STATUS_OPTIONS = [

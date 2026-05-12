@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import TwoFactorDialog from "../../shared/components/TwoFactorDialog";
-import { getErrorsMessages } from "../../../../app/utils";
-import { Alert, Button, Input } from "../../../../components";
-import { FormControl } from "../../../../components/FormControls";
+import { useAuth } from "@/features/base/auth/hooks/useAuth";
+import TwoFactorDialog from "@/features/base/shared/components/TwoFactorDialog";
+import { getErrorsMessages } from "@/app/utils";
+import { Alert, Button, Input } from "@/components";
+import { FormControl } from "@/components/FormControls";
 
 export default function LoginForm() {
     const { mutate, isPending, isError, error } = useAuth.login();

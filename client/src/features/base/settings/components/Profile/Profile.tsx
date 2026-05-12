@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useProfile, useUpdateProfile } from "../../hooks";
-import { getErrorsMessages } from "../../../../../app/utils";
+import { useProfile, useUpdateProfile } from "@/features/base/settings";
+import { getErrorsMessages } from "@/app/utils";
 import DangerZone from "./DangerZone";
-import { ComponentLoader } from "../../../../../components/Loaders";
+import { ComponentLoader } from "@/components/Loaders";
 import SettingsContainer from "../Shared/SettingsContainer";
 import ProfilForm from "./ProfilForm";
-import { useToastContext } from "../../../../../app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/useToastContext";
 
 export default function Profile() {
   const { data: user, isLoading } = useProfile();

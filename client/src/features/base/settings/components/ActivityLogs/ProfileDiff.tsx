@@ -1,4 +1,4 @@
-import type { LogPropertiesProps } from "../../types";
+import type { LogPropertiesProps } from "@/features/base/settings";
 
 export default function ProfileDiff({ properties }: { properties: LogPropertiesProps | null }) {
     if (!properties?.old || !properties?.new) return null;

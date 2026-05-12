@@ -1,5 +1,5 @@
-import { Checkbox } from "../../../../components/FormControls";
-import type { PermissionProps } from "../types";
+import { Checkbox } from "@/components/FormControls";
+import type { PermissionProps } from "../../shared";
 
 interface Props {
     grouped:     Record<string, PermissionProps[]>;

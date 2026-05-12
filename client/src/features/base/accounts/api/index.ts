@@ -1,4 +1,4 @@
-import { api } from '../../../../app/services/api';
+import { api } from '@/app/services/api';
 import type { CreateUserPayload, FilterAccountsParams, UpdateUserPayload } from '../types';
 
 const route = '/user/accounts';

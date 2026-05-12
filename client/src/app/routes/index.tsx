@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useToastContext } from "../hooks/useToastContext";
-import BaseRoutes from "./base";
-import AppRoutes from "./app";
 import baseRoutes from "./base";
 import appRoutes from "./app";
 

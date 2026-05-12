@@ -1,10 +1,10 @@
 import { Shield, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
-import { Card, Badge, Button } from "../../../../../../components";
-import { useToastContext } from "../../../../../../app/hooks/useToastContext";
-import { getErrorsMessages } from "../../../../../../app/utils";
-import { useAccounts } from "../../../hooks";
-import Disable2FAModal from "../../../../shared/components/Disable2FAModal";
+import { Card, Badge, Button } from "@/components";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { getErrorsMessages } from "@/app/utils";
+import { useAccounts } from "@/features/base/accounts";
+import Disable2FAModal from "@/features/base/shared/components/Disable2FAModal";
 // Assuming your hook is exported from a hooks file
 
 interface Props {

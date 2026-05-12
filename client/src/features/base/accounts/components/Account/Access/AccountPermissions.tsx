@@ -1,6 +1,6 @@
 import { Lock, ShieldOff } from "lucide-react";
-import { EmptyState } from "../../../../../../components";
-import type { PermissionProps } from "../../../../rbac";
+import { EmptyState } from "@/components";
+import type { PermissionProps } from "@/features/base/shared";
 
 
 interface Props {

@@ -2,7 +2,7 @@ import { useSearchParams, useNavigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { useValidateResetToken } from "./hooks/useCheckResetToken";
 import { useToastContext } from "../hooks/useToastContext";
-import { GlobalPageLoader } from "../../components/Loaders";
+import { GlobalPageLoader } from "@/components/Loaders";
 
 export function ResetPasswordGuard() {
     const [searchParams] = useSearchParams();

@@ -1,14 +1,14 @@
 import type { RoleProps } from "../types";
 import { useRoles, useRolesFilter } from "../hooks";
-import { type Column, Pagination, Modal, ConfirmDialog } from "../../../../components";
-import { DataTable } from "../../../../components/Table";
+import { type Column, Pagination, Modal, ConfirmDialog } from "@/components";
+import { DataTable } from "@/components/Table";
 import { useState } from "react";
 import RbacHeader from "./RbacHeader";
-import { useDebounce } from "../../../../app/hooks/useDebounce";
-import { ScrollContainer } from "../../../../components/ScrollContainer";
+import { useDebounce } from "@/app/hooks/useDebounce";
+import { ScrollContainer } from "@/components/ScrollContainer";
 import { UpdateRole } from "./UpdateRole";
-import { useToastContext } from "../../../../app/hooks/useToastContext";
-import { getErrorsMessages } from "../../../../app/utils";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { getErrorsMessages } from "@/app/utils";
 
 const columns = (): Column<RoleProps>[] => [
     {

@@ -1,4 +1,4 @@
-import type { ActivityLogProps, User } from "../../settings";
+import type { ActivityLogProps, User } from "@/features/base/settings";
 
 export type ViewType = "personal" | "system";
 

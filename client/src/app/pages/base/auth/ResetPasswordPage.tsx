@@ -1,5 +1,5 @@
-import { ResetPasswordForm } from "../../../../features/base/auth";
-import AuthBanner from "../../../../features/base/auth/components/shared/AuthBanner";
+import { ResetPasswordForm } from "@/features/base/auth";
+import AuthBanner from "@/features/base/auth/components/shared/AuthBanner";
 
 export default function ForgotPasswordPage() {
     return (

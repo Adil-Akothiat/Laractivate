@@ -1,12 +1,12 @@
 import type { SubmitEvent } from "react";
-import { Button, Input } from "../../../../../components";
-import type { User } from "../../types";
+import { Button, Input } from "@/components";
 import AvatarUploader from "./ProfileAvatar";
+import type { UserProps } from "@/features/base/shared";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type Props = {
     handleSubmit:(e:SubmitEvent<HTMLFormElement>)=> void;
-    user:User;
+    user:UserProps;
     form:{
         firstName:string;
         lastName:string;

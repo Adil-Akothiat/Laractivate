@@ -1,6 +1,6 @@
 import { Shield, Trash2 } from "lucide-react";
-import { Badge, Button } from "../../../../../../components";
-import type { RoleProps } from "../../../../rbac";
+import { Badge, Button } from "@/components";
+import type { RoleProps } from "@/features/base/rbac";
 
 interface Props {
     role:       RoleProps;

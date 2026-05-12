@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ShieldCheck, RefreshCw } from 'lucide-react';
 import OtpInput from './OtpInput';
-import { getErrorsMessages } from '../../../../../app/utils';
-import { Alert } from '../../../../../components';
+import { getErrorsMessages } from '@/app/utils';
+import { Alert } from '@/components';
 
 interface Props {
   onVerify:   (otp: string) => void;

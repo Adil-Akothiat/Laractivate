@@ -1,4 +1,4 @@
-import { Badge, LoadingOverlay } from "../../../../components";
+import { Badge, LoadingOverlay } from "@/components";
 import { useMarkAsRead } from "../hooks/useNotification";
 import type { NotificationProps } from "../types/index";
 import { typeConfig, iconMap, timeAgo } from "../utils/notification";

@@ -1,11 +1,10 @@
 import { Logs } from "lucide-react";
 import { useState } from "react";
-import { ComponentLoader } from "../../../../../components/Loaders";
-import type { ActivityLogProps } from "../../types";
-import LogCard from "../../../shared/components/LogCard";
+import { ComponentLoader } from "@/components/Loaders";
+import { type ActivityLogProps, useProfileActivityLogs } from "@/features/base/settings";
+import LogCard from "@/features/base/shared/components/LogCard";
 import SettingsContainer from "../Shared/SettingsContainer";
-import Pagination from "../../../../../components/Pagination/Pagination";
-import { useProfileActivityLogs } from "../../hooks";
+import Pagination from "@/components/Pagination/Pagination";
 
 export default function ActivityLogs() {
     const [page, setPage] = useState(1);

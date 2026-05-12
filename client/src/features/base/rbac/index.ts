@@ -11,8 +11,6 @@ export {
 
 // Types
 export type {
-  RoleProps,
-  PermissionProps,
   StoreRolePayload,
   UpdateRolePayload,
 } from './types'

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ConfirmDialog } from "../../../../../../components";
-import type { UserSession } from "../../../../settings/types";
-import { useAccounts } from "../../../hooks";
+import { ConfirmDialog } from "@/components";
+import type { UserSession } from "@/features/base/settings/types";
+import { useAccounts } from "@/features/base/accounts";
 import { AccountActiveSessions } from "./AccountActiveSessions";
 import { AccountSessionHistory } from "./AccountSessionHistory";
 

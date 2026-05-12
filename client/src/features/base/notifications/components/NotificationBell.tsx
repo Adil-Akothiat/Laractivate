@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import { Badge, Button, LoadingOverlay } from "../../../../components";
+import { Badge, Button, LoadingOverlay } from "@/components";
 import { useGetNotifications, useMarkAllRead } from "../hooks/useNotification";
 import type { NotificationProps } from "../types";
 import { NotificationsList } from "./NotificationsList";

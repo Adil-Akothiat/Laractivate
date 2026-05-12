@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
-import { Button, Input } from "../../../../../components";
-import { useAccountsFilter } from "../../hooks";
+import { Button, Input } from "@/components";
+import { useAccountsFilter } from "@/features/base/accounts";
 import { useState } from "react";
 
 export default function SearchAccounts() {

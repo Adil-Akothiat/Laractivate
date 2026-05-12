@@ -1,6 +1,6 @@
 import { CheckCircle2, AlertTriangle, XCircle, Server } from "lucide-react";
-import type { SystemHealthItem } from "../../types";
-// import { Badge } from "../../../../components";
+import type { SystemHealthItem } from "@/features/base/dashboard/types";
+// import { Badge } from "@/components";
 
 const statusConfig = {
     success: {

@@ -1,6 +1,6 @@
 import { AlertTriangle, ShieldOff, Trash2 } from "lucide-react";
-import { Modal, Button } from "../../../../../../components";
-import type { RoleProps } from "../../../../rbac";
+import { Modal, Button } from "@/components";
+import type { RoleProps } from "@/features/base/rbac";
 
 type RemoveGuard =
     | { kind: "confirm";           role: RoleProps }

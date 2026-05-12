@@ -1,7 +1,8 @@
-import type { User } from "../../../settings";
+import type { UserProps } from "@/features/base/shared";
+
 
 type Props = {
-    user: User;
+    user: UserProps;
 };
 
 const hour = new Date().getHours();

@@ -1,6 +1,6 @@
 import { Shield } from "lucide-react";
-import { Badge, Button, Modal, EmptyState } from "../../../../../../components";
-import type { RoleProps } from "../../../../rbac";
+import { Badge, Button, Modal, EmptyState } from "@/components";
+import type { RoleProps } from "@/features/base/rbac";
 
 interface Props {
     open:           boolean;

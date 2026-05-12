@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { EyeOff } from "lucide-react";
-import { useChangePassword } from "../../hooks";
-import { getErrorsMessages } from "../../../../../app/utils";
-import { Button, Input } from "../../../../../components";
+import { useChangePassword } from "@/features/base/settings";
+import { getErrorsMessages } from "@/app/utils";
+import { Button, Input } from "@/components";
 import SettingsContainer from "../Shared/SettingsContainer";
-import { useToastContext } from "../../../../../app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/useToastContext";
 
 export default function ChangePassword() {
   const { mutate, isPending, reset } = useChangePassword();
@@ -36,7 +36,6 @@ export default function ChangePassword() {
 
   return (
     <SettingsContainer settingsType="password">
-      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
         <Input
           type="password"

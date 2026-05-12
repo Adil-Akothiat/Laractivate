@@ -1,9 +1,9 @@
 import { ShieldOff } from "lucide-react";
 import type { UserSession } from "../../types";
-import SessionCard from "../../../shared/components/SessionCard";
-import { Badge, Button } from "../../../../../components";
-import { useToastContext } from "../../../../../app/hooks/useToastContext";
-import { useClearHistory, useRevokeUserSessions } from "../../hooks/useSessions";
+import SessionCard from "@/features/base/shared/components/SessionCard";
+import { Badge, Button } from "@/components";
+import { useToastContext } from "@/app/hooks/useToastContext";
+import { useClearHistory, useRevokeUserSessions } from "@/features/base/settings/hooks/useSessions";
 
 export default function SessionHistory({ sessions }: { sessions: UserSession[] }) {
     const { toast } = useToastContext();

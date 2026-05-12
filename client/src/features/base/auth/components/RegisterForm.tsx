@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { getErrorsMessages } from "../../../../app/utils";
-import { Alert, Button, Input } from "../../../../components";
-import { FormControl } from "../../../../components/FormControls";
+import { useAuth } from "@/features/base/auth/hooks/useAuth";
+import { getErrorsMessages } from "@/app/utils";
+import { Alert, Button, Input } from "@/components";
+import { FormControl } from "@/components/FormControls";
 
 export default function RegisterForm() {
     const { mutate: register, isPending, error, isError } = useAuth.register();

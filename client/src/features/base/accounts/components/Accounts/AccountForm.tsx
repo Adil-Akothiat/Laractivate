@@ -1,9 +1,9 @@
-import type { SetStateProps } from "../../../../../app/types";
-import { getErrorsMessages } from "../../../../../app/utils";
-import { Alert, Button, Input } from "../../../../../components";
-import { FormControl } from "../../../../../components/FormControls";
-import Switch from "../../../../../components/Switch";
-import type { RoleProps } from "../../../rbac";
+import type { SetStateProps } from "@/app/types";
+import { getErrorsMessages } from "@/app/utils";
+import { Alert, Button, Input } from "@/components";
+import { FormControl } from "@/components/FormControls";
+import Switch from "@/components/Switch";
+import type { RoleProps } from "@/features/base/rbac";
 
 type FormProps = {
     firstName: string;

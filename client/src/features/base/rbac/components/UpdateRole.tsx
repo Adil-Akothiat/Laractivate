@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useRoles } from "../index";
 import { usePermissions } from "../hooks";
-import { LoadingOverlay, Input, Button } from "../../../../components";
-import { getErrorsMessages } from "../../../../app/utils";
-import { FormControl } from "../../../../components/FormControls";
-import { useToastContext } from "../../../../app/hooks/useToastContext";
+import { LoadingOverlay, Input, Button } from "@/components";
+import { getErrorsMessages } from "@/app/utils";
+import { FormControl } from "@/components/FormControls";
+import { useToastContext } from "@/app/hooks/useToastContext";
 import PermissionsCheckbox from "./PermissionsCheckBox";
 
 interface Props {

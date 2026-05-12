@@ -1,4 +1,4 @@
-import { api } from "../../../../app/services/api";
+import { api } from "@/app/services/api";
 
 const route = "/system/notifications";
 export const fetchNotifications = () => api.get(route);

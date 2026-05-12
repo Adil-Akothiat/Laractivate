@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Modal } from "../../components";
+import { Modal } from "@/components";
 import PageHeader from "./components/PageHeader";
 import SidebarContent from "./components/SidebarContent";
 import { useMe } from "../middlewares/hooks/useMe";
-import { useAuth } from "../../features/base/auth/hooks/useAuth";
+import { useAuth } from "@/features/base/auth/hooks/useAuth";
 import { useToastContext } from "../hooks/useToastContext";
 import { getErrorsMessages } from "../utils";
 

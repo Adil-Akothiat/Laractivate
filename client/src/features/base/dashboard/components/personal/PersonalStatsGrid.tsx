@@ -3,7 +3,7 @@ import {
     Bell, Smartphone, TrendingUp,
     CheckCircle2, XCircle
 } from "lucide-react";
-import type { StatItem } from "../../types";
+import type { StatItem } from "@/features/base/dashboard/types";
 
 const iconMap: Record<string, React.ReactNode> = {
     "shield-check": <ShieldCheck size={18} />,

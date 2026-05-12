@@ -1,7 +1,7 @@
 import { Crown, ShieldCheck, ShieldOff } from "lucide-react";
-import { imageRender } from "../../../../../app/utils/imagePreviewHandler";
-import { Avatar, Badge, type Column } from "../../../../../components";
-import type { ManagedUser } from "../../types";
+import { imageRender } from "@/app/utils/imagePreviewHandler";
+import { Avatar, Badge, type Column } from "@/components";
+import type { ManagedUser } from "@/features/base/accounts/types";
 
 export const columns: Column<ManagedUser>[] = [
   {

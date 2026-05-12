@@ -1,10 +1,10 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useAccounts } from "../../hooks";
-import { Breadcrumb, LoadingOverlay } from "../../../../../components";
+import { useAccounts } from "@/features/base/accounts";
+import { Breadcrumb, LoadingOverlay } from "@/components";
 import AccountProfile from "./Profile/AccountProfile";
 import AccountSecurity from "./Security/AccountSecurity";
 import AccountDangerZone from "./DangerZone/AccountDangerZone";
-import Tabs from "../../../../../components/Tabs/Tabs";
+import Tabs from "@/components/Tabs/Tabs";
 import {
     IdCard,
     LayoutDashboard,
@@ -16,7 +16,7 @@ import {
     Globe,
     Logs,
 } from "lucide-react";
-import Container from "../../../../../components/Container";
+import Container from "@/components/Container";
 import AccountSessions from "./Sessions/AccountSession";
 import AccountAccess from "./Access/AccountAccess";
 import AccountActivityLogs from "./ActivityLog/AccountActivityLogs";

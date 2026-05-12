@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCan } from '../../app/middlewares/hooks/useCan';
+import { useCan } from '@/app/middlewares/hooks/useCan';
 
 interface CanProps {
     permission: string | string[];

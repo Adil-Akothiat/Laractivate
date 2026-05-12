@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { Alert, useToast } from "../../components";
+import { Alert, useToast } from "@/components";
 
 export const ToastContext = createContext<ReturnType<typeof useToast> | null>(null);
 
