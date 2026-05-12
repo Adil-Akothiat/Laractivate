@@ -24,13 +24,25 @@ Thumbs.db
 .phpunit.cache/
 
 # --- Environment & Secrets ---
+# 1. Ignore the specific .env files
 .env
-.env.*
-!.env.example
+.env.local
+.env.development
+.env.production
+.env.backup
+
+# 2. Specifically target subfolder envs
 server/.env
 server/.env.*
 client/.env
 client/.env.*
+
+# 3. Explicitly allow ALL example files
+!.env.example
+!client/.env.example
+!server/.env.example
+
+# 4. Other secrets
 auth.json
 Homestead.json
 Homestead.yaml
