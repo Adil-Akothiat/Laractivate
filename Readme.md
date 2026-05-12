@@ -53,11 +53,11 @@ docker-compose exec client npm install
 docker-compose exec app php artisan migrate --seed
 ```
 
-# 🔑 4. Application Keys Configuration
+### 4. Application Keys Configuration 🔑
 
 Because Laractivate uses Docker to manage environment variables, the standard `php artisan` commands cannot modify your `.env` file directly. You must generate the keys and manually add them to your root `.env` file.
 
-## A. Generate Laravel Application Key
+#### A. Generate Laravel Application Key
 The `APP_KEY` is used by Laravel to encrypt your user sessions and other sensitive data.
 
 Run the following command:
@@ -73,7 +73,7 @@ Open your root `.env` and paste it:
 APP_KEY=base64:your_generated_key_here
 ```
 
-## B. Generate JWT Secret
+#### B. Generate JWT Secret
 This secret is used to sign your authentication tokens. Without this, users will not be able to log in.
 
 Run the following command:
@@ -89,7 +89,7 @@ Update your root `.env`:
 JWT_SECRET=your_generated_jwt_secret_here
 ```
 
-## C. Apply Changes
+#### C. Apply Changes
 For the changes to take effect within the Docker environment, you must restart the application service:
 
 ```bash
