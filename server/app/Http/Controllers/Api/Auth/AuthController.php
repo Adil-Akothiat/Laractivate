@@ -7,8 +7,7 @@ use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\{LoginRequest, RegisterRequest, ForgotPasswordRequest};
 use App\Services\System\SessionService;
-use App\Services\Jwt\JwtService;
-use App\Services\Auth\AuthService;
+use App\Services\Security\{AuthService, JwtService};
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Log;
 
@@ -29,8 +28,12 @@ class AuthController extends Controller
         );
         $result = $this->auth->login($request->validated(), $metadata);
         if($result['requires_2fa']):
-            return response()->json(['next'=> '2FA_VERIFICATION', 'id'=> $result['id']],200);
-            endif;
+            return response()->json([
+                'next'=> '2FA_VERIFICATION', 
+                'challenge_token'=> $result['challenge_token'],
+                'id'=> $result['id'],
+            ],200);
+        endif;
         return $this->respondWithToken(
             $result['access_token'],
             $result['refresh_token'],

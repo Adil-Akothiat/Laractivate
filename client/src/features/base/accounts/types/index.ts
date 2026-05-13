@@ -1,45 +1,36 @@
-import type { RoleProps } from "@/features/base/rbac";
+import type { PasswordSchema } from "@/app/types";
+import type { RoleSchema, UserSchema } from "../../shared";
 
-export interface ManagedUser {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-    is_active: boolean;
-    roles: RoleProps[];
-    rolesSet: string[];
-    permissionSet: string[];
-    owner?: boolean;
-    avatar?: string;
-    created_at: string;
-    updated_at: string;
-}
+// Data Schema
 
-export interface CreateUserPayload {
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    is_active?: boolean;
-    roles?: string[];
-    avatar?: string;
-}
 
-export interface UpdateUserPayload {
-    first_name?: string;
-    last_name?: string;
-    email?: string;
-    password?: string;
-    password_confirmation?: string;
-    is_active?: boolean;
-    roles?: string[];
-    avatar?: string;
-}
-
+// Search Queries Params
 export type FilterAccountsParams = {
     search?: string;
     role?: string;
     status?: string;
     page?: number;
 };
+
+// ui components
+export type CreateAcccountProps = {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// Forms values
+export type AccountFormValues = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+    rolesState: string[];
+    isActive: boolean;
+}
+
+
+// Request Payload
+export type UserCreatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'avatar'|'rolesSet'>&PasswordSchema;
+
+export type UserUpdatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'rolesSet'|'avatar'>&PasswordSchema;

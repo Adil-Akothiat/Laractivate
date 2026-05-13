@@ -9,7 +9,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\User\UserService;
 use App\Services\System\SessionService;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 
 class ProfileController extends Controller
 {

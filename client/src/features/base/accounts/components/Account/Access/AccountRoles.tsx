@@ -3,15 +3,15 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card, Button, EmptyState } from "@/components";
 import { useRoles } from "@/features/base/rbac";
-import { useAccounts } from "@/features/base/accounts";
+import { useAccountMutations, useAccounts } from "@/features/base/accounts";
 import { RoleListItem } from "./RoleListItem";
 import { AssignRoleModal } from "./AssignRoleModal";
 import { RemoveRoleConfirmModal } from "./RemoveRoleConfirmModal";
 import type { RemoveGuard } from "./RemoveRoleConfirmModal";
-import type { RoleProps, UserProps } from "@/features/base/shared";
+import type { RoleSchema, UserSchema } from "@/features/base/shared";
 
 interface Props {
-    user: UserProps;
+    user: UserSchema;
 }
 
 export default function AccountRoles({ user }: Props) {
@@ -21,15 +21,15 @@ export default function AccountRoles({ user }: Props) {
     const [removeGuard, setRemoveGuard]             = useState<RemoveGuard | null>(null);
 
     const { data: rolesData }                       = useRoles.getRoles();
-    const { mutate: update, isPending: isUpdating } = useAccounts.update();
+    const { update } = useAccountMutations();
 
     const allRoles       = rolesData?.roles ?? [];
-    const assignedIds    = user?.roles?.map((r: RoleProps) => r.id) ?? [];
-    const availableRoles = allRoles.filter((r: RoleProps) => !assignedIds.includes(r.id));
+    const assignedIds    = user?.roles?.map((r: RoleSchema) => r.id) ?? [];
+    const availableRoles = allRoles.filter((r: RoleSchema) => !assignedIds.includes(r.id));
 
     function handleAssign(roleId: string) {
         setAssigningId(roleId);
-        update(
+        update.mutate(
             { id: id!, data: { roles: [...assignedIds, roleId] } },
             {
                 onSuccess: () => setOpen(false),
@@ -39,7 +39,7 @@ export default function AccountRoles({ user }: Props) {
     }
 
     function handleRemove(roleId: string) {
-        const role = allRoles.find((r: RoleProps) => r.id === roleId);
+        const role = allRoles.find((r: RoleSchema) => r.id === roleId);
         if (!role) return;
 
         // Guard 1: block if this is the only super admin in the app
@@ -59,7 +59,7 @@ export default function AccountRoles({ user }: Props) {
     }
 
     function commitRemove(roleId: string) {
-        update({
+        update.mutate({
             id: id!,
             data: { roles: assignedIds.filter((rid) => rid !== roleId) },
         });
@@ -98,11 +98,11 @@ export default function AccountRoles({ user }: Props) {
                     />
                 ) : (
                     <div className="flex flex-col divide-y divide-base-200">
-                        {user.roles.map((role: RoleProps) => (
+                        {user.roles.map((role: RoleSchema) => (
                             <RoleListItem
                                 key={role.id}
                                 role={role}
-                                isRemoving={isUpdating}
+                                isRemoving={update.isPending}
                                 onRemove={handleRemove}
                             />
                         ))}
@@ -120,7 +120,7 @@ export default function AccountRoles({ user }: Props) {
 
             <RemoveRoleConfirmModal
                 guard={removeGuard}
-                isRemoving={isUpdating}
+                isRemoving={update.isPending}
                 onConfirm={() => removeGuard && commitRemove(removeGuard.role.id)}
                 onClose={() => setRemoveGuard(null)}
             />

@@ -6,7 +6,7 @@ import PageHeader from "./components/PageHeader";
 import SidebarContent from "./components/SidebarContent";
 import { useMe } from "../middlewares/hooks/useMe";
 import { useAuth } from "@/features/base/auth/hooks/useAuth";
-import { useToastContext } from "../hooks/useToastContext";
+import { useToastContext } from "../hooks/common";
 import { getErrorsMessages } from "../utils";
 
 export default function Sidebar() {

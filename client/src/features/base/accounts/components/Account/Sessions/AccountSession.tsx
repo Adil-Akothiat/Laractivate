@@ -1,45 +1,52 @@
 import { useState } from "react";
 import { ConfirmDialog } from "@/components";
-import type { UserSession } from "@/features/base/settings/types";
-import { useAccounts } from "@/features/base/accounts";
+import { useAccountMutations } from "@/features/base/accounts";
 import { AccountActiveSessions } from "./AccountActiveSessions";
 import { AccountSessionHistory } from "./AccountSessionHistory";
-
-interface Sessions {
-    active:  UserSession[];
-    history: UserSession[];
-}
+import type { SessionResponseSchema, SessionSchema } from "@/features/base/shared";
+import { useToastContext } from "@/app/hooks/common";
+import { getErrorsMessages } from "@/app/utils";
 
 interface Props {
-    sessions: Sessions;
+    session: SessionResponseSchema;
     userId:   string;
 }
 
-export default function AccountSessions({ sessions, userId }: Props) {
-    const [revokeTarget,  setRevokeTarget]  = useState<UserSession | null>(null);
+export default function AccountSessions({ session, userId }: Props) {
+    const [revokeTarget,  setRevokeTarget]  = useState<SessionSchema | null>(null);
     const [revokeAll,     setRevokeAll]     = useState(false);
     const [clearHistory,  setClearHistory]  = useState(false);
 
-    const { mutate: revokeOne,      isPending: isRevoking        } = useAccounts.revokeSession();
-    const { mutate: revokeAllFn,    isPending: isRevokingAll      } = useAccounts.revokeAllSessions();
-    const { mutate: clearHistoryFn, isPending: isClearingHistory  } = useAccounts.clearSessionHistory();
-
+    const { toast } = useToastContext();
+    const { revokeSession, revokeAllSessions, clearSessionHistory } = useAccountMutations();
     function confirmRevoke() {
         if (!revokeTarget) return;
-        revokeOne({accountId:userId, sessionId:revokeTarget.session_id}, {
+        revokeSession.mutate({id:userId, sessionId:revokeTarget.session_id}, {
             onSuccess: () => setRevokeTarget(null),
         });
     }
 
     function confirmRevokeAll() {
-        revokeAllFn(userId, {
-            onSuccess: () => setRevokeAll(false),
+        revokeAllSessions.mutate(userId, {
+            onSuccess: (res) => {
+                setRevokeAll(false);
+                toast.success(res.data.message);
+            },
+            onError: (err:any)=> {
+                toast.error(getErrorsMessages(err).join('|'));
+            }
         });
     }
 
     function confirmClearHistory() {
-        clearHistoryFn(userId, {
-            onSuccess: () => setClearHistory(false),
+        clearSessionHistory.mutate(userId, {
+            onSuccess: (resp) =>{
+                setClearHistory(false);
+                toast.success(resp.data.message);
+            },
+            onError: (err:any)=> {
+                toast.success(getErrorsMessages(err).join('|'));
+            }
         });
     }
 
@@ -47,13 +54,13 @@ export default function AccountSessions({ sessions, userId }: Props) {
         <>
             <div className="flex flex-col gap-4">
                 <AccountActiveSessions
-                    sessions={sessions.active}
+                    sessions={session.active}
                     onRevoke={setRevokeTarget}
                     onRevokeAll={() => setRevokeAll(true)}
                 />
                 <AccountSessionHistory
-                    sessions={sessions.history}
-                    isClearingHistory={isClearingHistory}
+                    sessions={session.history}
+                    isClearingHistory={clearSessionHistory.isPending}
                     onClearHistory={() => setClearHistory(true)}
                 />
             </div>
@@ -66,7 +73,7 @@ export default function AccountSessions({ sessions, userId }: Props) {
                 message={`This will immediately sign out the session on ${revokeTarget?.browser} / ${revokeTarget?.platform}. The user will need to log in again on that device.`}
                 confirmLabel="Revoke"
                 cancelLabel="Cancel"
-                loading={isRevoking}
+                loading={revokeSession.isPending}
                 onConfirm={confirmRevoke}
                 onCancel={() => setRevokeTarget(null)}
             />
@@ -79,7 +86,7 @@ export default function AccountSessions({ sessions, userId }: Props) {
                 message="All sessions except the current one will be terminated. The user will be signed out from all other devices."
                 confirmLabel="Revoke all"
                 cancelLabel="Cancel"
-                loading={isRevokingAll}
+                loading={revokeAllSessions.isPending}
                 onConfirm={confirmRevokeAll}
                 onCancel={() => setRevokeAll(false)}
             />
@@ -92,7 +99,7 @@ export default function AccountSessions({ sessions, userId }: Props) {
                 message="All past session records for this user will be permanently deleted. Active sessions are not affected."
                 confirmLabel="Clear history"
                 cancelLabel="Cancel"
-                loading={isClearingHistory}
+                loading={clearSessionHistory.isPending}
                 onConfirm={confirmClearHistory}
                 onCancel={() => setClearHistory(false)}
             />

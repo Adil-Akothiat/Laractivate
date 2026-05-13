@@ -1,7 +1,7 @@
 import { Logs } from "lucide-react";
 import { useState } from "react";
 import { ComponentLoader } from "@/components/Loaders";
-import { type ActivityLogProps, useProfileActivityLogs } from "@/features/base/settings";
+import { type LogSchema, useProfileActivityLogs } from "@/features/base/settings";
 import LogCard from "@/features/base/shared/components/LogCard";
 import SettingsContainer from "../Shared/SettingsContainer";
 import Pagination from "@/components/Pagination/Pagination";
@@ -24,7 +24,7 @@ export default function ActivityLogs() {
             ) : (
                 <>
                     <div className="space-y-2.5">
-                        {logs.data.map((log: ActivityLogProps) => (
+                        {logs.data.map((log: LogSchema) => (
                             <LogCard key={log.id} log={log} />
                         ))}
                     </div>

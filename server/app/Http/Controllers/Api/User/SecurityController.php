@@ -3,82 +3,69 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use PragmaRX\Google2FA\Google2FA;
-use App\Models\User;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
+use App\Services\Security\TwoFactorAuthService;
 use App\Services\User\UserService;
+use Illuminate\Http\{Request, JsonResponse};
+use Illuminate\Validation\Rules\Password;
 
 class SecurityController extends Controller
-{    
+{
     public function __construct(
         protected JwtService $jwtService,
         protected UserService $userService,
+        protected TwoFactorAuthService $tfaService,
     ) {}
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request):JsonResponse
     {
-        $user = $request->user();
         $validated = $request->validate([
             'current_password' => 'required|string',
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ]);
 
         $this->userService->changePassword(
-            $user,
+            $request->user(),
             $validated['current_password'],
             $validated['password']
         );
-        // Invalidate all existing tokens
-        $this->jwtService->invalidateUserTokens($user->id);
+
+        $this->jwtService->invalidateUserTokens($request->user()->id);
 
         return response()->json([
-            'message' => 'Password changed successfully! Please log in again with your new password.',
-        ]);
+            'message' => 'Password changed successfully! Please log in again.',
+        ], 200);
     }
 
-    public function init()
+    public function init(): JsonResponse
     {
-        $user     = auth()->user();
-        $google2fa = new Google2FA();
-        $secret   = $google2fa->generateSecretKey();
-
-        $user->two_factor_secret = encrypt($secret);
-        $user->save();
-
-        $qrCodeUrl = $google2fa->getQRCodeUrl('YourAppName', $user->email, $secret);
-
-        return response()->json(['qrCodeUrl' => $qrCodeUrl], 200);
+        $qrCodeUrl = $this->tfaService->initializeSetup(auth()->user());
+        return response()->json(['qrCodeUrl' => $qrCodeUrl]);
     }
 
-    public function enable(Request $request)
+    public function enable(Request $request):JsonResponse
     {
-        $user      = auth()->user();
-        $google2fa = new Google2FA();
-        $google2fa->setWindow(2);
+        $request->validate(['otp' => 'required|string']);
+        $data = $this->tfaService->verifyAndEnable(auth()->user(), $request->otp);
 
-        $valid = $google2fa->verifyKey(
-            decrypt($user->two_factor_secret),
-            $request->input('otp')
-        );
-
-        if ($valid) {
-            $user->two_factor_enabled = true;
-            $user->save();
-            return response()->json(['enabled' => true], 200);
-        }
-
-        return response()->json(['enabled' => false, 'error' => 'Invalid OTP'], 401);
+        return response()->json($data, 200);
     }
-    
-    public function disable() {
-        $validated = request()->validate([
-            'password' => 'required|string',
-        ]);
-        $user = auth()->user();
-        $this->userService->disableTwoFactor($user, $validated['password']);
-        return response()->json(['disabled'=> true], 200);
+
+    public function disable(Request $request):JsonResponse
+    {
+        $request->validate(['password' => 'required|string']);
+
+        $this->tfaService->disable(auth()->user(), $request->password);
+
+        return response()->json(['disabled' => true], 200);
+    }
+
+    /**
+     * Optional: Allow users to regenerate codes without re-enabling 2FA
+     */
+    public function regenerateCodes():JsonResponse
+    {
+        $codes = $this->tfaService->generateRecoveryCodes(auth()->user());
+        return response()->json(['recovery_codes' => $codes], 200);
     }
 }

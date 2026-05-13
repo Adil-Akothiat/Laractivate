@@ -1,4 +1,4 @@
-import type { ActivityLogProps, User } from "@/features/base/settings";
+import type { LogSchema, User } from "@/features/base/settings";
 
 export type ViewType = "personal" | "system";
 
@@ -43,7 +43,7 @@ export type PersonalDashboardData = {
     view_type: "personal";
     user: User;
     stats: Record<string, StatItem>;
-    recent_activity: ActivityLogProps[];
+    recent_activity: LogSchema[];
     auth_meta: AuthMeta;
 };
 
@@ -57,7 +57,7 @@ export type SystemDashboardData = {
     };
     system_health: Record<string, SystemHealthItem>;
     quick_actions: QuickAction[];
-    recent_activity: ActivityLogProps[];
+    recent_activity: LogSchema[];
     auth_meta: AuthMeta;
 
 };

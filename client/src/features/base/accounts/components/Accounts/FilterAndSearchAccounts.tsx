@@ -3,10 +3,10 @@ import { Button, Modal } from "@/components";
 import { useState } from "react";
 import FilterAccounts from "./FilterAccounts";
 import SearchAccounts from "./SearchAccounts";
-import type { RoleProps } from "@/features/base/rbac";
+import type { RoleSchema } from "@/features/base/shared";
 
 type Props = {
-    roles: RoleProps[];
+    roles: RoleSchema[];
 }
 export default function FilterAndSearchAccounts({roles}: Props) {
     const [open, setOpen] = useState(false);

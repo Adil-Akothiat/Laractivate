@@ -1,14 +1,14 @@
 import { Lock, ShieldOff } from "lucide-react";
 import { EmptyState } from "@/components";
-import type { PermissionProps } from "@/features/base/shared";
+import type { PermissionSchema } from "@/features/base/shared";
 
 
 interface Props {
-    permissions: PermissionProps[];
+    permissions: PermissionSchema[];
 }
 
 export default function AccountPermissions({ permissions }: Props) {
-    const grouped = permissions.reduce((acc: Record<string, PermissionProps[]>, p) => {
+    const grouped = permissions.reduce((acc: Record<string, PermissionSchema[]>, p) => {
         if (!acc[p.group]) acc[p.group] = [];
         acc[p.group].push(p);
         return acc;

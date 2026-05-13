@@ -32,7 +32,7 @@ export { Spinner, Skeleton, SkeletonCard, SkeletonTable, LoadingOverlay } from "
 export { default as EmptyState } from "./EmptyState";
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
-export { useToast } from "@/app/hooks/useToast";
+export { useToast } from "@/app/hooks/common/useToast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type { NavItem } from "./Sidebar";

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/features/base/auth/hooks/useAuth";
-import TwoFactorDialog from "@/features/base/shared/components/TwoFactorDialog";
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
+import TwoFactorDialog from "../../shared/components/2FA/TwoFactorDialog";
 
 export default function LoginForm() {
     const { mutate, isPending, isError, error } = useAuth.login();
@@ -13,6 +13,7 @@ export default function LoginForm() {
         password: "",
         show2FA: false as boolean,
         userId: null as string | null,
+        token:""
     });
 
     const setValue = (key: string, value: string | boolean) =>
@@ -25,7 +26,8 @@ export default function LoginForm() {
             {
                 onSuccess: (res) => {
                     if (res?.data?.next === "2FA_VERIFICATION") {
-                        setForm((prev) => ({ ...prev, show2FA: true, userId: res.data.id }));
+                        const { id, challenge_token } = res.data;
+                        setForm((prev) => ({ ...prev, show2FA: true, userId: id, token:challenge_token }));
                         return;
                     }
                     setTimeout(() => { window.location.href = "/dashboard"; }, 0);
@@ -33,12 +35,12 @@ export default function LoginForm() {
             },
         );
     };
-
     return (
         <div className="w-full max-w-sm mx-auto px-6 py-8">
             {form.show2FA && (
                 <TwoFactorDialog
                     userId={form.userId}
+                    token={form.token}
                     onSuccess={() => (window.location.href = "/dashboard")}
                     onCancel={() => setValue("show2FA", false)}
                 />

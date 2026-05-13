@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Auth;
+namespace App\Services\Security;
 
 use App\Models\User;
 use Illuminate\Support\Facades\{DB, Hash};
@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Services\System\SystemSupportService;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 use App\Notifications\GeneralAppNotification;
 
 class PasswordService

@@ -4,8 +4,9 @@ import { usePermissions } from "../hooks";
 import { LoadingOverlay, Input, Button } from "@/components";
 import { getErrorsMessages } from "@/app/utils";
 import { FormControl } from "@/components/FormControls";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import PermissionsCheckbox from "./PermissionsCheckBox";
+import { toSnakeCase } from "../utils";
 
 interface Props {
     roleId:    string;
@@ -62,7 +63,7 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
                     type="text"
                     placeholder="e.g. billing-manager"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setName(toSnakeCase(e.target.value))}
                     disabled={isPending || !!isLocked}
                     required
                     maxLength={50}

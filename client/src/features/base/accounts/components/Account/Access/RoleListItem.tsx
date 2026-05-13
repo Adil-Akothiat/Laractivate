@@ -1,9 +1,9 @@
 import { Shield, Trash2 } from "lucide-react";
 import { Badge, Button } from "@/components";
-import type { RoleProps } from "@/features/base/rbac";
+import type { RoleSchema } from "@/features/base/shared";
 
 interface Props {
-    role:       RoleProps;
+    role:       RoleSchema;
     isRemoving: boolean;
     onRemove:   (roleId: string) => void;
 }

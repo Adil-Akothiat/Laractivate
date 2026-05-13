@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
-import type { UserSession } from "../../settings/types";
 import DeviceIcon from "../../settings/components/Sessions/DeviceIcon";
 import SessionMeta from "../../settings/components/Sessions/SessionMeta";
 import { Button } from "@/components";
+import type { SessionSchema } from "../types";
 
 interface SessionCardProps {
-    session:    UserSession;
+    session:    SessionSchema;
     active?:    boolean;
     badge?:     React.ReactNode;
     action?:    React.ReactNode;
     isRevoking?: boolean;
-    onRevoke?:  (session: UserSession) => void;
+    onRevoke?:  (session: SessionSchema) => void;
 }
 
 export default function SessionCard({

@@ -4,10 +4,10 @@ import { createRole, deleteRole, getPermissions, getRole, getRoles, updateRole }
 import { useSearchParams } from 'react-router-dom';
 
 export const useRoles = {
-  getRoles: ({ page = 1, search, group, permission }: FilterRolesParams = {}) =>
+  getRoles: ({ page = 1, search, group, permission, all }: FilterRolesParams = {}) =>
     useQuery({
-        queryKey: ['roles', page, search, group, permission],
-        queryFn:  () => getRoles({ page, search, group, permission }).then(res => res.data),
+        queryKey: ['roles', page, search, group, permission, all],
+        queryFn:  () => getRoles({ page, search, group, permission, all }).then(res => res.data),
     }),
 
   getRole: (id: string, options = {}) => useQuery({

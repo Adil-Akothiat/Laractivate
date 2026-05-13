@@ -32,6 +32,9 @@ class User extends Authenticatable implements JWTSubject
         'avatar',
         'password',
         'is_active',
+        'two_factor_enabled',
+        'two_factor_secret',
+        'two_factor_recovery_codes'
     ];
     protected $casts = [
         'password'=> 'hashed'
@@ -107,4 +110,6 @@ class User extends Authenticatable implements JWTSubject
             $query->where('name', $permission);
         })->exists();
     }
+
+    
 }

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Globe, Monitor, ChevronDown } from "lucide-react";
-import type { ActivityLogProps } from "../../settings/types";
+import type { LogSchema } from "../../settings/types";
 import { getEventConfig } from "../../settings/utils/logActivities/eventConfig";
 import { fullDate, parseDevice, relativeTime } from "../../settings/utils/logActivities/helpers";
 import ProfileDiff from "../../settings/components/ActivityLogs/ProfileDiff";
 
-export default function LogCard({ log }: { log: ActivityLogProps }) {
+export default function LogCard({ log }: { log: LogSchema }) {
     const [open, setOpen] = useState(false);
     
     const config = getEventConfig(log.event);

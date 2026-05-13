@@ -26,17 +26,3 @@ export const resetPassword = (data: {
 export const logout = () => {
   return api.post('/auth/logout');
 }
-
-// 2FA
-const securityRoute = '/user/security';
-export const initTwoFactor = () =>
-  api.post(`${securityRoute}/two-factor/init`);
-
-export const enableTwoFactor = (data: { otp: string }) =>
-  api.post(`${securityRoute}/two-factor/enable`, data);
-
-export const verifyTwoFactor = (data: { otp: string }) =>
-  api.post(`/auth/two-factor/verify`, data);
-
-export const disableTwoFactor = (data: { password: string }) =>
-  api.put(`${securityRoute}/two-factor/disable`, { password: data.password });

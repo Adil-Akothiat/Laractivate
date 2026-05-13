@@ -5,7 +5,7 @@ import DangerZone from "./DangerZone";
 import { ComponentLoader } from "@/components/Loaders";
 import SettingsContainer from "../Shared/SettingsContainer";
 import ProfilForm from "./ProfilForm";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 
 export default function Profile() {
   const { data: user, isLoading } = useProfile();

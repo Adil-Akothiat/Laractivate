@@ -15,4 +15,5 @@ export interface FilterRolesParams {
     search?:     string;
     group?:      string;
     permission?: string;
+    all?:boolean
 }

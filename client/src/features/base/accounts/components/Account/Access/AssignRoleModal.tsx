@@ -1,10 +1,10 @@
 import { Shield } from "lucide-react";
 import { Badge, Button, Modal, EmptyState } from "@/components";
-import type { RoleProps } from "@/features/base/rbac";
+import type { RoleSchema } from "@/features/base/shared";
 
 interface Props {
     open:           boolean;
-    availableRoles: RoleProps[];
+    availableRoles: RoleSchema[];
     assigningId:    string | null;
     onAssign:       (roleId: string) => void;
     onClose:        () => void;

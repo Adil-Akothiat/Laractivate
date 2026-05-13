@@ -15,27 +15,23 @@
 
 
 
-
 Services/
-├─ Access/
-│  └─ RbacService.php
-├─ Auth/
+├─ docs/
+│  ├─ doc.md
+│  └─ services.md
+├─ Security/
 │  ├─ AuthService.php
+│  ├─ JwtService.php
 │  ├─ PasswordService.php
-│  ├─ RegistrationService.php
-│  └─ TwoFactorAuthService.php
-├─ Jwt/
-│  └─ JwtService.php
+│  ├─ RbacService.php
+│  └─ RegistrationService.php
 ├─ System/
+│  ├─ ActivityLogService.php
 │  ├─ DashboardService.php
 │  ├─ SessionService.php
 │  └─ SystemSupportService.php
-├─ User/
-│  ├─ AccountService.php
-│  └─ UserService.php
-└─ docs/
-│  ├─ doc.md
-│  └─ services.md             # Implementation guide and code samples
+└─ User/
+   └─ UserService.php
 
 ---
 

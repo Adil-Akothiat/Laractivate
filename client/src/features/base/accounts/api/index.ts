@@ -1,46 +1,63 @@
 import { api } from '@/app/services/api';
-import type { CreateUserPayload, FilterAccountsParams, UpdateUserPayload } from '../types';
+import type { CollectionSchema, ResourceSchema } from '@/app/types';
+import type { 
+  FilterAccountsParams,
+  UserCreatePayload,
+  UserUpdatePayload,
+} from '../types';
+import type { LogSchema, UserSchema } from '../../shared';
 
-const route = '/user/accounts';
-export const getAccounts = ({ page, search, role, status }: FilterAccountsParams) => {
-  const params = new URLSearchParams();
+const BASE_ROUTE = '/user/accounts';
 
-  params.set('page', String(page));
-  if (search) params.set('search', search);
-  if (role)   params.set('role',   role);
-  if (status) params.set('status', status);
-  return api.get(`${route}?${params.toString()}`);
+export const accountApi = {
+  // --- Core CRUD ---
+  list: (params: FilterAccountsParams) =>
+    api.get<CollectionSchema<UserSchema>>(BASE_ROUTE, { params }),
+
+  get: (id: string) =>
+    api.get<ResourceSchema<UserSchema>>(`${BASE_ROUTE}/${id}`),
+
+  create: (data: UserCreatePayload) =>
+    api.post<ResourceSchema<UserSchema>>(BASE_ROUTE, data),
+
+  update: (id: string, data: UserUpdatePayload) =>
+    api.put<ResourceSchema<UserSchema>>(`${BASE_ROUTE}/${id}`, data),
+
+  remove: (id: string) =>
+    api.delete<ResourceSchema<null>>(`${BASE_ROUTE}/${id}`),
+
+  // --- Security & Profile ---
+  profile: {
+    updateAvatar: (id: string, data: FormData) =>
+      api.post(`${BASE_ROUTE}/${id}/update-avatar`, data), // Using POST for FormData/Spoofing
+
+    changePassword: (id: string, data: any) =>
+      api.put(`${BASE_ROUTE}/${id}/security/password`, data),
+
+    disableTwoFactor: (id: string, data: { password: string }) =>
+      api.delete(`${BASE_ROUTE}/${id}/security/two-factor`, { data }),
+  },
+
+  // --- Sessions ---
+  sessions: {
+    list: (id: string) => 
+      api.get(`${BASE_ROUTE}/${id}/sessions`),
+
+    revoke: (id: string, sessionId: number) =>
+      api.put(`${BASE_ROUTE}/${id}/sessions/${sessionId}`),
+
+    revokeAll: (id: string) =>
+      api.put(`${BASE_ROUTE}/${id}/sessions`),
+
+    clearHistory: (id: string) =>
+      api.delete(`${BASE_ROUTE}/${id}/sessions/clear-history`),
+  },
+
+  // --- Logs ---
+  logs: {
+    list: (id: string, page: number) =>
+      api.get<CollectionSchema<LogSchema>>(`${BASE_ROUTE}/${id}/activity-logs`, {
+        params: { page },
+      }),
+  },
 };
-export const getAccount = (id:string) => api.get(`${route}/${id}`);
-
-export const createAccount = (data: CreateUserPayload) =>
-  api.post(`${route}`, data);
-
-export const updateAccount = (id: string, data: UpdateUserPayload) =>
-  api.put(`${route}/${id}`, data);
-
-
-export const updateAccountAvatar = (id:string, data: FormData)=> api.put(`${route}/${id}/update-avatar`, data, {
-  headers: { 'Content-Type':'multipart/form-data' }
-});
-
-export const changeAccountPassword = (id:string, data: {
-  current_password: string;
-  password: string;
-  password_confirmation: string;
-}) => api.put(`${route}/${id}/security/password`, data);
-
-export const disableAccountTwoFactor = (id:string, data: { password: string }) =>
-  api.delete(`${route}/${id}/security/two-factor`, { data });
-
-
-export const deleteAccount = (id: string) =>
-  api.delete(`${route}/${id}`);
-
-// session management
-export const revokeAccountSession = (accountId:string, sessionId:number)=> api.put(`${route}/${accountId}/sessions/${sessionId}`);
-export const revokeAllAccountSession = (id:string)=> api.put(`${route}/${id}/sessions`);
-export const clearAccountSessionHistory = (id:string)=> api.delete(`${route}/${id}/sessions/clear-history`);
-
-// activity logs
-export const getAccountActivityLogs = (page:number, userId:string)=> api.get(`${route}/${userId}/activity-logs?page=${page}`);

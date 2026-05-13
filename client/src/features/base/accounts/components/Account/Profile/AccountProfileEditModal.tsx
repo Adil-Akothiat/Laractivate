@@ -2,14 +2,14 @@ import { Mail } from "lucide-react";
 import { Button, Input, Modal, Switch } from "@/components";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { useAccounts } from "@/features/base/accounts";
 import { getErrorsMessages } from "@/app/utils";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import { FormControl } from "@/components/FormControls";
-import type { UserProps } from "@/features/base/shared";
+import type { UserSchema } from "@/features/base/shared";
+import { useAccountMutations } from "../../../hooks";
 
 type Props = {
-    user:    UserProps;
+    user:    UserSchema;
     isOpen:  boolean;
     onClose: () => void;
 };
@@ -22,21 +22,17 @@ type FormProps = {
 
 export default function AccountProfileEditModal({ user, isOpen, onClose }: Props) {
     const { id } = useParams<{ id: string }>();
-
     const [form, setForm] = useState<FormProps>({
         firstName: user.first_name,
         lastName:  user.last_name,
         is_active: user?.is_active || false
     });
 
-    const {
-        mutate:    updateAccount,
-        isPending,
-    } = useAccounts.update();
+    const { update } = useAccountMutations();
     const { toast } = useToastContext();
 
     const handleSave = () => {
-        updateAccount(
+        update.mutate(
             {
                 id: id!,
                 data: {
@@ -70,15 +66,15 @@ export default function AccountProfileEditModal({ user, isOpen, onClose }: Props
                         onClick={onClose}
                         variant="default"
                         size="sm"
-                        disabled={isPending}
+                        disabled={update.isPending}
                     >
                         Cancel
                     </Button>
                     <Button
                         onClick={handleSave}
                         size="sm"
-                        loading={isPending}
-                        disabled={isPending}
+                        loading={update.isPending}
+                        disabled={update.isPending}
                     >
                         Save
                     </Button>
@@ -91,13 +87,13 @@ export default function AccountProfileEditModal({ user, isOpen, onClose }: Props
                         label="First name"
                         value={form.firstName}
                         onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                        disabled={isPending}
+                        disabled={update.isPending}
                     />
                     <Input
                         label="Last name"
                         value={form.lastName}
                         onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                        disabled={isPending}
+                        disabled={update.isPending}
                     />
                 </FormControl>
                 <FormControl>
@@ -113,7 +109,7 @@ export default function AccountProfileEditModal({ user, isOpen, onClose }: Props
                     <Switch 
                         label="Active"
                         checked={form.is_active}
-                        disabled={isPending}
+                        disabled={update.isPending}
                         onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
                     />
                 </FormControl>

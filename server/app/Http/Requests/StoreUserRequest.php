@@ -55,11 +55,11 @@ class StoreUserRequest extends FormRequest
                 'sometimes', 
                 'boolean'
             ],
-            'roles'      => [
+            'rolesSet'      => [
                 'nullable', 
                 'array'
             ],
-            'roles.*'    => [
+            'rolesSet.*'    => [
                 'string', 
                 'exists:roles,id'
             ],

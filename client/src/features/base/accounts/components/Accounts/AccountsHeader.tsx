@@ -2,12 +2,12 @@ import { LayoutDashboard, UserPlus, Users } from "lucide-react";
 import { Breadcrumb, Button } from "@/components";
 import FilterAndSearchAccounts from "./FilterAndSearchAccounts";
 import { Can } from "@/components/Guard/Can";
-import type { RoleProps } from "@/features/base/rbac";
+import type { RoleSchema } from "@/features/base/shared";
 
 type Props = {
     newAccountHandler: () => void;
     searchResult?:number;
-    roles:RoleProps[]
+    roles:RoleSchema[]
 }
 export default function AccountsHeader({ newAccountHandler, searchResult=0, roles }: Props) {
     return (

@@ -6,23 +6,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{User, Role};
 use App\Http\Resources\{AccountResource, WithPaginationMeta};
-use App\Services\User\{AccountService, UserService};
-use App\Services\Jwt\JwtService;
+use App\Services\User\UserService;
+use App\Services\Security\JwtService;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Validation\Rules\Password;
 use App\Services\System\SessionService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AccountsController extends Controller
 {
     use WithPaginationMeta;
     public function __construct(
-        protected AccountService $accountService,
         protected UserService $userService,
         protected JwtService $jwtService,
         protected SessionService $sessionService,
     ){}
-    public function index(Request $request)
+    public function index(Request $request):AnonymousResourceCollection
     {
         $users = User::latest()
             ->when($request->search, function ($q, $search) {
@@ -42,18 +42,13 @@ class AccountsController extends Controller
             ->withQueryString();
 
         $users->load('roles.permissions');
-        return response()->json(
-            [
-                'accounts' => AccountResource::collection($users),
-                'meta' => $this->paginationMeta($users),
-                'roles' => Role::select('id', 'name', 'is_locked')->get(),
-            ]
-        ,200);
+        return AccountResource::collection($users);
     }
     public function store(StoreUserRequest $request)
     {
         $credentials = $request->validated();
-        $user = $this->accountService->createAccount($credentials);
+        if($cren)
+        $user = $this->userService->createAccount($credentials);
 
         return response()->json([
             'message' => 'User created successfully', 
@@ -63,12 +58,12 @@ class AccountsController extends Controller
     public function show(User $user)
     {
         $user->load('roles.permissions');
-        return response()->json(['user' => new AccountResource($user)], 200);
+        return new AccountResource($user);
     }
     public function update(StoreUserRequest $request, User $user)
     {
         $credentials = $request->validated();
-        $updatedUser = $this->accountService->updateAccount($user, $credentials, auth()->user());
+        $updatedUser = $this->userService->updateAccount($user, $credentials, auth()->user());
 
         return response()->json([
             'message' => 'profile has been updated successfully', 
@@ -120,7 +115,7 @@ class AccountsController extends Controller
 
     public function destroy(User $user)
     {
-        $this->accountService->deleteAccount($user, auth()->user());
+        $this->userService->deleteAccount($user, auth()->user());
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
 

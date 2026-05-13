@@ -1,8 +1,8 @@
 import AvatarUploader from "@/components/FileUploader/AvatarUploader";
 import { useUpdateAvatarProfile } from "@/features/base/settings";
-import type { UserProps } from "@/features/base/shared";
+import type { UserSchema } from "@/features/base/shared";
 
-export default function ProfileAvatar({ user }: { user: UserProps }) {
+export default function ProfileAvatar({ user }: { user: UserSchema }) {
     const {
         mutate: uploadAvatar,
         isPending: isUploading,

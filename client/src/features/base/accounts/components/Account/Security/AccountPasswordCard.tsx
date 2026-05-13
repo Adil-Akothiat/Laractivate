@@ -7,10 +7,11 @@ import {
     Modal,
     Alert
 } from "@/components";
-import { useAccounts } from "@/features/base/accounts"
+import { useAccountMutations } from "@/features/base/accounts"
 import { useParams } from "react-router-dom";
 import { getErrorsMessages } from "@/app/utils";
 import { FormControl } from "@/components/FormControls";
+import { useToastContext } from "@/app/hooks/common";
 
 export default function AccountPasswordCard() {
     const { id } = useParams<{ id: string }>();
@@ -21,12 +22,8 @@ export default function AccountPasswordCard() {
         password_confirmation: "",
     });
 
-    const {
-        mutate: changePassword,
-        isPending,
-        isError,
-        error,
-    } = useAccounts.changePassword();
+    const { toast } = useToastContext();
+    const { changePassword } = useAccountMutations();
 
     const handleClose = () => {
         setOpen(false);
@@ -38,7 +35,17 @@ export default function AccountPasswordCard() {
     };
 
     const handleSubmit = () => {
-        changePassword({ id: id!, data: form }, { onSuccess: handleClose });
+        changePassword.mutate({ id: id!, data: form }, 
+            { 
+                onSuccess: (res)=> {
+                    toast.success(res.data?.message);
+                    handleClose();
+                },
+                onError: (err:any)=> {
+                    toast.error(getErrorsMessages(err).join('|'))
+                }
+            }
+        );
     };
 
     return (
@@ -77,15 +84,14 @@ export default function AccountPasswordCard() {
                             variant="ghost"
                             size="sm"
                             onClick={handleClose}
-                            disabled={isPending}
+                            disabled={changePassword.isPending}
                         >
                             Cancel
                         </Button>
                         <Button
                             variant="primary"
                             size="sm"
-                            loading={isPending}
-                            disabled={isPending}
+                            loading={changePassword.isPending}
                             onClick={handleSubmit}
                         >
                             Save
@@ -98,10 +104,6 @@ export default function AccountPasswordCard() {
                         variant="info"
                         message="The user will be required to log in again after the password is changed."
                     />
-                    {isError &&
-                        getErrorsMessages(error).map((msg, i) => (
-                            <Alert key={i} variant="error" message={msg} />
-                        ))}
                     <FormControl>
                         <Input
                             label="Current password"
@@ -114,7 +116,7 @@ export default function AccountPasswordCard() {
                                     current_password: e.target.value,
                                 })
                             }
-                            disabled={isPending}
+                            disabled={changePassword.isPending}
                         />
                     </FormControl>
                     <FormControl>
@@ -126,7 +128,7 @@ export default function AccountPasswordCard() {
                             onChange={(e) =>
                                 setForm({ ...form, password: e.target.value })
                             }
-                            disabled={isPending}
+                            disabled={changePassword.isPending}
                         />
                     </FormControl>
                     <FormControl>
@@ -141,7 +143,7 @@ export default function AccountPasswordCard() {
                                     password_confirmation: e.target.value,
                                 })
                             }
-                            disabled={isPending}
+                            disabled={changePassword.isPending}
                         />
                     </FormControl>
                 </form>

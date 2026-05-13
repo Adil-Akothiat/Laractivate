@@ -4,7 +4,7 @@ import { useChangePassword } from "@/features/base/settings";
 import { getErrorsMessages } from "@/app/utils";
 import { Button, Input } from "@/components";
 import SettingsContainer from "../Shared/SettingsContainer";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 
 export default function ChangePassword() {
   const { mutate, isPending, reset } = useChangePassword();

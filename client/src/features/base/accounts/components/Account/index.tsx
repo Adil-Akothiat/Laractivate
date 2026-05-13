@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useAccounts } from "@/features/base/accounts";
+import { useAccount } from "@/features/base/accounts";
 import { Breadcrumb, LoadingOverlay } from "@/components";
 import AccountProfile from "./Profile/AccountProfile";
 import AccountSecurity from "./Security/AccountSecurity";
@@ -13,30 +13,28 @@ import {
     ShieldCheck,
     Lock,
     Trash2,
-    Globe,
+    // Globe,
     Logs,
 } from "lucide-react";
 import Container from "@/components/Container";
-import AccountSessions from "./Sessions/AccountSession";
+// import AccountSessions from "./Sessions/AccountSession";
 import AccountAccess from "./Access/AccountAccess";
 import AccountActivityLogs from "./ActivityLog/AccountActivityLogs";
+import NotFoundPage from "@/app/pages/app/404";
 
 const VALID_TABS = ["profile", "security", "access", "danger", "sessions", "activity-logs"];
 
 export default function AccountDetails() {
     const { id } = useParams();
     const [searchParams] = useSearchParams();
-    const { data: accountData, isPending: fetchingAccount } =
-        useAccounts.getAccount(id || "");
+    const { data, isPending } = useAccount(id);
+    const response = data?.data;
+    if (isPending) return <LoadingOverlay />;
 
-    if (fetchingAccount) return <LoadingOverlay />;
-
-    const user = accountData?.user;
-    if (!user) return null;
-
+    const user = response?.data;
     const tabParam = searchParams.get("tab");
     const initialTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "profile";
-
+    if(!user) return <NotFoundPage message="User not found!"  />
     const tabs = [
         {
             key: "profile",
@@ -62,12 +60,12 @@ export default function AccountDetails() {
             icon: <Trash2 size={15} />,
             content: <AccountDangerZone user={user} />,
         },
-        {
-            key: "sessions",
-            label: "Sessions",
-            icon: <Globe size={15} />,
-            content: <AccountSessions sessions={user?.sessions} userId={user.id} />,
-        },
+        // {
+        //     key: "sessions",
+        //     label: "Sessions",
+        //     icon: <Globe size={15} />,
+        //     content: <AccountSessions session={{}} userId={user.id} />,
+        // },
         {
             key: "activity-logs",
             label: "Activity Logs",
@@ -91,7 +89,7 @@ export default function AccountDetails() {
                         icon: <User size={16} />,
                     },
                     {
-                        label: user?.full_name,
+                        label: user?.full_name||user.email,
                         href: `/accounts/${id}`,
                         icon: <IdCard size={16} />,
                     },

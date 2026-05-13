@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import { getErrorsMessages } from "@/app/utils";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 
 export default function ForgotPasswordForm() {
     const { mutate, isPending } = useAuth.forgotPassword();

@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes } from "react-router-dom";
 import { useEffect } from "react";
-import { useToastContext } from "../hooks/useToastContext";
 import baseRoutes from "./base";
 import appRoutes from "./app";
+import { useToastContext } from "../hooks/common";
 
 function App() {
     const { toast } = useToastContext();

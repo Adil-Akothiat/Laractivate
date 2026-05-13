@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $superAdminRole = Role::where('name', 'super admin')->first();
+        $superAdminRole = Role::where('name', 'SUPER_ADMIN')->first();
         if ($superAdminRole) {
             $admin->roles()->attach($superAdminRole->id);
         }
 
         // 2. Get all available roles to assign randomly to others
-        $roles = Role::where('name', '!=', 'super admin')->get();
+        $roles = Role::where('name', '!=', 'SUPER_ADMIN')->get();
 
         // 3. Generate 40 Mock Users
         for ($i = 0; $i < 40; $i++) {

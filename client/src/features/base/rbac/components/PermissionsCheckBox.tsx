@@ -1,9 +1,9 @@
 import { Checkbox } from "@/components/FormControls";
-import type { PermissionProps } from "../../shared";
+import type { PermissionSchema } from "../../shared";
 
 interface Props {
-    grouped:     Record<string, PermissionProps[]>;
-    permissions: PermissionProps[];
+    grouped:     Record<string, PermissionSchema[]>;
+    permissions: PermissionSchema[];
     selectedIds: string[];
     onChange:    (ids: string[]) => void;
     disabled?:   boolean;
@@ -22,7 +22,7 @@ export default function PermissionsCheckbox({ grouped, permissions, selectedIds,
         );
     };
 
-    const toggleGroup = (perms: PermissionProps[]) => {
+    const toggleGroup = (perms: PermissionSchema[]) => {
         const ids         = perms.filter((p) => !p.is_locked && p.name !== "dashboard.view").map((p) => p.id);
         const allSelected = ids.every((id) => selectedIds.includes(id));
         if (allSelected) {
@@ -69,7 +69,7 @@ export default function PermissionsCheckbox({ grouped, permissions, selectedIds,
                                 )}
                             </div>
                             <div className="flex flex-col gap-2 pl-1">
-                                {perms.map((perm:PermissionProps) => (
+                                {perms.map((perm:PermissionSchema) => (
                                     <div key={perm.id} className="flex items-center justify-between">
                                         <span className={`text-sm ${perm.is_locked ? "text-base-content/40" : "text-base-content/70"}`}>
                                             {perm.name}

@@ -1,16 +1,16 @@
-import type { RoleProps } from "../types";
 import { useRoles, useRolesFilter } from "../hooks";
 import { type Column, Pagination, Modal, ConfirmDialog } from "@/components";
 import { DataTable } from "@/components/Table";
 import { useState } from "react";
 import RbacHeader from "./RbacHeader";
-import { useDebounce } from "@/app/hooks/useDebounce";
+import { useDebounce } from "@/app/hooks/common/useDebounce";
 import { ScrollContainer } from "@/components/ScrollContainer";
 import { UpdateRole } from "./UpdateRole";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import { getErrorsMessages } from "@/app/utils";
+import type { RoleSchema } from "../../shared";
 
-const columns = (): Column<RoleProps>[] => [
+const columns = (): Column<RoleSchema>[] => [
     {
         key: "name",
         header: "Name",
@@ -78,7 +78,7 @@ export function RolesList() {
     return (
         <ScrollContainer>
             <RbacHeader />
-            <DataTable<RoleProps>
+            <DataTable<RoleSchema>
                 pinRows
                 columns={columns()}
                 actions={[

@@ -10,7 +10,7 @@ type Props = {
     roles?: string[];
 };
 export default function DangerZone({ roles }: Props) {
-    const isSuperAdmin = roles?.includes("Super Admin");
+    const isSuperAdmin = roles?.includes("SUPER_ADMIN");
     const navigate = useNavigate();
     const { mutate: deactivate, isPending: isDeactivating } =
         useDeactivateAccount();

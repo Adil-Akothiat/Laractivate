@@ -12,61 +12,6 @@ export interface ChangePasswordPayload {
 export interface AccountActionPayload {
   password: string;
 }
-
-export interface UserSession {
-    session_id:       number;
-    users_id:         string;
-    device:           string;
-    device_name?:     string;
-    browser:          string;
-    browser_version?: string;
-    platform:         string;
-    platform_version?:string;
-    ip_address:       string;
-    city?:            string;
-    country?:         string;
-    timezone?:        string;
-    user_agent?:      string;
-    is_current:       boolean;
-    is_active:        boolean;
-    revoked:          boolean;
-    last_active:      string;
-}
-
-export interface SessionsData {
-    active:  UserSession[];
-    history: UserSession[];
-}
-
-export interface LogPropertiesProps {
-    ip?: string;
-    city?: string;
-    country?: string;
-    device?: string;
-    browser?: string;
-    platform?: string;
-    timezone?: string;
-    user_agent?: string;
-    device_name?: string;
-    browser_version?: string | null;
-    platform_version?: string;
-    email?: string;
-    old?: Record<string, string | null>;
-    new?: Record<string, string | null>;
-};
-
-export interface ActivityLogProps {
-    id: number;
-    users_id: string;
-    description: string;
-    event: string;
-    properties: LogPropertiesProps | null;
-    ip_address: string;
-    user_agent: string | null;
-    created_at: string;
-    updated_at: string;
-};
-
 // ─── Event Config ─────────────────────────────────────────────────────────────
 
 export interface EventConfigProps {

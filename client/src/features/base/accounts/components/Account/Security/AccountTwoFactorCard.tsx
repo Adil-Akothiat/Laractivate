@@ -1,45 +1,25 @@
 import { Shield, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Card, Badge, Button } from "@/components";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import { getErrorsMessages } from "@/app/utils";
-import { useAccounts } from "@/features/base/accounts";
-import Disable2FAModal from "@/features/base/shared/components/Disable2FAModal";
-// Assuming your hook is exported from a hooks file
+import { useAccountMutations } from "@/features/base/accounts";
+import Disable2FAModal from "@/features/base/shared/components/2FA/Disable2FAModal";
+import type { UserSchema } from "@/features/base/shared";
 
 interface Props {
-    user: any;
+    user: UserSchema;
 }
 
 export default function AccountTwoFactorCard({ user }: Props) {
     const [open, setOpen] = useState(false);
     const { toast } = useToastContext();
     // Initialize the hook
-    const { mutate: disable2FA, isPending } = useAccounts.disableTwoFactor();
+    const { disableTwoFactor } = useAccountMutations();
     const isEnabled = !!user?.two_factor_enabled;
 
-    // const handleDisable = () => {
-    //     disable2FA (
-    //         {
-    //             id: user.id,
-    //             data: {password}
-    //         },
-    //         {
-    //             onSuccess: () => {
-    //                 setOpen(false);
-    //                 toast.success("Two-Factor Authentication disabled successfully");
-    //                 setPassword(""); // Clear password on success
-    //             },
-    //             onError: (err: any) => {
-    //                 const message = getErrorsMessages(err).join('\n') || "Failed to disable Two-Factor Authentication";
-    //                 toast.error(message);
-    //             }
-    //         }
-    //     );
-    // };
-
     const handleConfirm = (password: string) => {
-        disable2FA(
+        disableTwoFactor.mutate(
             { id: user.id, data: { password } },
             {
                 onSuccess: () => {
@@ -123,7 +103,7 @@ export default function AccountTwoFactorCard({ user }: Props) {
             </Card>
             <Disable2FAModal
                 isOpen={open}
-                isPending={isPending}
+                isPending={disableTwoFactor.isPending}
                 onConfirm={handleConfirm}
                 onClose={() => setOpen(false)}
             />

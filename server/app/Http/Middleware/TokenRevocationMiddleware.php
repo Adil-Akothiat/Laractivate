@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\RefreshToken;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 use Illuminate\Support\Facades\Log;
 
 class TokenRevocationMiddleware

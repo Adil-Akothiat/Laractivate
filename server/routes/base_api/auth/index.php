@@ -16,5 +16,5 @@ Route::prefix('auth')->group(function () {
     Route::post('/reset-password', [PasswordController::class, 'resetPassword']);
     Route::get('/reset-password/validate-token', [PasswordController::class, 'validateToken']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-    Route::post('/two-factor/verify', [TwoFactorAuthController::class, 'verifyAuthentication']);
+    Route::post('/two-factor/verify', [TwoFactorAuthController::class, 'verifyAuthentication'])->middleware('2fa.challenge');
 });

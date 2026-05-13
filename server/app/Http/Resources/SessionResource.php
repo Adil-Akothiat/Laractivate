@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 // use Illuminate\Support\Facades\Log;
 
 class SessionResource extends JsonResource

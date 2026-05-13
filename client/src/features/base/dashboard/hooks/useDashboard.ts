@@ -6,9 +6,9 @@ export const useDashboard = () => {
   const { data } = useMe();
   const user = data?.user;
   const userRoles: string[] = user?.rolesSet || [];
-  const isSuperAdmin = userRoles.includes('Super Admin');
+  const isSuperAdmin = userRoles.includes('SUPER_ADMIN');
   return useQuery({
-    queryKey: ["dashboard", isSuperAdmin ? 'super-admin' : 'user'],
+    queryKey: ["dashboard", isSuperAdmin ? 'SUPER_ADMIN' : 'MEMBER'],
     queryFn: ()=> isSuperAdmin ? getSuperAdminDashboard() : getUserDashboard(),
     retry: false,
   });

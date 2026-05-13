@@ -3,12 +3,12 @@ import { ProfileDropdown } from "./ProfileDropdown";
 import { imageRender } from "../../utils/imagePreviewHandler";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "@/features/base/notifications/components/NotificationBell";
-import type { UserProps } from "@/features/base/shared/types";
+import type { UserSchema } from "@/features/base/shared/types";
 
 type Props = {
     setDrawerOpen:(open:boolean)=>void;
     setIsLogoutModalOpen:(open:boolean)=>void;
-    user:UserProps | null;
+    user:UserSchema | null;
 }
 export default function PageHeader({ setDrawerOpen, setIsLogoutModalOpen, user }:Props) {
     const navigate = useNavigate();

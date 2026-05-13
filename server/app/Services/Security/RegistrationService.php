@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Auth;
+namespace App\Services\Security;
 
 use App\Models\{User,Role};
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -31,7 +31,7 @@ class RegistrationService
             $user->roles()->attach($roleId);
 
             $token        = JWTAuth::fromUser($user);
-            $refreshToken = $this->jwtService->create($user->id, $metadata)['token'];
+            $refreshToken = $this->jwtService->createRefreshToken($user->id, $metadata)['token'];
 
             return [
                 'access_token'=> $token,

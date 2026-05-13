@@ -9,11 +9,11 @@ import {
     Modal,
 } from "@/components";
 import { Can } from "@/components/Guard/Can";
-import { useAccounts } from "@/features/base/accounts";
-import type { UserProps } from "@/features/base/shared";
+import { useAccountMutations } from "@/features/base/accounts";
+import type { UserSchema } from "@/features/base/shared";
 
 interface Props {
-    user: UserProps;
+    user: UserSchema;
 }
 
 export default function AccountDangerZone({ user }: Props) {
@@ -21,9 +21,7 @@ export default function AccountDangerZone({ user }: Props) {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [emailInput, setEmailInput] = useState("");
-
-    const { mutate: deleteAccount, isPending: isDeleting } =
-        useAccounts.delete();
+    const { remove } = useAccountMutations();
 
     function handleClose() {
         setOpen(false);
@@ -31,7 +29,7 @@ export default function AccountDangerZone({ user }: Props) {
     }
 
     function handleDelete() {
-        deleteAccount(id!, {
+        remove.mutate(id!, {
             onSuccess: () => navigate("/accounts"),
         });
     }
@@ -110,7 +108,7 @@ export default function AccountDangerZone({ user }: Props) {
                     <Button
                         size="sm"
                         variant="ghost"
-                        disabled={isDeleting}
+                        disabled={remove.isPending}
                         onClick={handleClose}
                     >
                         Cancel
@@ -118,8 +116,7 @@ export default function AccountDangerZone({ user }: Props) {
                     <Button
                         size="sm"
                         variant="error"
-                        loading={isDeleting}
-                        disabled={isDeleting}
+                        loading={remove.isPending}
                         onClick={handleDelete}
                     >
                         Delete account

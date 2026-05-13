@@ -6,6 +6,7 @@ import { usePermissions } from "../hooks";
 import PermissionsCheckbox from "./PermissionsCheckBox";
 import { getErrorsMessages } from "@/app/utils";
 import { Can } from "@/components/Guard/Can";
+import { toSnakeCase } from "../utils";
 
 interface Props {
     onSuccess?: (msg:string) => void;
@@ -18,7 +19,6 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
     
     const { mutate: createRole, isPending } = useRoles.create();
     const { data } = usePermissions.getPermissions();
-    console.log(data);
     const permissions = data?.permissions ?? [];
     const grouped     = data?.grouped     ?? {};
     const defaultPermission = data?.default;
@@ -100,7 +100,7 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
                             type="text"
                             placeholder="e.g. billing-manager"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setName(toSnakeCase(e.target.value))}
                             disabled={isPending}
                             required
                             maxLength={50}

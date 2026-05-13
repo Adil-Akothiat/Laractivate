@@ -2,12 +2,13 @@ import { api } from "@/app/services/api";
 import type { FilterRolesParams, StoreRolePayload, UpdateRolePayload } from "../types";
 
 const route = '/access/rbac';
-export const getRoles = ({ page = 1, search, group, permission }: FilterRolesParams = {}) => {
+export const getRoles = ({ page = 1, search, group, permission, all }: FilterRolesParams = {}) => {
     const params = new URLSearchParams();
     params.set('page', String(page));
     if (search)     params.set('search',     search);
     if (group)      params.set('group',      group);
     if (permission) params.set('permission', permission);
+    if(all) params.set('all', 'true');
 
     return api.get(`${route}/roles?${params.toString()}`);
 };

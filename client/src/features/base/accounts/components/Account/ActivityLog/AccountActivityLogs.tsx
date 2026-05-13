@@ -1,19 +1,20 @@
 import { Logs } from "lucide-react";
 import { useState } from "react";
-import type { ActivityLogProps } from "@/features/base/settings/types";
 import LogCard from "@/features/base/shared/components/LogCard";
 import { ComponentLoader } from "@/components/Loaders";
-import { useAccounts } from "@/features/base/accounts";
+import { useAccountLogs } from "@/features/base/accounts";
 import { Pagination } from "@/components";
+import type { LogSchema } from "@/features/base/shared";
 
 type Props = {
     userId:string;
 }
 export default function AccountActivityLogs({ userId }:Props) {
     const [page, setPage] = useState(1);
-    const { data, isPending } = useAccounts.getActivityLogs(page, userId!);
-    const logs = data?.data?.activityLogs;
-    const activityLogs = logs?.data || [];
+    const { data, isPending } = useAccountLogs(userId, page);
+    const response = data?.data;
+    const activityLogs = response?.data || [];
+    const meta = response?.meta;
     if(isPending) return <ComponentLoader isLoading={isPending}/>
     return (
         <>
@@ -25,15 +26,15 @@ export default function AccountActivityLogs({ userId }:Props) {
             ) : (
                 <>
                     <div className="space-y-2.5">
-                        {activityLogs.map((log: ActivityLogProps) => (
+                        {activityLogs.map((log: LogSchema) => (
                             <LogCard key={log.id} log={log} />
                         ))}
                     </div>
                     <Pagination
                         currentPage={page}
-                        totalPages={logs?.last_page}
-                        total={logs?.total}
-                        perPage={logs?.per_page}
+                        totalPages={meta?.last_page}
+                        total={meta?.total}
+                        perPage={meta?.per_page}
                         onPageChange={setPage}
                         size="xs"
                     />

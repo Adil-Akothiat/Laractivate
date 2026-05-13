@@ -1,30 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import StepIntro from "./StepIntro";
 import StepScan from "./StepScan";
 import StepVerify from "./StepVerify";
 import StepSuccess from "./StepSuccess";
 import { FingerprintPattern } from "lucide-react";
 import { useMe } from "@/app/middlewares/hooks/useMe";
-import { useTwoFactor } from "@/features/base/auth/hooks/useTwoFactor";
 import { ComponentLoader } from "@/components/Loaders";
 import { Modal } from "@/components";
+import type { UserSchema } from "@/features/base/shared";
+import { useTwoFactor } from "../../hooks";
 
-type Step = "intro" | "scan" | "verify" | "success";
+// "idle" = modal closed; other values drive what renders inside the modal
+type ModalStep = "idle" | "scan" | "verify" | "success";
 
 export default function TwoFactorAuth() {
     const { data: info, isPending } = useMe();
+    const user: UserSchema = info?.user;
 
-    const [step, setStep] = useState<Step>("intro");
+    const [modalStep, setModalStep] = useState<ModalStep>("idle");
     const [qrUrl, setQrUrl] = useState("");
     const [isInvalid, setIsInvalid] = useState(false);
-    const [open, setOpen] = useState<boolean>(false);
 
-    // If 2FA is already enabled, jump straight to success screen
-    useEffect(() => {
-        if (info?.user?.two_factor_enabled) {
-            setStep("success");
-        }
-    }, [info?.user?.two_factor_enabled]);
+    // Codes captured fresh from the enable API response.
+    // Only non-empty right after the user just enabled 2FA (shown in StepSuccess).
+    // For already-enabled users, codes come from user.two_factor_recovery_codes via StepIntro.
+    const [freshCodes, setFreshCodes] = useState<string[]>([]);
+
+    const isEnabled = !!user?.two_factor_enabled;
 
     const { mutate: init, isPending: isIniting } = useTwoFactor.init();
 
@@ -36,18 +38,17 @@ export default function TwoFactorAuth() {
         reset: resetEnable,
     } = useTwoFactor.enable();
 
-    // Step 1 → generate secret & get QR
+    // Step 1 — generate secret & receive QR URL
     const handleInit = () => {
         init(undefined, {
             onSuccess: (res) => {
                 setQrUrl(res.data.qrCodeUrl);
-                setStep("scan");
-                setOpen(true);
+                setModalStep("scan");
             },
         });
     };
 
-    // Step 3 → verify OTP and enable 2FA
+    // Step 3 — verify OTP and activate 2FA
     const handleEnable = (otp: string) => {
         const sanitized = otp.replace(/\D/g, "").trim();
         if (sanitized.length !== 6) return;
@@ -57,19 +58,31 @@ export default function TwoFactorAuth() {
             { otp: sanitized },
             {
                 onSuccess: (res) => {
-                    if (res.data.enabled) {
-                        setStep("success");
-                    } else {
-                        setIsInvalid(true);
+                    console.log(res);
+                    if (res.data.success) {
+                        // Grab codes directly from this response — user cache is still stale here
+                        setFreshCodes(res.data.recovery_codes ?? []);
+                        setModalStep("success");
                     }
                 },
-            },
+                onError: ()=> {
+                    setIsInvalid(false);
+                }
+            }
         );
     };
+
+    const handleCloseModal = () => {
+        setModalStep("idle");
+        setFreshCodes([]);
+        resetEnable();
+        setIsInvalid(false);
+    };
+
     if (isPending) return <ComponentLoader isLoading={isPending} />;
 
     return (
-        <div className="py-6 px-3  space-y-6">
+        <div className="py-6 px-3 space-y-6">
             <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
                 <FingerprintPattern size={18} className="text-primary" />
             </div>
@@ -81,28 +94,35 @@ export default function TwoFactorAuth() {
                     Secure your account with an authenticator app.
                 </p>
             </div>
+
+            {/*
+             * StepIntro is always visible.
+             * When enabled it shows: status badge + Disable button + existing recovery codes.
+             * When disabled it shows: status badge + Enable button.
+             */}
             <StepIntro
-                onEnable={handleInit}
-                onDisable={() => setStep("intro")}
+                isEnabled={isEnabled}
                 isPending={isIniting}
-                step={step}
+                recoveryCodes={user?.two_factor_recovery_codes ?? []}
+                onEnable={handleInit}
             />
-            <Modal isOpen={open} onClose={() => setOpen(false)}>
-                {/* Step indicator */}
-                {(step === "scan" || step === "verify") && (
+
+            {/* Modal: scan → verify → success (only during the enable flow) */}
+            <Modal isOpen={modalStep !== "idle"} onClose={handleCloseModal}>
+                {(modalStep === "scan" || modalStep === "verify") && (
                     <ul className="steps steps-horizontal w-full mb-8 text-xs">
                         <li className="step step-primary">Scan QR</li>
-                        <li
-                            className={`step ${step === "verify" ? "step-primary" : ""}`}
-                        >
+                        <li className={`step ${modalStep === "verify" ? "step-primary" : ""}`}>
                             Verify
                         </li>
                     </ul>
                 )}
-                {step === "scan" && (
-                    <StepScan qrUrl={qrUrl} onNext={() => setStep("verify")} />
+
+                {modalStep === "scan" && (
+                    <StepScan qrUrl={qrUrl} onNext={() => setModalStep("verify")} />
                 )}
-                {step === "verify" && (
+
+                {modalStep === "verify" && (
                     <StepVerify
                         onVerify={handleEnable}
                         isPending={isEnabling}
@@ -112,13 +132,15 @@ export default function TwoFactorAuth() {
                         onBack={() => {
                             resetEnable();
                             setIsInvalid(false);
-                            setStep("scan");
+                            setModalStep("scan");
                         }}
                     />
                 )}
-                {step === "success" && (
+
+                {modalStep === "success" && (
                     <StepSuccess
-                        closeHandler={() => setOpen(false)}
+                        recoveryCodes={freshCodes}
+                        closeHandler={handleCloseModal}
                     />
                 )}
             </Modal>

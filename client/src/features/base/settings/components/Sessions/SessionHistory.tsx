@@ -1,11 +1,11 @@
 import { ShieldOff } from "lucide-react";
-import type { UserSession } from "../../types";
 import SessionCard from "@/features/base/shared/components/SessionCard";
 import { Badge, Button } from "@/components";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import { useClearHistory, useRevokeUserSessions } from "@/features/base/settings/hooks/useSessions";
+import type { SessionSchema } from "@/features/base/shared";
 
-export default function SessionHistory({ sessions }: { sessions: UserSession[] }) {
+export default function SessionHistory({ sessions }: { sessions: SessionSchema[] }) {
     const { toast } = useToastContext();
     const { mutate:clearHistory, isPending:isClearing } = useClearHistory();
     const clearHistoryHandler = ()=> {
@@ -17,7 +17,7 @@ export default function SessionHistory({ sessions }: { sessions: UserSession[] }
 
     const { mutate: revoke, isPending } = useRevokeUserSessions();
     
-    const revokeSessionHandler = (session:UserSession) => {
+    const revokeSessionHandler = (session:SessionSchema) => {
         revoke(session.session_id, {
             onSuccess: () => {
                 toast.success("Session revoked!");
@@ -51,7 +51,7 @@ export default function SessionHistory({ sessions }: { sessions: UserSession[] }
                 <p className="text-sm text-base-content/40 py-4 text-center">No recent activity.</p>
             ) : (
                 <ul className="space-y-2">
-                    {sessions.map((session:UserSession, index) => (
+                    {sessions.map((session:SessionSchema, index) => (
                         <SessionCard
                             key={session.session_id || index}
                             session={session}

@@ -1,6 +1,6 @@
 import { Activity, Clock, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { ActivityLogProps } from "@/features/base/settings";
+import type { LogSchema } from "@/features/base/settings";
 
 const eventStyle: Record<string, string> = {
     "auth.login":      "bg-emerald-500/10 text-emerald-600",
@@ -9,7 +9,7 @@ const eventStyle: Record<string, string> = {
 };
 
 type Props = {
-    activities: ActivityLogProps[];
+    activities: LogSchema[];
 };
 
 export function RecentActivity({ activities }: Props) {

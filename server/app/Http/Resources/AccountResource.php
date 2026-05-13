@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use App\Models\RefreshToken;
+use App\Models\{RefreshToken, Roles};
 
 class AccountResource extends UserResource
 {

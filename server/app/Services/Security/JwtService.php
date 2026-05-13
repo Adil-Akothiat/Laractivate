@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Jwt;
+namespace App\Services\Security;
 
 use App\Models\{User, RefreshToken};
 use Illuminate\Support\Str;
@@ -21,8 +21,20 @@ class JwtService
         $this->access_token_key= config('jwt.access_token_key');
     }
 
+    public function createJwtToken(User $user, array $customClaims = [], ?int $ttl = null): string
+    {
+        // Access the guard directly (usually 'api')
+        $guard = auth('api');
+
+        if ($ttl) {
+            $guard->setTTL($ttl);
+        }
+
+        return $guard->claims($customClaims)->fromUser($user);
+    }
+
     // create refresh token (to be store in db)
-    public function create(string $userId, array $metadata): array
+    public function createRefreshToken(string $userId, array $metadata): array
     {
         $token     = Str::random(64); // refresh token
         $expiresAt = Carbon::now()->addMinutes($this->refresh_ttl);

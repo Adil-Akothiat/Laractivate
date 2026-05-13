@@ -1,12 +1,12 @@
 <?php
-namespace App\Services\Auth;
+namespace App\Services\Security;
 
 use App\Models\RefreshToken;
 use App\Services\System\SystemSupportService;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Services\Jwt\JwtService;
+use App\Services\Security\JwtService;
 
 class AuthService
 {
@@ -24,10 +24,11 @@ class AuthService
             throw ValidationException::withMessages(['email' => ['Invalid credentials']]);
         }
         $user = auth()->user();
-        $refreshTokenArray = $this->jwtService->create($user->id, $metadata);
+        $refreshTokenArray = $this->jwtService->createRefreshToken($user->id, $metadata);
         $refreshToken = $refreshTokenArray['token'];
         $id = $refreshTokenArray['id'];
-        $token = JWTAuth::claims(['rtid' => $id])->attempt($credentials);
+        // $token = JWTAuth::claims(['rtid' => $id])->attempt($credentials);
+        $token = $this->jwtService->createJwtToken($user, ['rtid'=>$id]);
         
         if (!$user->is_active) {
             JWTAuth::setToken($token)->invalidate();
@@ -36,6 +37,12 @@ class AuthService
 
         // Handle 2FA Requirement
         if ($user->two_factor_enabled) {
+            $challengeToken = $this->jwtService->createJwtToken($user, ['pending_2fa' => true], 5);
+            return [
+                'requires_2fa' => true,
+                'challenge_token' => $challengeToken, // Replacing the encrypted ID with a JWT
+                'id' => encrypt($user->id) // Optional: keep if your frontend logic requires it
+            ];
             return [
                 'requires_2fa' => true,
                 'id' => encrypt($user->id)

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Access;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\{Request, JsonResponse};
-use App\Services\Access\RbacService;
+use App\Services\Security\RbacService;
 use App\Http\Requests\RoleRequest;
 use App\Models\{Role, Permission};
 use App\Http\Resources\{PermissionCollection, WithPaginationMeta};
@@ -19,6 +19,11 @@ class RbacController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        if($request->has('all')):
+            return response()->json([
+                'roles'=> Role::all()
+            ]);
+        endif;
         $roles = $this->rbacService->rolesList($request->all());
         $roles->load('permissions');
 

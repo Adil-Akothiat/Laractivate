@@ -1,8 +1,9 @@
+import type { UserSchema } from "@/features/base/shared";
 import AccountPasswordCard   from "./AccountPasswordCard";
 import AccountTwoFactorCard  from "./AccountTwoFactorCard";
 
 interface Props {
-    user: any;
+    user: UserSchema;
 }
 
 export default function AccountSecurity({ user }: Props) {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Access;
+namespace App\Services\Security;
 
 use App\Models\{Role, Permission};
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 use App\Http\Resources\PermissionCollection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -13,7 +13,7 @@ class RbacService
 {
     /**
      * List roles with filtering and user counts.
-     */
+    */
     public function rolesList(array $filters): LengthAwarePaginator
     {
         return Role::withCount('users')

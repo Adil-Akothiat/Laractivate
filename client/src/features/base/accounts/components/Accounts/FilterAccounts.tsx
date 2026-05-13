@@ -1,7 +1,7 @@
 import { useAccountsFilter } from "@/features/base/accounts";
-import { type RoleProps } from "@/features/base/rbac";
 import { Button, Select } from "@/components";
 import { useState } from "react";
+import type { RoleSchema } from "@/features/base/shared";
 
 const STATUS_OPTIONS = [
     { label: "All", value: "" },
@@ -11,7 +11,7 @@ const STATUS_OPTIONS = [
 
 interface FilterAccountsProps {
     onApply?: () => void;
-    roles:RoleProps[];
+    roles:RoleSchema[];
 }
 
 export default function FilterAccounts({ onApply, roles }: FilterAccountsProps) {
@@ -47,7 +47,7 @@ export default function FilterAccounts({ onApply, roles }: FilterAccountsProps) 
                         selectSize="sm"
                         label="Role"
                         options={roles?.map(
-                            (r: RoleProps) => ({
+                            (r: RoleSchema) => ({
                                 label: r.name,
                                 value: r.name,
                             }),

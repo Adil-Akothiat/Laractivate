@@ -21,7 +21,7 @@ class RolePermissionSeeder extends Seeder
 
         // 1. Give EVERYTHING to Super Admin
         $rolePermissions[] = [
-            'roles_id' => $roles['Super Admin'],
+            'roles_id' => $roles['SUPER_ADMIN'],
             'permissions_id' => $permissions['all'],
         ];
 
@@ -38,7 +38,7 @@ class RolePermissionSeeder extends Seeder
         foreach ($adminPerms as $permName) {
             if (isset($permissions[$permName])) {
                 $rolePermissions[] = [
-                    'roles_id' => $roles['Administrator'],
+                    'roles_id' => $roles['ADMINISTRATOR'],
                     'permissions_id' => $permissions[$permName],
                 ];
             }

@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
             'is_active' => $this->is_active,
             'two_factor_enabled' => $this->two_factor_enabled,
+            'two_factor_recovery_codes' => $this->getRecoveryCodes(),
             'two_factor_secret' => $this->two_factor_secret,
             'roles' => $this->roles,
             'rolesSet' => $this->roles->pluck('name'),
@@ -33,5 +34,18 @@ class UserResource extends JsonResource
                 return $role->permissions;
             })
         ];
+    }
+    protected function getRecoveryCodes(): ?array
+    {
+        if (!$this->two_factor_recovery_codes) {
+            return null;
+        }
+
+        try {
+            return json_decode(decrypt($this->two_factor_recovery_codes), true);
+        } catch (\Exception $e) {
+            // Return null if decryption fails (e.g., after an APP_KEY change)
+            return null;
+        }
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->boolean('two_factor_enabled')->default(false);
             $table->text('two_factor_secret')->nullable();
+            $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamps();
         });
 

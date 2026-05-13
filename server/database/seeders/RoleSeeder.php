@@ -11,10 +11,10 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['name' => 'Super Admin', 'is_locked' => true],
-            ['name' => 'Administrator', 'is_locked' => false],
-            ['name' => 'Manager', 'is_locked' => false],
-            ['name' => 'Member', 'is_locked' => false],
+            ['name' => 'SUPER_ADMIN', 'is_locked' => true],
+            ['name' => 'ADMINISTRATOR', 'is_locked' => false],
+            ['name' => 'MANAGER', 'is_locked' => false],
+            ['name' => 'MEMBER', 'is_locked' => false],
         ];
 
         foreach ($roles as $role) {

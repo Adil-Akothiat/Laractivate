@@ -1,9 +1,9 @@
 import { useState } from "react";
 import AccountProfileCard      from "./AccountProfileCard";
 import AccountProfileEditModal from "./AccountProfileEditModal";
-import type { UserProps } from "@/features/base/shared";
+import type { UserSchema } from "@/features/base/shared";
 
-type Props = { user: UserProps };
+type Props = { user: UserSchema };
 
 export default function AccountProfile({ user }: Props) {
     const [open, setOpen] = useState(false);

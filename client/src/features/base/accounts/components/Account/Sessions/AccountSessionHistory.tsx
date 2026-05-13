@@ -1,10 +1,10 @@
 import { Clock, Trash2 } from "lucide-react";
 import { Badge, Button, Card, EmptyState } from "@/components";
-import type { UserSession } from "@/features/base/settings/types";
 import SessionCard from "@/features/base/shared/components/SessionCard";
+import type { SessionSchema } from "@/features/base/shared";
 
 interface Props {
-    sessions:        UserSession[];
+    sessions:        SessionSchema[];
     isClearingHistory: boolean;
     onClearHistory:  () => void;
 }

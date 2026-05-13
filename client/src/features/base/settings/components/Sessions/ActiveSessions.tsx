@@ -1,11 +1,11 @@
 import { ShieldCheck } from "lucide-react";
-import type { UserSession } from "../../types";
 import SessionCard from "@/features/base/shared/components/SessionCard";
 import { Badge, Button } from "@/components";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useToastContext } from "@/app/hooks/common";
 import { useRevokeAllSessions, useRevokeUserSessions } from "@/features/base/settings/hooks/useSessions";
+import type { SessionSchema } from "@/features/base/shared";
 
-export default function ActiveSessions({ sessions }: { sessions: UserSession[] }) {
+export default function ActiveSessions({ sessions }: { sessions: SessionSchema[] }) {
     const { mutate: revokeAll, isPending:isPendingAll } = useRevokeAllSessions();
     const { toast } = useToastContext();
     const revokeAllHandler = ()=> {
@@ -21,7 +21,7 @@ export default function ActiveSessions({ sessions }: { sessions: UserSession[] }
 
     const { mutate: revoke, isPending } = useRevokeUserSessions();
 
-    const revokeSessionHandler = (session:UserSession) => {
+    const revokeSessionHandler = (session:SessionSchema) => {
         revoke(session.session_id, {
             onSuccess: () => {
                 toast.success("Session revoked!");

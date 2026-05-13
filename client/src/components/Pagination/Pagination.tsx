@@ -1,10 +1,10 @@
 import React from "react";
 
 interface PaginationProps {
-  currentPage:  number;
-  totalPages:   number;
-  total:        number;
-  perPage:      number;
+  currentPage?:  number;
+  totalPages?:   number;
+  total?:        number;
+  perPage?:      number;
   onPageChange: (page: number) => void;
   size?:        "xs" | "sm" | "md";
   className?:   string;
@@ -20,15 +20,15 @@ function generatePages(current: number, total: number): (number | "...")[] {
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  total,
-  perPage,
+  currentPage=0,
+  totalPages=0,
+  total=0,
+  perPage=0,
   onPageChange,
   size = "sm",
   className = "",
 }) => {
-  if (totalPages <= 1) return null;
+  if ((totalPages) <= 1) return null;
 
   const from  = (currentPage - 1) * perPage + 1;
   const to    = Math.min(currentPage * perPage, total);

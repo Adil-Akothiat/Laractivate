@@ -1,13 +1,13 @@
 import { Crown, ShieldCheck, ShieldOff } from "lucide-react";
 import { imageRender } from "@/app/utils/imagePreviewHandler";
 import { Avatar, Badge, type Column } from "@/components";
-import type { ManagedUser } from "@/features/base/accounts/types";
+import type { UserSchema } from "@/features/base/shared";
 
-export const columns: Column<ManagedUser>[] = [
+export const columns: Column<UserSchema>[] = [
   {
     key:    'first_name',
     header: 'User',
-    render: (row:ManagedUser) => {
+    render: (row:UserSchema) => {
       const fullName = `${row.first_name ?? ''} ${row.last_name ?? ''}`.trim();
       const initials = [row.first_name, row.last_name]
         .filter(Boolean)
@@ -38,14 +38,14 @@ export const columns: Column<ManagedUser>[] = [
   {
     key:    'email',
     header: 'Email',
-    render: (row:ManagedUser) => (
+    render: (row:UserSchema) => (
       <span className="text-sm text-base-content/60">{row.email ?? '—'}</span>
     ),
   },
   {
     key:    'roles',
     header: 'Roles',
-    render: (row:ManagedUser) => (
+    render: (row:UserSchema) => (
       <div className="flex flex-wrap gap-1">
         {
           row.roles?.length ?
@@ -61,7 +61,7 @@ export const columns: Column<ManagedUser>[] = [
   {
     key:    'is_active',
     header: 'Status',
-    render: (row:ManagedUser) =>
+    render: (row:UserSchema) =>
       row.is_active ? (
         <span className="badge badge-success badge-sm gap-1">
           <ShieldCheck size={10} /> Active

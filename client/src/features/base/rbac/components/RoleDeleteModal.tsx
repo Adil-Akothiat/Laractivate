@@ -1,11 +1,11 @@
 import { useRef, useEffect } from 'react'
 import { useRoles } from '../index';
-import type { RoleProps } from '../types'
 import { getErrorsMessages } from '@/app/utils';
 import { Button } from '@/components';
+import type { RoleSchema } from '../../shared';
 
 interface Props {
-  role: RoleProps
+  role: RoleSchema
   onSuccess: () => void
   onCancel: () => void
 }

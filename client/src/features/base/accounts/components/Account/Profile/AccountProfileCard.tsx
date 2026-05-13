@@ -1,14 +1,14 @@
 import { Mail, CheckCircle, XCircle, Edit } from "lucide-react";
 import { Badge, Button, Card } from "@/components";
 import { useParams } from "react-router-dom";
-import { useAccounts } from "@/features/base/accounts";
-import { useToastContext } from "@/app/hooks/useToastContext";
+import { useAccountMutations } from "@/features/base/accounts";
+import { useToastContext } from "@/app/hooks/common";
 import { getErrorsMessages } from "@/app/utils";
 import AvatarUploader from "@/components/FileUploader/AvatarUploader";
-import type { UserProps } from "@/features/base/shared";
+import type { UserSchema } from "@/features/base/shared";
 
 type Props = {
-    user:    UserProps;
+    user:    UserSchema;
     onEdit:  () => void;
 };
 
@@ -16,13 +16,10 @@ export default function AccountProfileCard({ user, onEdit }: Props) {
     const { id } = useParams<{ id: string }>();
 
     const { toast } = useToastContext();
-    const {
-        mutate:    uploadAvatar,
-        isPending: isUploading
-    } = useAccounts.updateAvatar();
+    const { updateAvatar } = useAccountMutations();
 
     const uploadAvatarHandler = (formData: FormData) => {
-        uploadAvatar(
+        updateAvatar.mutate(
             { id: id!, data: formData },
             {
                 onSuccess: ()=> {
@@ -44,7 +41,7 @@ export default function AccountProfileCard({ user, onEdit }: Props) {
                     avatarUrl={user?.avatar}
                     firstName={user?.first_name}
                     lastName={user?.last_name}
-                    isUploading={isUploading}
+                    isUploading={updateAvatar.isPending}
                     compact
                     onUpload={uploadAvatarHandler}
                 />

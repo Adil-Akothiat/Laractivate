@@ -1,63 +1,68 @@
-import { useState, type FormEvent } from 'react';
-import { type CreateUserPayload, useAccounts } from '@/features/base/accounts';
-import AccountForm from './AccountForm';
-import type { RoleProps } from '@/features/base/rbac';
-import { Modal } from '@/components';
+import { useState, type FormEvent } from "react";
+import {
+  type AccountFormValues,
+  type CreateAcccountProps,
+  useAccountMutations,
+  type UserCreatePayload,
+} from "@/features/base/accounts";
+import AccountForm from "./AccountForm";
+import { LoadingOverlay, Modal } from "@/components";
+import { useToastContext } from "@/app/hooks/common";
+import { getErrorsMessages } from "@/app/utils";
+import { useRoles } from "@/features/base/rbac";
 
-interface Props {
-  isOpen: boolean;
-  roles: RoleProps[];
-  onClose: () => void;
-}
-
-const CreateAccount = ({ isOpen, roles, onClose }: Props) => {
-  const { mutate, isPending, isError, error, reset } = useAccounts.create();
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    passwordConfirmation: '',
+const CreateAccount = ({ isOpen, onClose }: CreateAcccountProps) => {
+  const { toast } = useToastContext();
+  const { create } = useAccountMutations();
+  const { data, isPending } = useRoles.getRoles({ all: true });
+  const [form, setForm] = useState<AccountFormValues>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
     rolesState: [] as string[],
     isActive: true,
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload: CreateUserPayload = {
-      first_name:            form.firstName,
-      last_name:             form.lastName,
-      email:                 form.email,
-      password:              form.password,
+    const payload: UserCreatePayload = {
+      first_name: form.firstName,
+      last_name: form.lastName,
+      email: form.email,
+      password: form.password,
       password_confirmation: form.passwordConfirmation,
-      is_active:             form.isActive,
-      roles:                form.rolesState,
+      is_active: form.isActive,
+      rolesSet: form.rolesState,
     };
 
-    mutate(payload, {
-      onSuccess: () => {
-        reset();
+    create.mutate(payload, {
+      onSuccess: (res) => {
+        create.reset();
         onClose();
+        toast.success(res?.data?.message || "");
+      },
+      onError: (err: any) => {
+        toast.error(getErrorsMessages(err).join("|"));
       },
     });
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Create new user account"
-    >
-      <AccountForm
-        form={form}
-        roles={roles}
-        handleSubmit={handleSubmit}
-        setForm={setForm}
-        isPending={isPending}
-        isError={isError}
-        error={error}
-        onClose={onClose}
-      />
+    <Modal isOpen={isOpen} onClose={onClose} title="Create new user account">
+      {isPending ? (
+        <LoadingOverlay />
+      ) : (
+        <AccountForm
+          form={form}
+          roles={data.roles || []}
+          handleSubmit={handleSubmit}
+          setForm={setForm}
+          isPending={create.isPending}
+          onClose={onClose}
+        />
+      )}
     </Modal>
   );
 };

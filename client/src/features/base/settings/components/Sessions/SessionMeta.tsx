@@ -1,7 +1,7 @@
+import type { SessionSchema } from "@/features/base/shared";
 import { Clock, Globe, MapPin, TimerIcon } from "lucide-react";
-import type { UserSession } from "../../types";
 
-export default function SessionMeta({ session }: { session: UserSession }) {
+export default function SessionMeta({ session }: { session: SessionSchema }) {
     const location = [session.city, session.country].filter(Boolean).join(", ");
 
     return (

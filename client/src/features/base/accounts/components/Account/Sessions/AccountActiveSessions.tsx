@@ -1,12 +1,11 @@
 import { LogOut, WifiOff } from "lucide-react";
 import { Button, Card, EmptyState } from "@/components";
-import type { UserSession } from "@/features/base/settings/types";
 import SessionCard from "@/features/base/shared/components/SessionCard";
+import type { SessionSchema } from "@/features/base/shared";
 
 interface Props {
-    sessions:       UserSession[];
-    // isRevoking:     boolean;
-    onRevoke:       (session: UserSession) => void;
+    sessions:       SessionSchema[];
+    onRevoke:       (session: SessionSchema) => void;
     onRevokeAll:    () => void;
 }
 

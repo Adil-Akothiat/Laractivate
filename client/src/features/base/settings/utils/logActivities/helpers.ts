@@ -1,4 +1,4 @@
-import type { LogPropertiesProps } from "../../types";
+import type { LogPropertiesSchema } from "../../types";
 
 
 export function relativeTime(dateStr: string) {
@@ -23,7 +23,7 @@ export function fullDate(dateStr: string) {
     });
 }
 
-export function parseDevice(properties: LogPropertiesProps | null) {
+export function parseDevice(properties: LogPropertiesSchema | null) {
     if (!properties) return null;
     const parts: string[] = [];
     if (properties.browser) parts.push(properties.browser);

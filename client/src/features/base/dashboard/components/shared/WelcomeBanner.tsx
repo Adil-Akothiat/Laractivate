@@ -1,8 +1,8 @@
-import type { UserProps } from "@/features/base/shared";
+import type { UserSchema } from "@/features/base/shared";
 
 
 type Props = {
-    user: UserProps;
+    user: UserSchema;
 };
 
 const hour = new Date().getHours();
