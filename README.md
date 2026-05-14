@@ -37,23 +37,15 @@ cp .env.example .env
 ```bash
 docker-compose up -d --build
 ```
+> ⏳ The first build may take a few minutes.
 
-> ⏳ The first build may take a few minutes. Run `docker-compose logs -f` to follow progress.
-
-### 4. Install Dependencies
-
-```bash
-docker-compose exec app composer install
-docker-compose exec client npm install
-```
-
-### 5. Setup Database
+### 4. Setup Database
 
 ```bash
 docker-compose exec app php artisan migrate --seed
 ```
 
-### 4. Application Keys Configuration 🔑
+### 5. Application Keys Configuration 🔑
 
 Because Laractivate uses Docker to manage environment variables, the standard `php artisan` commands cannot modify your `.env` file directly. You must generate the keys and manually add them to your root `.env` file.
 
@@ -155,7 +147,18 @@ docs/
 ### Stop Containers
 
 ```bash
-docker-compose down
+docker-compose stop
+```
+### Start Containers
+
+```bash
+docker-compose start
+```
+
+### Restart Containers
+
+```bash
+docker-compose restart
 ```
 
 ### View Logs
@@ -174,4 +177,21 @@ docker-compose restart client
 
 ```bash
 docker-compose exec app php artisan migrate:fresh --seed
+```
+
+### The "Bridge" Command: `docker-compose exec`
+
+```bash
+docker-compose exec [service_name] [command]
+```
+
+#### Example
+- Client:
+```bash
+docker-compose exec client npm install <package-name>
+```
+
+- Server:
+```bash
+docker-compose exec app composer require <package-name>
 ```

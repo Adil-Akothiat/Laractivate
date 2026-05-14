@@ -12,6 +12,7 @@ services:
       - ./server/.env
     volumes:
       - ./server:/var/www
+      - vendor-cache:/var/www/vendor
     depends_on:
       - db
     networks:
@@ -58,7 +59,7 @@ services:
       - ./client/.env
     volumes:
       - ./client:/app
-      - /app/node_modules
+      - node-cache:/app/node_modules
     depends_on:
       - app
     networks:
@@ -67,3 +68,6 @@ services:
 networks:
   app-network:
     driver: bridge
+volumes:
+  node-cache:
+  vendor-cache:

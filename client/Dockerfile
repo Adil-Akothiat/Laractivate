@@ -8,6 +8,11 @@ RUN npm install
 
 COPY . .
 
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Set the entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 EXPOSE 5173
 
 CMD ["npm", "run", "dev", "--", "--host"]
