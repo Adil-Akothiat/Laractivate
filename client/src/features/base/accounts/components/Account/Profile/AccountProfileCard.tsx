@@ -2,8 +2,6 @@ import { Mail, CheckCircle, XCircle, Edit } from "lucide-react";
 import { Badge, Button, Card } from "@/components";
 import { useParams } from "react-router-dom";
 import { useAccountMutations } from "@/features/base/accounts";
-import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
 import AvatarUploader from "@/components/FileUploader/AvatarUploader";
 import type { UserSchema } from "@/features/base/shared";
 
@@ -14,22 +12,11 @@ type Props = {
 
 export default function AccountProfileCard({ user, onEdit }: Props) {
     const { id } = useParams<{ id: string }>();
-
-    const { toast } = useToastContext();
     const { updateAvatar } = useAccountMutations();
 
     const uploadAvatarHandler = (formData: FormData) => {
         updateAvatar.mutate(
-            { id: id!, data: formData },
-            {
-                onSuccess: ()=> {
-                    toast.success("Avatar updated successfully");
-                },
-                onError: (err: any)=> {
-                    const message = getErrorsMessages(err).join(", ") || "Failed to update avatar";
-                    toast.error(message);
-                }
-            }
+            { id: id!, data: formData }
         );
     };
 

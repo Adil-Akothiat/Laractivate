@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { ConfirmDialog } from "@/components";
-import { useAccountMutations } from "@/features/base/accounts";
+import { useAccountMutations, useAccountSessions } from "@/features/base/accounts";
 import { AccountActiveSessions } from "./AccountActiveSessions";
 import { AccountSessionHistory } from "./AccountSessionHistory";
-import type { SessionResponseSchema, SessionSchema } from "@/features/base/shared";
-import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
+import type { SessionSchema } from "@/features/base/shared";
 
 interface Props {
-    session: SessionResponseSchema;
     userId:   string;
 }
 
-export default function AccountSessions({ session, userId }: Props) {
+export default function AccountSessions({ userId }: Props) {
     const [revokeTarget,  setRevokeTarget]  = useState<SessionSchema | null>(null);
     const [revokeAll,     setRevokeAll]     = useState(false);
     const [clearHistory,  setClearHistory]  = useState(false);
 
-    const { toast } = useToastContext();
+    const { data } = useAccountSessions(userId);
+    console.log(data);
     const { revokeSession, revokeAllSessions, clearSessionHistory } = useAccountMutations();
     function confirmRevoke() {
         if (!revokeTarget) return;
@@ -28,24 +26,16 @@ export default function AccountSessions({ session, userId }: Props) {
 
     function confirmRevokeAll() {
         revokeAllSessions.mutate(userId, {
-            onSuccess: (res) => {
+            onSuccess: () => {
                 setRevokeAll(false);
-                toast.success(res.data.message);
             },
-            onError: (err:any)=> {
-                toast.error(getErrorsMessages(err).join('|'));
-            }
         });
     }
 
     function confirmClearHistory() {
         clearSessionHistory.mutate(userId, {
-            onSuccess: (resp) =>{
+            onSuccess: () =>{
                 setClearHistory(false);
-                toast.success(resp.data.message);
-            },
-            onError: (err:any)=> {
-                toast.success(getErrorsMessages(err).join('|'));
             }
         });
     }
@@ -53,7 +43,7 @@ export default function AccountSessions({ session, userId }: Props) {
     return (
         <>
             <div className="flex flex-col gap-4">
-                <AccountActiveSessions
+                {/* <AccountActiveSessions
                     sessions={session.active}
                     onRevoke={setRevokeTarget}
                     onRevokeAll={() => setRevokeAll(true)}
@@ -62,7 +52,7 @@ export default function AccountSessions({ session, userId }: Props) {
                     sessions={session.history}
                     isClearingHistory={clearSessionHistory.isPending}
                     onClearHistory={() => setClearHistory(true)}
-                />
+                /> */}
             </div>
 
             {/* Revoke single */}

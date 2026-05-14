@@ -2,8 +2,6 @@ import { Mail } from "lucide-react";
 import { Button, Input, Modal, Switch } from "@/components";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { getErrorsMessages } from "@/app/utils";
-import { useToastContext } from "@/app/hooks/common";
 import { FormControl } from "@/components/FormControls";
 import type { UserSchema } from "@/features/base/shared";
 import { useAccountMutations } from "../../../hooks";
@@ -29,7 +27,6 @@ export default function AccountProfileEditModal({ user, isOpen, onClose }: Props
     });
 
     const { update } = useAccountMutations();
-    const { toast } = useToastContext();
 
     const handleSave = () => {
         update.mutate(
@@ -43,12 +40,7 @@ export default function AccountProfileEditModal({ user, isOpen, onClose }: Props
             },
             {
                 onSuccess: ()=> {
-                    toast.success("Profile updated successfully");
                     onClose();
-                },
-                onError: (err: any)=> {
-                    const message = getErrorsMessages(err).join(", ") || "Failed to update profile";
-                    toast.error(message);
                 }
             },
         );

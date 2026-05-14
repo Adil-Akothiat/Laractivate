@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\{LoginRequest, RegisterRequest, ForgotPasswordRequest};
 use App\Services\System\SessionService;
 use App\Services\Security\{AuthService, JwtService};
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller

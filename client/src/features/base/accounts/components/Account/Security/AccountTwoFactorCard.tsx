@@ -1,8 +1,6 @@
 import { Shield, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Card, Badge, Button } from "@/components";
-import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
 import { useAccountMutations } from "@/features/base/accounts";
 import Disable2FAModal from "@/features/base/shared/components/2FA/Disable2FAModal";
 import type { UserSchema } from "@/features/base/shared";
@@ -13,7 +11,6 @@ interface Props {
 
 export default function AccountTwoFactorCard({ user }: Props) {
     const [open, setOpen] = useState(false);
-    const { toast } = useToastContext();
     // Initialize the hook
     const { disableTwoFactor } = useAccountMutations();
     const isEnabled = !!user?.two_factor_enabled;
@@ -24,15 +21,6 @@ export default function AccountTwoFactorCard({ user }: Props) {
             {
                 onSuccess: () => {
                     setOpen(false);
-                    toast.success(
-                        "Two-Factor Authentication disabled successfully",
-                    );
-                },
-                onError: (err: any) => {
-                    const message =
-                        getErrorsMessages(err).join("\n") ||
-                        "Failed to disable Two-Factor Authentication";
-                    toast.error(message);
                 },
             },
         );

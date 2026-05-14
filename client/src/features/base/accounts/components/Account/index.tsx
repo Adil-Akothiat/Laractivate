@@ -13,11 +13,11 @@ import {
     ShieldCheck,
     Lock,
     Trash2,
-    // Globe,
+    Globe,
     Logs,
 } from "lucide-react";
 import Container from "@/components/Container";
-// import AccountSessions from "./Sessions/AccountSession";
+import AccountSessions from "./Sessions/AccountSession";
 import AccountAccess from "./Access/AccountAccess";
 import AccountActivityLogs from "./ActivityLog/AccountActivityLogs";
 import NotFoundPage from "@/app/pages/app/404";
@@ -60,12 +60,12 @@ export default function AccountDetails() {
             icon: <Trash2 size={15} />,
             content: <AccountDangerZone user={user} />,
         },
-        // {
-        //     key: "sessions",
-        //     label: "Sessions",
-        //     icon: <Globe size={15} />,
-        //     content: <AccountSessions session={{}} userId={user.id} />,
-        // },
+        {
+            key: "sessions",
+            label: "Sessions",
+            icon: <Globe size={15} />,
+            content: <AccountSessions userId={user.id} />,
+        },
         {
             key: "activity-logs",
             label: "Activity Logs",

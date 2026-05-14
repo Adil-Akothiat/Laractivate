@@ -1,5 +1,5 @@
 import type { PasswordSchema } from "@/app/types";
-import type { RoleSchema, UserSchema } from "../../shared";
+import type { UserSchema } from "../../shared";
 
 // Data Schema
 

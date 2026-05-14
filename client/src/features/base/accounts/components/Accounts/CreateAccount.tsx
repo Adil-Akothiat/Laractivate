@@ -7,12 +7,9 @@ import {
 } from "@/features/base/accounts";
 import AccountForm from "./AccountForm";
 import { LoadingOverlay, Modal } from "@/components";
-import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
 import { useRoles } from "@/features/base/rbac";
 
 const CreateAccount = ({ isOpen, onClose }: CreateAcccountProps) => {
-  const { toast } = useToastContext();
   const { create } = useAccountMutations();
   const { data, isPending } = useRoles.getRoles({ all: true });
   const [form, setForm] = useState<AccountFormValues>({
@@ -38,13 +35,9 @@ const CreateAccount = ({ isOpen, onClose }: CreateAcccountProps) => {
     };
 
     create.mutate(payload, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         create.reset();
         onClose();
-        toast.success(res?.data?.message || "");
-      },
-      onError: (err: any) => {
-        toast.error(getErrorsMessages(err).join("|"));
       },
     });
   };

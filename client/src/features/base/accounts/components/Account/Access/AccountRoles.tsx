@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card, Button, EmptyState } from "@/components";
 import { useRoles } from "@/features/base/rbac";
-import { useAccountMutations, useAccounts } from "@/features/base/accounts";
+import { useAccountMutations } from "@/features/base/accounts";
 import { RoleListItem } from "./RoleListItem";
 import { AssignRoleModal } from "./AssignRoleModal";
 import { RemoveRoleConfirmModal } from "./RemoveRoleConfirmModal";
@@ -30,7 +30,7 @@ export default function AccountRoles({ user }: Props) {
     function handleAssign(roleId: string) {
         setAssigningId(roleId);
         update.mutate(
-            { id: id!, data: { roles: [...assignedIds, roleId] } },
+            { id: id!, data: { rolesSet: [...assignedIds, roleId] } },
             {
                 onSuccess: () => setOpen(false),
                 onSettled: () => setAssigningId(null),
@@ -61,7 +61,7 @@ export default function AccountRoles({ user }: Props) {
     function commitRemove(roleId: string) {
         update.mutate({
             id: id!,
-            data: { roles: assignedIds.filter((rid) => rid !== roleId) },
+            data: { rolesSet: assignedIds.filter((rid) => rid !== roleId) },
         });
         setRemoveGuard(null);
     }

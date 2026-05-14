@@ -21,6 +21,7 @@ Route::prefix('accounts')->group(function() {
         Route::delete('/{user}/security/two-factor', [AccountsController::class, 'disableTwoFactor']);
         
         // session management
+        Route::get('/{user}/sessions', [AccountsController::class, 'getSessions']);
         Route::put('/{user}/sessions/{sessionId}', [AccountsController::class, 'revokeSession']);
         Route::put('/{user}/sessions', [AccountsController::class, 'revokeAllSessions']);
         Route::delete('/{user}/sessions/clear-history', [AccountsController::class, 'clearHistory']);

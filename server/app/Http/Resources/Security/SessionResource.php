@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Security;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\Security\JwtService;
-// use Illuminate\Support\Facades\Log;
+use App\Http\Resources\System\BaseResource;
 
-class SessionResource extends JsonResource
+class SessionResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +17,6 @@ class SessionResource extends JsonResource
     {
         $jwtService = new JwtService();
         $currentTokenHash = hash('sha256', $request->cookie($jwtService->refresh_token_key));
-        // Log::info('TOKEN1', ["1"=> $request->cookie('refresh_token')]);
-        // Log::info('TOKEN2', ["2"=> $this->token_hash]);
-        // Log::info('TOKEN3', ["3"=> $currentTokenHash]);
         return [
             ...($this->metadata ?? []),
             'session_id'  => $this->id,

@@ -11,7 +11,6 @@ import { useAccountMutations } from "@/features/base/accounts"
 import { useParams } from "react-router-dom";
 import { getErrorsMessages } from "@/app/utils";
 import { FormControl } from "@/components/FormControls";
-import { useToastContext } from "@/app/hooks/common";
 
 export default function AccountPasswordCard() {
     const { id } = useParams<{ id: string }>();
@@ -21,8 +20,6 @@ export default function AccountPasswordCard() {
         password: "",
         password_confirmation: "",
     });
-
-    const { toast } = useToastContext();
     const { changePassword } = useAccountMutations();
 
     const handleClose = () => {
@@ -37,13 +34,9 @@ export default function AccountPasswordCard() {
     const handleSubmit = () => {
         changePassword.mutate({ id: id!, data: form }, 
             { 
-                onSuccess: (res)=> {
-                    toast.success(res.data?.message);
+                onSuccess: ()=> {
                     handleClose();
                 },
-                onError: (err:any)=> {
-                    toast.error(getErrorsMessages(err).join('|'))
-                }
             }
         );
     };

@@ -6,7 +6,7 @@ use App\Models\{Role, Permission};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
-use App\Http\Resources\PermissionCollection;
+use App\Http\Resources\Security\PermissionCollection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RbacService

@@ -7,12 +7,10 @@ use Illuminate\Http\{Request, JsonResponse};
 use App\Services\Security\RbacService;
 use App\Http\Requests\RoleRequest;
 use App\Models\{Role, Permission};
-use App\Http\Resources\{PermissionCollection, WithPaginationMeta};
+use App\Http\Resources\Security\PermissionCollection;
 
 class RbacController extends Controller
 {
-    use WithPaginationMeta;
-
     public function __construct(
         protected RbacService $rbacService
     ) {}

@@ -37,12 +37,6 @@ export interface PaginatedResponseSchema<T> {
   meta: PaginationMetaSchema
 }
 
-export interface CollectionSchema<T> {
-  data: T[];
-  links: PaginationLinksSchema;
-  meta: PaginationMetaSchema;
-}
-
 export interface ResourceSchema<T> {
   data: T;
   message?: string; // Useful for success messages from the server

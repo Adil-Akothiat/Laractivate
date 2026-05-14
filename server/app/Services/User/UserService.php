@@ -116,8 +116,8 @@ class UserService
                 if (isset($data['is_active'])) {
                     $updateData['is_active'] = $data['is_active'];
                 }
-                if (isset($data['roles'])) {
-                    $user->roles()->sync($data['roles']);
+                if (isset($data['rolesSet'])) {
+                    $user->roles()->sync($data['rolesSet']);
                 }
             }
             $user->update($updateData);
@@ -125,7 +125,7 @@ class UserService
         });
     }
 
-    /**
+    /** 
      * Handle user deletion with safety checks.
      */
     public function deleteAccount(User $user, User $authUser): bool

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreUserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Services\User\UserService;
 use App\Services\System\SessionService;
 use App\Services\Security\JwtService;
@@ -77,13 +77,8 @@ class ProfileController extends Controller
     // sessions management
     public function getSessions(Request $request)
     {
-        $user = $request->user();
-        $sessions = $this->sessionService->getSessions($user);
-
-        return response()->json([
-            'active'  => $sessions['active'] ?? [],
-            'history' => $sessions['history'] ?? [],
-        ]);
+        $sessions = $this->sessionService->getSessions($request->user());
+        return new SessionCollection($sessions);
     }
 
     public function revokeSession(Request $request, string $id)

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Security;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\System\BasePaginatedCollection;
 
-class PermissionCollection extends ResourceCollection
+class PermissionCollection extends BasePaginatedCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -21,9 +21,11 @@ class PermissionCollection extends ResourceCollection
         
         $permissions = PermissionResource::collection($this->collection);
         return [
-            'permissions' => $permissions,
-            'grouped'     => $grouped,
-            'default'       => $this->collection->firstWhere('name', 'dashboard.view'),
+            'data'=> [
+                'permissions' => $permissions,
+                'grouped'     => $grouped,
+                'default'       => $this->collection->firstWhere('name', 'dashboard.view'),
+            ]
         ];
     }
 }

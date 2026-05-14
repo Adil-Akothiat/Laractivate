@@ -6,7 +6,7 @@ use Illuminate\Http\{Request, JsonResponse};
 use Jenssegers\Agent\Agent;
 use Stevebauman\Location\Facades\Location;
 use App\Models\{User, RefreshToken};
-use App\Http\Resources\SessionResource;
+use App\Http\Resources\Security\SessionResource;
 
 class SessionService
 {
@@ -80,32 +80,13 @@ class SessionService
     }
 
     // get Sessions
-    function getSessions(User $user): array
+    public function getSessions(User $user, int $perPage = 10): LengthAwarePaginator
     {
-        $allTokens = RefreshToken::where('users_id', $user->id)
+        return RefreshToken::where('users_id', $user->id)
+            ->orderBy('is_active', 'desc') 
             ->orderBy('updated_at', 'desc')
-            ->limit(10)
-            ->get();
-        
-        // Transform the collection using the Resource
-        $sessions = SessionResource::collection($allTokens)->resolve();
-
-        // Use Laravel Collections to partition the data
-        $partitioned = collect($sessions)->partition(function ($session) {
-            return $session['is_active'] === true;
-        });
-
-        $active = $partitioned[0];
-        $history = $partitioned[1];
-
-        // Ensure current session is at the top of the active list
-        $active = $active->sortByDesc('is_current')->values();
-        $history = $history->values();
-
-        return [
-            'active' => $active,
-            'history' => $history
-        ];
+            ->paginate($perPage)
+            ->withQueryString();
     }
     // revoke session
     public function revokeSession(User $user, string $sessionId): void

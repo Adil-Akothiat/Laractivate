@@ -5,7 +5,7 @@ namespace App\Services\System;
 use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\RefreshToken;
 
 class DashboardService

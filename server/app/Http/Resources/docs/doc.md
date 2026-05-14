@@ -17,7 +17,7 @@ The output filter. Transforms Eloquent models and collections into a consistent,
 
 ```
 Resources/
-├─ AccountResource.php
+├─ UserResource.php
 ├─ PermissionCollection.php
 ├─ PermissionResource.php
 ├─ SessionResource.php
