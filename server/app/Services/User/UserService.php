@@ -42,7 +42,6 @@ class UserService
     public function delete(User $user, string $password): void
     {
         $this->verifyPassword($user, $password);
-
         $user->forceDelete();
     }
 
@@ -98,31 +97,13 @@ class UserService
      */
     public function updateAccount(User $user, array $data, User $authUser): User
     {
-        // Guard: Prevent modifying the primary owner by others
-        if ($user->owner && $authUser->id !== $user->id) {
-            throw ValidationException::withMessages([
-                'user' => ['The primary owner cannot be modified by other admins.']
-            ]);
+        $updateData = collect($data)->only(['first_name', 'last_name'])->toArray();
+        if (!empty($data['password'])) {
+            $updateData['password'] = $data['password'];
         }
-        return DB::transaction(function () use ($user, $data, $authUser) {
-            $updateData = collect($data)->only(['first_name', 'last_name'])->toArray();
-            if (!empty($data['password'])) {
-                $updateData['password'] = $data['password'];
-            }
-
-            // Guard: Self-protection logic
-            // An account admin cannot change their own roles or active status via this endpoint
-            if ($authUser->id !== $user->id) {
-                if (isset($data['is_active'])) {
-                    $updateData['is_active'] = $data['is_active'];
-                }
-                if (isset($data['rolesSet'])) {
-                    $user->roles()->sync($data['rolesSet']);
-                }
-            }
-            $user->update($updateData);
-            return $user->load('roles');
-        });
+        $updateData['is_active'] = $data['is_active'] ?? $user->is_active;
+        $user->update($updateData);
+        return $user->load('roles');
     }
 
     /** 
@@ -130,12 +111,6 @@ class UserService
      */
     public function deleteAccount(User $user, User $authUser): bool
     {
-        if ($authUser->id === $user->id) {
-            throw ValidationException::withMessages(['user' => ['You cannot delete your own account.']]);
-        }
-        if ($user->owner) {
-            throw ValidationException::withMessages(['user' => ['The primary owner cannot be deleted.']]);
-        }
         return $user->delete();
     }
 }

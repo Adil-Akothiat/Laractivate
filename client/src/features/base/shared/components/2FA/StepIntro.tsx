@@ -2,7 +2,7 @@ import { ShieldBan, ShieldCheck, Copy, Check, KeyRound, RefreshCw } from "lucide
 import { useState } from "react";
 import { Badge, Button } from "@/components";
 import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
+import { getErrorsMessagesStr } from "@/app/utils";
 import Disable2FAModal from "@/features/base/shared/components/2FA/Disable2FAModal";
 import { useTwoFactor } from "../../hooks";
 
@@ -34,7 +34,7 @@ const StepIntro = ({ isEnabled, isPending, recoveryCodes, onEnable }: Props) => 
                     toast.success("2FA was disabled successfully");
                 },
                 onError: (err: any) => {
-                    toast.error(getErrorsMessages(err).join("|"));
+                    toast.error(getErrorsMessagesStr(err));
                 },
             }
         );
@@ -49,7 +49,7 @@ const StepIntro = ({ isEnabled, isPending, recoveryCodes, onEnable }: Props) => 
                 toast.success("Recovery codes regenerated");
             },
             onError: (err: any) => {
-                toast.error(getErrorsMessages(err).join("|"));
+                toast.error(getErrorsMessagesStr(err));
             },
         });
     };

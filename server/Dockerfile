@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libzip-dev \
-    libonig-dev
+    libonig-dev \
+    libfcgi-dev
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -21,10 +22,10 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+# ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

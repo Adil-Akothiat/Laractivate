@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\User\UserResource;
+use App\Http\Resources\Security\SessionCollection;
 use App\Services\User\UserService;
 use App\Services\System\SessionService;
 use App\Services\Security\JwtService;
@@ -20,13 +20,18 @@ class ProfileController extends Controller
     ) {}
     public function show(Request $request)
     {
-        return response()->json(new UserResource($request->user()), 200);
+        return new UserResource($request->user());
     }
 
-    public function update(StoreUserRequest $request)
+    public function update(Request $request)
     {
+        $crendentials = $request->validate([
+            'first_name' => 'required|string|max:32',
+            'last_name'  => 'required|string|max:32',
+            'email'      => 'sometimes|email|max:191|unique:users,email'
+        ]);
+        
         $user = $request->user();
-        $crendentials = $request->validated();
         $user->update($crendentials);
 
         return response()->json([
@@ -44,7 +49,6 @@ class ProfileController extends Controller
             $request->user(),
             $request->file('avatar')
         );
-
         return response()->json([
             'message'    => 'Avatar updated successfully.',
             'avatar_url' => $avatarUrl,

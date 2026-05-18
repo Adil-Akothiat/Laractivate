@@ -23,12 +23,12 @@ export { default as Pagination } from "./Pagination/Pagination";
 export { default as Dropdown } from "./Dropdown";
 
 // ─── Overlays ─────────────────────────────────────────────────────────────────
-export { default as Modal } from "./Modal";
-export { default as ConfirmDialog } from "./Dialog/ConfirmDialog";
+export { default as Modal } from "./Modals/Modal";
+export { default as ConfirmModal } from "./Modals/ConfirmModal";
 export { Alert, ToastContainer } from "./Alert";
 
 // ─── Feedback ─────────────────────────────────────────────────────────────────
-export { Spinner, Skeleton, SkeletonCard, SkeletonTable, LoadingOverlay } from "./Loading";
+export { Spinner, Skeleton, SkeletonCard, SkeletonTable, LoadingOverlay } from "./Loaders/Loading";
 export { default as EmptyState } from "./EmptyState";
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────

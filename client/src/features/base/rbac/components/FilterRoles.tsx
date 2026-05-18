@@ -8,30 +8,30 @@ interface FilterRolesProps {
 }
 
 export default function FilterRoles({ onApply }: FilterRolesProps) {
-    const { data } = usePermissions.getPermissions();
+    const { data }   = usePermissions();
     const {
-        group: groupData,
+        group:      groupData,
         permission: permissionData,
         setFilters,
     } = useRolesFilter();
 
-    const groups = data?.grouped ? Object.keys(data.grouped) : [];
+    const groups      = data?.grouped ? Object.keys(data.grouped) : [];
     const permissions = data?.permissions ?? [];
 
-    const [group, setGroup] = useState(groupData);
+    const [group, setGroup]         = useState(groupData);
     const [permission, setPermission] = useState(permissionData);
-    const [applying, setApplying] = useState(false);
+    const [applying, setApplying]   = useState(false);
 
     const handleReset = () => {
         setGroup("");
         setPermission("");
-        setFilters({ group: "", permission: "", page: 1 }); // ← also clear URL
+        setFilters({ group: "", permission: "", page: 1 });
     };
 
     const handleApply = () => {
         setApplying(true);
         setTimeout(() => {
-            setFilters({ group, permission, page: 1 }); // ← reset to page 1
+            setFilters({ group, permission, page: 1 });
             setApplying(false);
             onApply?.();
         }, 300);

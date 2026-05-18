@@ -1,33 +1,15 @@
-import { ShieldOff } from "lucide-react";
-import SessionCard from "@/features/base/shared/components/SessionCard";
-import { Badge, Button } from "@/components";
-import { useToastContext } from "@/app/hooks/common";
-import { useClearHistory, useRevokeUserSessions } from "@/features/base/settings/hooks/useSessions";
-import type { SessionSchema } from "@/features/base/shared";
+import { ShieldOff } from 'lucide-react';
+import SessionCard from '@/features/base/shared/components/SessionCard';
+import { Badge, Button } from '@/components';
+import { useSettingsMutations } from '@/features/base/settings';
+import type { SessionSchema } from '@/features/base/shared';
 
 export default function SessionHistory({ sessions }: { sessions: SessionSchema[] }) {
-    const { toast } = useToastContext();
-    const { mutate:clearHistory, isPending:isClearing } = useClearHistory();
-    const clearHistoryHandler = ()=> {
-        clearHistory("_", {
-            onSuccess: (data)=> toast.success(data.data.message),
-            onError: ()=> toast.error('Clear history failed!')
-        })
-    }
+    const { clearHistory, revokeSession } = useSettingsMutations();
 
-    const { mutate: revoke, isPending } = useRevokeUserSessions();
-    
-    const revokeSessionHandler = (session:SessionSchema) => {
-        revoke(session.session_id, {
-            onSuccess: () => {
-                toast.success("Session revoked!");
-            },
-            onError: () => {
-                toast.error("Session faild!");
-            },
-        });
+    const revokeSessionHandler = (session: SessionSchema) => {
+        revokeSession.mutate(session.session_id);
     };
-
 
     return (
         <div className="space-y-3">
@@ -36,12 +18,12 @@ export default function SessionHistory({ sessions }: { sessions: SessionSchema[]
                     Recent Security Activity
                 </h3>
                 <Button
-                    outline={true}
+                    outline
                     size="xs"
                     variant="default"
                     className="text-gray-500"
-                    onClick={clearHistoryHandler}
-                    loading={isClearing}
+                    onClick={() => clearHistory.mutate(undefined)}
+                    loading={clearHistory.isPending}
                 >
                     Clear history
                 </Button>
@@ -51,18 +33,14 @@ export default function SessionHistory({ sessions }: { sessions: SessionSchema[]
                 <p className="text-sm text-base-content/40 py-4 text-center">No recent activity.</p>
             ) : (
                 <ul className="space-y-2">
-                    {sessions.map((session:SessionSchema, index) => (
+                    {sessions.map((session: SessionSchema, index) => (
                         <SessionCard
                             key={session.session_id || index}
                             session={session}
                             active={false}
                             badge={
                                 session.revoked ? (
-                                    <Badge
-                                        size="xs"
-                                        variant="error"
-                                        outline={true}
-                                    >
+                                    <Badge size="xs" variant="error" outline>
                                         <ShieldOff size={9} /> Revoked
                                     </Badge>
                                 ) : (
@@ -72,7 +50,7 @@ export default function SessionHistory({ sessions }: { sessions: SessionSchema[]
                                 )
                             }
                             onRevoke={revokeSessionHandler}
-                            isRevoking={isPending}
+                            isRevoking={revokeSession.isPending}
                         />
                     ))}
                 </ul>

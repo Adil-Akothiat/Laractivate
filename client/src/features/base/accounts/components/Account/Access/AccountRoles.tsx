@@ -1,13 +1,11 @@
 import { Shield, Plus } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Button, EmptyState } from "@/components";
+import { Card, Button, EmptyState, ConfirmModal } from "@/components";
 import { useRoles } from "@/features/base/rbac";
 import { useAccountMutations } from "@/features/base/accounts";
 import { RoleListItem } from "./RoleListItem";
 import { AssignRoleModal } from "./AssignRoleModal";
-import { RemoveRoleConfirmModal } from "./RemoveRoleConfirmModal";
-import type { RemoveGuard } from "./RemoveRoleConfirmModal";
 import type { RoleSchema, UserSchema } from "@/features/base/shared";
 
 interface Props {
@@ -15,55 +13,41 @@ interface Props {
 }
 
 export default function AccountRoles({ user }: Props) {
-    const { id }                                    = useParams<{ id: string }>();
-    const [open, setOpen]                           = useState(false);
-    const [assigningId, setAssigningId]             = useState<string | null>(null);
-    const [removeGuard, setRemoveGuard]             = useState<RemoveGuard | null>(null);
+    const { id }                          = useParams<{ id: string }>();
+    const [open, setOpen]                 = useState(false);
+    const [assigningId, setAssigningId]   = useState<string | null>(null);
+    const [pendingRole, setPendingRole]   = useState<RoleSchema | null>(null);
 
-    const { data: rolesData }                       = useRoles.getRoles();
-    const { update } = useAccountMutations();
+    const { data }                        = useRoles({ all: true });
+    const { assignRole, unAssignRole }        = useAccountMutations();
 
-    const allRoles       = rolesData?.roles ?? [];
+    const allRoles       = data?.data    ?? [];
     const assignedIds    = user?.roles?.map((r: RoleSchema) => r.id) ?? [];
     const availableRoles = allRoles.filter((r: RoleSchema) => !assignedIds.includes(r.id));
 
     function handleAssign(roleId: string) {
         setAssigningId(roleId);
-        update.mutate(
-            { id: id!, data: { rolesSet: [...assignedIds, roleId] } },
+        assignRole.mutate(
+            { userId: id!, roleId },
             {
                 onSuccess: () => setOpen(false),
                 onSettled: () => setAssigningId(null),
-            },
+            }
         );
     }
 
     function handleRemove(roleId: string) {
         const role = allRoles.find((r: RoleSchema) => r.id === roleId);
         if (!role) return;
-
-        // Guard 1: block if this is the only super admin in the app
-        if (role.is_super_admin && (role.users_count ?? 0) < 2) {
-            setRemoveGuard({ kind: "super-admin-sole", role });
-            return;
-        }
-
-        // Guard 2: warn if removing this leaves the user with no roles
-        if (assignedIds.length === 1) {
-            setRemoveGuard({ kind: "last-role", role });
-            return;
-        }
-
-        // Default: always confirm before removing
-        setRemoveGuard({ kind: "confirm", role });
+        setPendingRole(role);
     }
 
-    function commitRemove(roleId: string) {
-        update.mutate({
-            id: id!,
-            data: { rolesSet: assignedIds.filter((rid) => rid !== roleId) },
-        });
-        setRemoveGuard(null);
+    function commitRemove() {
+        if (!pendingRole) return;
+        unAssignRole.mutate(
+            { userId: id!, roleId: pendingRole.id },
+            { onSettled: () => setPendingRole(null) },
+        );
     }
 
     return (
@@ -102,7 +86,7 @@ export default function AccountRoles({ user }: Props) {
                             <RoleListItem
                                 key={role.id}
                                 role={role}
-                                isRemoving={update.isPending}
+                                isRemoving={unAssignRole.isPending}
                                 onRemove={handleRemove}
                             />
                         ))}
@@ -118,11 +102,15 @@ export default function AccountRoles({ user }: Props) {
                 onClose={() => setOpen(false)}
             />
 
-            <RemoveRoleConfirmModal
-                guard={removeGuard}
-                isRemoving={update.isPending}
-                onConfirm={() => removeGuard && commitRemove(removeGuard.role.id)}
-                onClose={() => setRemoveGuard(null)}
+            <ConfirmModal
+                isOpen={!!pendingRole}
+                variant="error"
+                title="Unassign role"
+                message={`Are you sure you want to remove the "${pendingRole?.name}" role from this user?`}
+                confirmLabel="Confirm"
+                loading={unAssignRole.isPending}
+                onConfirm={commitRemove}
+                onCancel={() => setPendingRole(null)}
             />
         </>
     );

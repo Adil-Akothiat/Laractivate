@@ -2,7 +2,7 @@
 
 namespace App\Services\Security;
 
-use App\Models\{Role, Permission};
+use App\Models\{Role, Permission, User};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
@@ -95,10 +95,5 @@ class RbacService
     {
         $role = Role::findOrFail($id);
         return $role;
-    }
-
-    public function getPermissions(): PermissionCollection
-    {
-        return new PermissionCollection(Permission::all());
     }
 }

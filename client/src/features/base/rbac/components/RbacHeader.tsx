@@ -1,16 +1,10 @@
 import { LayoutDashboard, UserKey } from "lucide-react";
 import { Breadcrumb } from "@/components";
 import { CreateRole } from "./CreateRole";
-import { useToastContext } from "@/app/hooks/common";
 import SearchAndFilterRoles from "./SearchAndFilterRoles";
 import { Can } from "@/components/Guard/Can";
 
 export default function RbacHeader() {
-    const { toast } = useToastContext();
-    const handleAlert = (msg:string, variant: "success" | "error" | "warning" | "info") => {
-        console.log(msg);
-        toast[variant](msg);
-    }
     return (
         <div className="py-3">
             <Breadcrumb
@@ -36,10 +30,7 @@ export default function RbacHeader() {
                 </div>
             <div className="flex justify-between mt-4">
             <SearchAndFilterRoles />
-            <CreateRole
-                onSuccess={(msg:string)=> handleAlert(msg, "success")}
-                onFailure={(msg:string)=> handleAlert(msg, "error")}
-            />
+            <CreateRole />
             </div>
         </div>
     );

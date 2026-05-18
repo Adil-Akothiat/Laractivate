@@ -3,9 +3,10 @@
 namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Security\RoleResource;
+use App\Http\Resources\System\BaseResource;
 
-class UserResource extends JsonResource
+class UserResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -24,14 +25,14 @@ class UserResource extends JsonResource
             'two_factor_enabled' => $this->two_factor_enabled,
             'two_factor_recovery_codes' => $this->getRecoveryCodes(),
             'two_factor_secret' => $this->two_factor_secret,
-            'roles' => $this->roles,
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'rolesSet' => $this->roles->pluck('name'),
             'owner' => $this->id === auth()->user()->id,
-            'permissionsSet'=> $this->roles->flatMap(function($role) {
-                return $role->permissions->pluck('name');
-            }),
             'permissions' => $this->roles->flatMap(function($role) {
                 return $role->permissions;
+            }),
+            'permissionsSet'=> $this->roles->flatMap(function($role) {
+                return $role->permissions->pluck('name');
             })
         ];
     }

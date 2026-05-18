@@ -1,22 +1,32 @@
-import { api } from "@/app/services/api";
-import type { FilterRolesParams, StoreRolePayload, UpdateRolePayload } from "../types";
+import { api } from '@/app/services/api';
+import type { PaginatedResponseSchema, ResourceSchema } from '@/app/types';
+import type { FilterRolesParams, StoreRolePayload, UpdateRolePayload } from '../types';
+import type { RoleSchema, PermissionResponseSchema } from '../../shared';
 
-const route = '/access/rbac';
-export const getRoles = ({ page = 1, search, group, permission, all }: FilterRolesParams = {}) => {
-    const params = new URLSearchParams();
-    params.set('page', String(page));
-    if (search)     params.set('search',     search);
-    if (group)      params.set('group',      group);
-    if (permission) params.set('permission', permission);
-    if(all) params.set('all', 'true');
+const BASE_ROUTE = '/access/rbac';
 
-    return api.get(`${route}/roles?${params.toString()}`);
+export const rbacApi = {
+  // --- Roles ---
+  roles: {
+    list: (params: FilterRolesParams) =>
+      api.get<PaginatedResponseSchema<RoleSchema>>(`${BASE_ROUTE}/roles`, { params }),
+
+    get: (id: string) =>
+      api.get<ResourceSchema<RoleSchema>>(`${BASE_ROUTE}/roles/${id}`),
+
+    create: (data: StoreRolePayload) =>
+      api.post<ResourceSchema<RoleSchema>>(`${BASE_ROUTE}/roles`, data),
+
+    update: (id: string, data: UpdateRolePayload) =>
+      api.put<ResourceSchema<RoleSchema>>(`${BASE_ROUTE}/roles/${id}`, data),
+
+    remove: (id: string) =>
+      api.delete<ResourceSchema<null>>(`${BASE_ROUTE}/roles/${id}`),
+  },
+
+  // --- Permissions ---
+  permissions: {
+    list: () =>
+      api.get<ResourceSchema<PermissionResponseSchema>>(`${BASE_ROUTE}/permissions`),
+  },
 };
-export const getRole = (id: string) => api.get(`${route}/roles/${id}`);
-export const getPermissions = () => api.get(`${route}/permissions`);
-export const createRole = (payload: StoreRolePayload) =>
-    api.post(`${route}/roles`, payload);
-export const updateRole = (id: string, payload: UpdateRolePayload) =>
-    api.put(`${route}/roles/${id}`, payload);
-export const deleteRole = (id: string) =>
-    api.delete(`${route}/roles/${id}`);

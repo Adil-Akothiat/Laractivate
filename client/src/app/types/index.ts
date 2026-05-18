@@ -1,7 +1,7 @@
 export type SetStateSchema<T> = React.Dispatch<React.SetStateAction<T>>;
 
 // api
-export interface ApiResponseSchemaSchema<T> {
+export interface ApiResponseSchema<T> {
   data: T;
   message?: string;
 }

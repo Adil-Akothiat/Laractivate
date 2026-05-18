@@ -65,4 +65,14 @@ class ApiExceptionHandler
             'retry_after' => $e->getHeaders()['Retry-After'] ?? 60
         ], 429);
     }
+    public static function handleAuthorizationException($e)
+    {
+        // If you used Response::deny('super-admin-sole'), 
+        // the message is stored inside the exception.
+        $message = $e->getMessage();
+        return response()->json([
+            'code' => 'FORBIDDEN',
+            'message' => $message
+        ], 403);
+    }
 }

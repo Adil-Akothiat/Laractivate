@@ -7,6 +7,7 @@ use Jenssegers\Agent\Agent;
 use Stevebauman\Location\Facades\Location;
 use App\Models\{User, RefreshToken};
 use App\Http\Resources\Security\SessionResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SessionService
 {
@@ -83,7 +84,6 @@ class SessionService
     public function getSessions(User $user, int $perPage = 10): LengthAwarePaginator
     {
         return RefreshToken::where('users_id', $user->id)
-            ->orderBy('is_active', 'desc') 
             ->orderBy('updated_at', 'desc')
             ->paginate($perPage)
             ->withQueryString();

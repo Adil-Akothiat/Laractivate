@@ -11,7 +11,7 @@ import { useRoles } from "@/features/base/rbac";
 
 const CreateAccount = ({ isOpen, onClose }: CreateAcccountProps) => {
   const { create } = useAccountMutations();
-  const { data, isPending } = useRoles.getRoles({ all: true });
+  const { data, isPending } = useRoles({ all: true });
   const [form, setForm] = useState<AccountFormValues>({
     firstName: "",
     lastName: "",
@@ -49,7 +49,7 @@ const CreateAccount = ({ isOpen, onClose }: CreateAcccountProps) => {
       ) : (
         <AccountForm
           form={form}
-          roles={data.roles || []}
+          roles={data?.data || []}
           handleSubmit={handleSubmit}
           setForm={setForm}
           isPending={create.isPending}

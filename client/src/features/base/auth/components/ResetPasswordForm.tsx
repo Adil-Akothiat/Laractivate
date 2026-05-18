@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { getErrorsMessages } from "@/app/utils";
+import { getErrorsMessagesStr } from "@/app/utils";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
 import { useToastContext } from "@/app/hooks/common";
@@ -35,8 +35,7 @@ export default function ResetPasswordForm() {
                     navigate('/login');
                 },
                 onError: (err:any)=> {
-                    const message = getErrorsMessages(err);
-                    toast.error(message.join('|'));
+                    toast.error(getErrorsMessagesStr(err));
                 }
             },
         );

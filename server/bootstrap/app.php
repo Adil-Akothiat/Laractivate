@@ -9,6 +9,8 @@ use Illuminate\Auth\AuthenticationException;
 use App\Exceptions\ApiExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -49,6 +51,16 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return ApiExceptionHandler::handleThrottleException($e, $request);
             }
+        });
+
+        // // Handle Policy failures (from Gate::authorize or $this->authorize)
+        $exceptions->render(function (AuthorizationException $e, Request $request) {
+            return ApiExceptionHandler::handleAuthorizationException($e);
+        });
+
+        // Handle 403s thrown via abort(403, 'reason')
+        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
+            return ApiExceptionHandler::handleAuthorizationException($e);
         });
 
         // 4. (Recommended) Generic Catch-all for API 500s

@@ -1,8 +1,8 @@
 import { Checkbox } from "@/components/FormControls";
-import type { PermissionSchema } from "../../shared";
+import type { PermissionGroupSchema, PermissionSchema } from "../../shared";
 
 interface Props {
-    grouped:     Record<string, PermissionSchema[]>;
+    grouped:     PermissionGroupSchema;
     permissions: PermissionSchema[];
     selectedIds: string[];
     onChange:    (ids: string[]) => void;

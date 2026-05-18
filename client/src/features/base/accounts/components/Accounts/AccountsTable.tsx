@@ -17,7 +17,6 @@ export default function AccountsTable() {
   
   const { data, isPending } = useAccounts({ page, search:debouncedSearch, role, status });
   const response = data?.data;
-  console.log(response);
   const users = response?.data || [];
   const meta = response?.meta;
   return (

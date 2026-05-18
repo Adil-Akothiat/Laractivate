@@ -1,13 +1,11 @@
-import { useRoles, useRolesFilter } from "../hooks";
-import { type Column, Pagination, Modal, ConfirmDialog } from "@/components";
+import { useRoles, useRolesFilter, useRoleMutations } from "../hooks";
+import { type Column, Pagination, Modal, ConfirmModal } from "@/components";
 import { DataTable } from "@/components/Table";
 import { useState } from "react";
 import RbacHeader from "./RbacHeader";
 import { useDebounce } from "@/app/hooks/common/useDebounce";
 import { ScrollContainer } from "@/components/ScrollContainer";
 import { UpdateRole } from "./UpdateRole";
-import { useToastContext } from "@/app/hooks/common";
-import { getErrorsMessages } from "@/app/utils";
 import type { RoleSchema } from "../../shared";
 
 const columns = (): Column<RoleSchema>[] => [
@@ -41,21 +39,21 @@ const columns = (): Column<RoleSchema>[] => [
 
 export function RolesList() {
     const { page, search, group, permission, setFilters } = useRolesFilter();
-    const debouncedSearch = useDebounce(search, 400);
-    const { toast } = useToastContext();
+    const debouncedSearch                                 = useDebounce(search, 400);
 
-    const { data, isPending } = useRoles.getRoles({
+    const { data, isPending } = useRoles({
         page,
         search: debouncedSearch,
         group,
-        permission
+        permission,
     });
 
-    const { mutate: deleteRole, isPending: isDeleting } = useRoles.delete();
-    const roles = data?.roles ?? [];
-    const meta  = data?.meta;
+    const { remove }  = useRoleMutations();
+    const roles       = data?.data || [];
+    const meta        = data?.meta;
+
     const [modal, setModal] = useState<{
-        type: "edit" | "delete";
+        type:   "edit" | "delete";
         roleId: string;
     } | null>(null);
 
@@ -63,16 +61,7 @@ export function RolesList() {
 
     const handleDelete = () => {
         if (!modal?.roleId) return;
-        deleteRole(modal.roleId, {
-            onSuccess: ()=> {
-                closeModal();
-                toast.success("Role deleted successfully");
-            },
-            onError:(err)=> {
-                const messages = getErrorsMessages(err);
-                toast.error(messages.join('\n'));
-            }
-        });
+        remove.mutate(modal.roleId, { onSuccess:()=> closeModal() });
     };
 
     return (
@@ -84,17 +73,15 @@ export function RolesList() {
                 actions={[
                     {
                         permission: "roles.manage",
-                        label: "Edit",
-                        onClick: (role) =>
-                            setModal({ type: "edit", roleId: role.id }),
+                        label:      "Edit",
+                        onClick:    (role) => setModal({ type: "edit", roleId: role.id }),
                     },
                     {
                         permission: "roles.manage",
-                        label:     "Delete",
-                        className: "text-error",
-                        hidden:    (role) => !!role.is_locked,
-                        onClick:   (role) =>
-                            setModal({ type: "delete", roleId: role.id }),
+                        label:      "Delete",
+                        className:  "text-error",
+                        hidden:     (role) => !!role.is_locked,
+                        onClick:    (role) => setModal({ type: "delete", roleId: role.id }),
                     },
                 ]}
                 data={roles}
@@ -128,15 +115,16 @@ export function RolesList() {
                     />
                 )}
             </Modal>
+
             {/* Delete confirm */}
-            <ConfirmDialog
+            <ConfirmModal
                 isOpen={modal?.type === "delete"}
                 variant="error"
                 title="Delete Role?"
                 message="This role will be permanently deleted. Users assigned to this role will lose its permissions."
                 confirmLabel="Delete"
                 cancelLabel="Cancel"
-                loading={isDeleting}
+                loading={remove.isPending}
                 onConfirm={handleDelete}
                 onCancel={closeModal}
             />

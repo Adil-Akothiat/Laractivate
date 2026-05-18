@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{User, Role};
 use App\Http\Resources\User\{UserCollection, UserResource};
+use App\Http\Resources\Security\SessionCollection;
 use App\Services\User\UserService;
 use App\Services\Security\JwtService;
 use Illuminate\Validation\ValidationException;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
 use Illuminate\Validation\Rules\Password;
 use App\Services\System\SessionService;
 
@@ -55,11 +56,11 @@ class AccountsController extends Controller
         return new UserResource($user);
     }
 
-    public function update(StoreUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $credentials = $request->validated();
+        $this->authorize('update', [$user, $credentials['is_active']]);
         $updatedUser = $this->userService->updateAccount($user, $credentials, auth()->user());
-
         return (new UserResource($updatedUser))->withMessage('Account updated successfully.');
     }
     
@@ -107,6 +108,7 @@ class AccountsController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('delete', [$user]);
         $this->userService->deleteAccount($user, auth()->user());
         return response()->json(['message' => 'User deleted successfully'], 200);
     }

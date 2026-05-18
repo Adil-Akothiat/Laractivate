@@ -7,6 +7,14 @@ export interface PermissionSchema {
   updated_at?: string
 }
 
+export type PermissionGroupSchema = {[key:string]: PermissionSchema[]};
+
+export interface PermissionResponseSchema {
+  default: PermissionSchema,
+  permissions: PermissionSchema[],
+  grouped: PermissionGroupSchema
+}
+
 export interface RoleSchema {
   id: string
   name: string
@@ -89,4 +97,15 @@ export interface LogSchema {
     user_agent: string | null;
     created_at: string;
     updated_at: string;
+};
+
+
+
+// --- UI Props ---
+export type EventConfigProps = {
+  icon:      React.ReactNode;
+  label:     string;
+  iconBg:    string;
+  iconColor: string;
+  badge:     string;
 };

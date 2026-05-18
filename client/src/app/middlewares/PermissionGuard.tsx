@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useCan } from './hooks/useCan';
 import { useMe } from './hooks/useMe';
-import { GlobalPageLoader } from '@/components/Loaders';
+import { GlobalPageLoader } from '@/components/Loaders/Loaders';
 
 type Props = {
     permission:string|string[];

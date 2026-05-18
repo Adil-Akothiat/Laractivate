@@ -11,8 +11,15 @@ fi
 chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 
+echo "Waiting for database connection..."
+until php artisan db:monitor --databases=mysql > /dev/null 2>&1; do
+  echo "Database is unavailable - sleeping"
+  sleep 2
+done
+
 # 3. Run migrations (Optional but helpful for local dev)
-# php artisan migrate --force
+# php artisan migrate --seed --force
+
 
 # 4. Execute the main container command (usually php-fpm)
 exec "$@"

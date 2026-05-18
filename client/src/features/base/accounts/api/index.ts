@@ -1,11 +1,11 @@
 import { api } from '@/app/services/api';
-import type { PaginatedResponseSchema, ResourceSchema } from '@/app/types';
+import type { ApiResponseSchema, PaginatedResponseSchema, ResourceSchema } from '@/app/types';
 import type { 
   FilterAccountsParams,
   UserCreatePayload,
   UserUpdatePayload,
 } from '../types';
-import type { LogSchema, UserSchema } from '../../shared';
+import type { LogSchema, SessionResponseSchema, UserSchema } from '../../shared';
 
 const BASE_ROUTE = '/user/accounts';
 
@@ -39,7 +39,7 @@ export const accountApi = {
   // --- Sessions ---
   sessions: {
     list: (id: string) => 
-      api.get(`${BASE_ROUTE}/${id}/sessions`),
+      api.get<ApiResponseSchema<SessionResponseSchema>>(`${BASE_ROUTE}/${id}/sessions`),
 
     revoke: (id: string, sessionId: number) =>
       api.put(`${BASE_ROUTE}/${id}/sessions/${sessionId}`),
@@ -58,4 +58,10 @@ export const accountApi = {
         params: { page },
       }),
   },
+
+  // --- Rbac ---
+  rbac: {
+    assignRole: (userId:string, roleId:string)=> api.post<ApiResponseSchema<null>>(`${BASE_ROUTE}/${userId}/${roleId}/assign`),
+    unAssignRole: (userId:string, roleId:string)=> api.delete<ApiResponseSchema<null>>(`${BASE_ROUTE}/${userId}/${roleId}/unassign`),
+  }
 };

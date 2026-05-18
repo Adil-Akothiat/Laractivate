@@ -19,6 +19,8 @@ class PermissionResource extends BaseResource
             'name'      => $this->name,
             'group'     => $this->group,
             'is_locked' => $this->is_locked,
+            'created_at'=> $this->created_at,
+            'updated_at'=> $this->updated_at,
         ];
     }
 }

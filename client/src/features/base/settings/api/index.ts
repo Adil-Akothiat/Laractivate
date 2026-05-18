@@ -1,30 +1,57 @@
-import { api } from "@/app/services/api";
+import { api } from '@/app/services/api';
+import type { ApiResponseSchema, PaginatedResponseSchema, ResourceSchema } from '@/app/types';
+import type {
+  UpdateProfilePayload,
+  ChangePasswordPayload,
+  AccountActionPayload,
+} from '../types';
+import type { LogSchema, SessionResponseSchema, UserSchema } from '../../shared';
 
-const route = '/user';
+const BASE_ROUTE = '/user';
+export const settingsApi = {
+  // --- Profile ---
+  profile: {
+    get: () =>
+      api.get<ResourceSchema<UserSchema>>(`${BASE_ROUTE}/profile`),
 
-export const getProfile = () => api.get(`${route}/profile`);
-export const updateProfile = (data: { first_name: string, last_name: string }) =>
-  api.put(`${route}/profile`, data);
+    update: (data: UpdateProfilePayload) =>
+      api.put<ResourceSchema<UserSchema>>(`${BASE_ROUTE}/profile`, data),
 
-export const deleteAccount = (data: { password: string }) =>
-  api.delete(`${route}/profile`, { data });
+    updateAvatar: (data: FormData) =>
+      api.put<ResourceSchema<null>>(`${BASE_ROUTE}/profile/update-avatar`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
 
-export const updateAvatar = (data: FormData)=> api.put(`${route}/profile/update-avatar`, data, {
-  headers: { 'Content-Type':'multipart/form-data' }
-});
+    delete: (data: AccountActionPayload) =>
+      api.delete<ResourceSchema<null>>(`${BASE_ROUTE}/profile`, { data }),
+  },
 
-export const changePassword = (data: {
-  current_password: string;
-  password: string;
-  password_confirmation: string;
-}) => api.post(`${route}/security/password`, data);
-export const deactivateAccount = (data: { password: string }) =>
-  api.post(`${route}/security/deactivate`, data);
+  // --- Security ---
+  security: {
+    changePassword: (data: ChangePasswordPayload) =>
+      api.post<ResourceSchema<null>>(`${BASE_ROUTE}/security/password`, data),
 
+    deactivateAccount: (data: AccountActionPayload) =>
+      api.post<ResourceSchema<null>>(`${BASE_ROUTE}/security/deactivate`, data),
+  },
 
-// user sessions
-export const getUserSessions = ()=> api.get(`${route}/profile/sessions`);
-export const revokeSession = (id:number)=> api.put(`${route}/profile/sessions/${id}`);
-export const revokeAllSessions = ()=> api.put(`${route}/profile/sessions`);
-export const clearHistory = ()=> api.delete(`${route}/profile/sessions/clear-history`);
-export const getProfileActivityLogs = (page:number)=> api.get(`${route}/profile/activity-logs?page=${page}`);
+  // --- Sessions ---
+  sessions: {
+    list: () =>
+      api.get<ApiResponseSchema<SessionResponseSchema>>(`${BASE_ROUTE}/profile/sessions`),
+    revoke: (id: number) =>
+      api.put<ResourceSchema<null>>(`${BASE_ROUTE}/profile/sessions/${id}`),
+
+    revokeAll: () =>
+      api.put<ResourceSchema<null>>(`${BASE_ROUTE}/profile/sessions`),
+
+    clearHistory: () =>
+      api.delete<ResourceSchema<null>>(`${BASE_ROUTE}/profile/sessions/clear-history`),
+  },
+
+  // --- Logs ---
+  activityLogs: {
+    list: (page: number) =>
+      api.get<PaginatedResponseSchema<LogSchema>>(`${BASE_ROUTE}/profile/activity-logs?page=${page}`),
+  },
+};

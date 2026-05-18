@@ -1,7 +1,7 @@
 import { Logs } from "lucide-react";
 import { useState } from "react";
 import LogCard from "@/features/base/shared/components/LogCard";
-import { ComponentLoader } from "@/components/Loaders";
+import { ComponentLoader } from "@/components/Loaders/Loaders";
 import { useAccountLogs } from "@/features/base/accounts";
 import { Pagination } from "@/components";
 import type { LogSchema } from "@/features/base/shared";
@@ -11,11 +11,12 @@ type Props = {
 }
 export default function AccountActivityLogs({ userId }:Props) {
     const [page, setPage] = useState(1);
-    const { data, isPending } = useAccountLogs(userId, page);
+    const { data, isPending, isError } = useAccountLogs(userId, page);
     const response = data?.data;
     const activityLogs = response?.data || [];
     const meta = response?.meta;
     if(isPending) return <ComponentLoader isLoading={isPending}/>
+    if(isError) return 'Failed to fetch.'
     return (
         <>
             {activityLogs.length === 0 ? (

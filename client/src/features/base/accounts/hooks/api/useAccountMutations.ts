@@ -28,7 +28,9 @@ export const useAccountMutations = () => {
       queryClient.invalidateQueries({ queryKey: accountKeys.lists() });
       toast.success(response.data.message || "Account updated");
     },
-    onError: () => toast.error("Update failed"),
+    onError: (err:any) => {
+      toast.error(err?.response?.data?.message||'UpdateFailed')
+    },
   });
 
   const remove = useMutation({
@@ -59,7 +61,9 @@ export const useAccountMutations = () => {
       toast.success(response.data.message || "Password changed successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to change password");
+      toast.error(
+        error?.response?.data?.message || "Failed to change password",
+      );
     },
   });
 
@@ -68,10 +72,15 @@ export const useAccountMutations = () => {
       accountApi.profile.disableTwoFactor(id, data),
     onSuccess: (response, { id }) => {
       queryClient.invalidateQueries({ queryKey: accountKeys.detail(id) });
-      toast.success(response.data.message || "Two-factor authentication disabled");
+      toast.success(
+        response.data.message || "Two-factor authentication disabled",
+      );
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to disable two-factor authentication");
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to disable two-factor authentication",
+      );
     },
   });
 
@@ -105,6 +114,30 @@ export const useAccountMutations = () => {
     onError: () => toast.error("Failed to clear session history"),
   });
 
+  const assignRole = useMutation({
+    mutationFn: ({ userId, roleId }: { userId: string; roleId: string }) =>
+      accountApi.rbac.assignRole(userId, roleId),
+    onSuccess: (response, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: accountKeys.detail(userId) });
+      toast.success(response.data.message || "Role assigned");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to unassign role");
+    },
+  });
+
+  const unAssignRole = useMutation({
+    mutationFn: ({ userId, roleId }: { userId: string; roleId: string }) =>
+      accountApi.rbac.unAssignRole(userId, roleId),
+    onSuccess: (response, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: accountKeys.detail(userId) });
+      toast.success(response.data.message || "Role unassigned");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to unassign role");
+    },
+  });
+
   return {
     // Core CRUD
     create,
@@ -118,5 +151,8 @@ export const useAccountMutations = () => {
     revokeSession,
     revokeAllSessions,
     clearSessionHistory,
+    // rbac
+    unAssignRole,
+    assignRole
   };
 };

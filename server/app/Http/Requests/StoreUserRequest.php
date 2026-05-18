@@ -22,47 +22,16 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         // Get the user ID from the route (works for /users/{user})
-        $userId = $this->route('id'); 
-        // Determine if we are updating
-        $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $userId = $this->route('user');
 
         return [
-            'first_name' => [
-                $isUpdate ? 'sometimes' : 'required', 
-                'string', 
-                'max:32'
-            ],
-            'last_name'  => [
-                $isUpdate ? 'sometimes' : 'required', 
-                'string', 
-                'max:32'
-            ],
-            'email'      => [
-                $isUpdate ? 'sometimes' : 'required', 
-                'string', 
-                'email', 
-                'max:191',
-                // Ignore the current user ID during update
-                $isUpdate ? 'unique:users,email,' . $userId : 'unique:users,email'
-            ],
-            'password'   => [
-                $isUpdate ? 'nullable' : 'required', 
-                'string', 
-                'min:8', 
-                'confirmed'
-            ],
-            'is_active'  => [
-                'sometimes', 
-                'boolean'
-            ],
-            'rolesSet'      => [
-                'nullable', 
-                'array'
-            ],
-            'rolesSet.*'    => [
-                'string', 
-                'exists:roles,id'
-            ],
+            'first_name' => 'required|string|max:32',
+            'last_name'  => 'required|string|max:32',
+            'email'      => 'required|email|max:191|unique:users,email,' . $userId,
+            'password'   => 'nullable|string|min:8|confirmed',
+            'is_active'  => 'sometimes|boolean',
+            'rolesSet'   => 'nullable|array',
+            'rolesSet.*' => 'string|exists:roles,id'
         ];
     }
 }

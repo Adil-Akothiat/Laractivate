@@ -13,7 +13,7 @@ These components have non-obvious behavior and their own dedicated documentation
 | **Can** | Permission-based conditional rendering | [Guard/doc.md](../Guard/doc.md) |
 | **DataTable** | Generic type-safe table with actions, loading, and permission gating | [Table/doc.md](../Table/doc.md) |
 | **AvatarUploader** | Click-to-upload avatar with live preview and initials fallback | [FileUploader/doc.md](../FileUploader/doc.md) |
-| **ConfirmDialog** | Modal confirmation prompt for destructive actions | [Dialog/doc.md](../Dialog/doc.md) |
+| **ConfirmModal** | Modal confirmation prompt for destructive actions | [Dialog/doc.md](../Dialog/doc.md) |
 | **MultiSelect** | Multi-select dropdown with locked options and badge display | [MultiSelect/doc.md](../MultiSelect/doc.md) |
 | **Pagination** | Smart pagination bar with truncation and results summary | [Pagination/doc.md](../Pagination/doc.md) |
 | **Tabs** | Horizontal and vertical tabs — controlled and uncontrolled | [Tabs/doc.md](../Tabs/doc.md) |

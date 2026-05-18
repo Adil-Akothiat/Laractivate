@@ -7,7 +7,7 @@ import SidebarContent from "./components/SidebarContent";
 import { useMe } from "../middlewares/hooks/useMe";
 import { useAuth } from "@/features/base/auth/hooks/useAuth";
 import { useToastContext } from "../hooks/common";
-import { getErrorsMessages } from "../utils";
+import { getErrorsMessagesStr } from "../utils/errorsHandling";
 
 export default function Sidebar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,8 +22,7 @@ export default function Sidebar() {
         logout(undefined, {
             onSuccess: () => navigate("/login"),
             onError: (err:any) => {
-                const message = getErrorsMessages(err).join('|');
-                toast.error(message);
+                toast.error(getErrorsMessagesStr(err));
             },
         });
     };

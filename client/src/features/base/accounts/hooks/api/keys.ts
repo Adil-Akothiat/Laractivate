@@ -5,5 +5,5 @@ export const accountKeys = {
   details: () => [...accountKeys.all, 'detail'] as const,
   detail: (id: string) => [...accountKeys.details(), id] as const,
   sessions: (id: string) => [...accountKeys.detail(id), 'sessions'] as const,
-  logs: (id: string, page: number) => [...accountKeys.detail(id), 'logs', page] as const,
+  logs: (id: string, page: number) => [...accountKeys.detail(id), 'logs', page] as const
 };

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\{Request, JsonResponse};
 use App\Services\Security\RbacService;
 use App\Http\Requests\RoleRequest;
-use App\Models\{Role, Permission};
-use App\Http\Resources\Security\PermissionCollection;
+use App\Models\{Role, Permission, User};
+use App\Http\Resources\Security\{PermissionCollection,  RoleResource, RoleCollection};
 
 class RbacController extends Controller
 {
@@ -18,58 +18,58 @@ class RbacController extends Controller
     public function index(Request $request): JsonResponse
     {
         if($request->has('all')):
-            return response()->json([
-                'roles'=> Role::all()
-            ]);
+            $roles = Role::all();
+            $roles->load('permissions');
+            return (new RoleResource($roles))->response();
         endif;
         $roles = $this->rbacService->rolesList($request->all());
         $roles->load('permissions');
-
-        return response()->json([
-            'roles' => $roles->items(),
-            'meta' => $this->paginationMeta($roles)
-        ], 200);
+        return (new RoleCollection($roles))->response()->setStatusCode(200);
     }
 
     public function store(RoleRequest $request): JsonResponse
     {
-        $this->rbacService->createRole($request->validated());
-        return response()->json(['message' => 'Role created successfully.'], 201);
+        $role = $this->rbacService->createRole($request->validated());
+        return (new RoleResource($role))->withMessage('Role created successfully.')->response()->setStatusCode(201);
     }
 
     public function update(RoleRequest $request, string $id): JsonResponse
     {
-        try {
-            $this->rbacService->updateRole($id, $request->validated());
-            return response()->json(['message' => 'Role updated successfully.']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 400);
-        }
+
+        $role = $this->rbacService->updateRole($id, $request->validated());
+        return (new RoleResource($role))->withMessage('Role updated successfully.')->response()->setStatusCode(200);
     }
 
     public function destroy(string $id): JsonResponse
     {
-        // try {
         $this->rbacService->deleteRole($id);
-        return response()->json(['message' => 'Role deleted successfully.']);
-        // } catch (\Exception $e) {
-        //     return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 400);
-        // }
+        return response()->json(['message'=> 'Role deleted successfully.'], 204);
     }
 
     // Keep show() and getPermissions() simple
     public function show(string $id): JsonResponse
     {
         $role = $this->rbacService->getRole($id);
-        return response()->json([
-            'role' => $role,
-            'attached_ids' => $role->permissions->pluck('id')
-        ]);
+        $role->load('permissions');
+        return (new RoleResource($role))->response()->setStatusCode(200);
     }
 
     public function getPermissions(): JsonResponse
     {
-        $permissions = $this->rbacService->getPermissions();
-        return response()->json($permissions, 200);
+        $permissions = Permission::all();
+        return (new PermissionCollection($permissions))->response()->setStatusCode(200);
+    }
+
+    // rbac unassigned role
+    public function assignRole(User $user, Role $role) {
+        $user->roles()->attach($role->id);
+        return response()->json(['message'=> 'Role assigned successfully.'], 200);
+    }
+    
+    public function unassignRole(User $user, Role $role) {
+        $role->loadCount('users');
+        $this->authorize('detach', [$role, $user]);
+        $user->roles()->detach($role->id);
+        return response()->json(['message'=> 'Role unassigned successfully.'], 204);
     }
 }

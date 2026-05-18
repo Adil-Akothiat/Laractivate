@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { GlobalPageLoader } from "@/components/Loaders";
+import { GlobalPageLoader } from "@/components/Loaders/Loaders";
 import { useMe } from "./hooks/useMe";
 
 export default function AuthGuard() {

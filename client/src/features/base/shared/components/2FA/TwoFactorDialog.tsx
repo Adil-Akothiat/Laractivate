@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ShieldCheck, X, KeyRound, Smartphone } from 'lucide-react';
-import { getErrorsMessages } from '@/app/utils';
+import { getErrorsMessagesStr } from '@/app/utils';
 import { Button, Input } from '@/components';
 import OtpInput from './OtpInput';
 import { useTwoFactor } from '../../hooks';
@@ -38,8 +38,7 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
             mutate({ code: sanitized, user_id: userId, token }, { 
               onSuccess,
               onError: (err:any)=> {
-                const message = getErrorsMessages(err).join('|');
-                toast.error(message);
+                toast.error(getErrorsMessagesStr(err));
               }
             });
         } else {
@@ -48,8 +47,7 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
             mutate({ code: sanitized, user_id: userId, token }, {
               onSuccess,
                onError: (err:any)=> {
-                const message = getErrorsMessages(err).join('|');
-                toast.error(message);
+                toast.error(getErrorsMessagesStr(err));
               }
             });
         }

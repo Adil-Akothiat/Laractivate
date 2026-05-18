@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { getErrorsMessages } from "@/app/utils";
+import { getErrorsMessagesStr } from "@/app/utils";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
 import { useToastContext } from "@/app/hooks/common";
@@ -20,8 +20,7 @@ export default function ForgotPasswordForm() {
                 navigate('/login');
             },
             onError: (err:any)=> {
-                const message = getErrorsMessages(err).join('|');
-                toast.error(message);  
+                toast.error(getErrorsMessagesStr(err));  
             }
            
         });

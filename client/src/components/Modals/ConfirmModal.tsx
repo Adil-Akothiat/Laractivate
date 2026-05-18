@@ -1,8 +1,8 @@
 import React from "react";
-import Modal from "../Modal";
+import Modal from "./Modal";
 import Button from "../Button";
 
-interface ConfirmDialogProps {
+interface ConfirmModalProps {
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -44,7 +44,7 @@ const confirmVariantMap = {
   success: "success" as const,
 };
 
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onConfirm,
   onCancel,
@@ -91,4 +91,4 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   );
 };
 
-export default ConfirmDialog;
+export default ConfirmModal;

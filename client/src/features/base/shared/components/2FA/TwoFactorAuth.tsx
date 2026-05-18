@@ -5,7 +5,7 @@ import StepVerify from "./StepVerify";
 import StepSuccess from "./StepSuccess";
 import { FingerprintPattern } from "lucide-react";
 import { useMe } from "@/app/middlewares/hooks/useMe";
-import { ComponentLoader } from "@/components/Loaders";
+import { ComponentLoader } from "@/components/Loaders/Loaders";
 import { Modal } from "@/components";
 import type { UserSchema } from "@/features/base/shared";
 import { useTwoFactor } from "../../hooks";
@@ -58,9 +58,7 @@ export default function TwoFactorAuth() {
             { otp: sanitized },
             {
                 onSuccess: (res) => {
-                    console.log(res);
                     if (res.data.success) {
-                        // Grab codes directly from this response — user cache is still stale here
                         setFreshCodes(res.data.recovery_codes ?? []);
                         setModalStep("success");
                     }

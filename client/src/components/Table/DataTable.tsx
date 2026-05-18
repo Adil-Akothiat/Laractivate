@@ -7,7 +7,7 @@ import {
   TableHead,
   TableCell,
 } from "./index";
-import { SkeletonLoader } from "../Loaders";
+import { SkeletonLoader } from "../Loaders/Loaders";
 import { Can } from "../Guard/Can";
 import { EllipsisVertical } from "lucide-react";
 import Button from "../Button";
@@ -183,7 +183,7 @@ function ActionsDropdown<T>({ row, actions, isLast }: ActionsDropdownProps<T>) {
             action.permission ? (
               <Can 
                 key={i} 
-                permission={action.permission}
+                permission={action.permission.split(',')}
                 fallback={renderItem(action, i, true)}
               >
                 {renderItem(action, i, false)}

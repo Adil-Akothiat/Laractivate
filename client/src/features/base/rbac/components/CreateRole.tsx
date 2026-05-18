@@ -1,34 +1,27 @@
 import { useEffect, useState } from "react";
-import { useRoles } from "../index";
+import { useRoleMutations, usePermissions } from "../hooks";
 import { Input, Button, Modal } from "@/components";
 import { FormControl } from "@/components/FormControls";
-import { usePermissions } from "../hooks";
 import PermissionsCheckbox from "./PermissionsCheckBox";
-import { getErrorsMessages } from "@/app/utils";
 import { Can } from "@/components/Guard/Can";
 import { toSnakeCase } from "../utils";
 
-interface Props {
-    onSuccess?: (msg:string) => void;
-    onFailure?: (msg:string) => void;
-}
-
-export function CreateRole({ onSuccess, onFailure }: Props) {
+export function CreateRole() {
     const [open, setOpen]               = useState(false);
     const [name, setName]               = useState("");
-    
-    const { mutate: createRole, isPending } = useRoles.create();
-    const { data } = usePermissions.getPermissions();
-    const permissions = data?.permissions ?? [];
-    const grouped     = data?.grouped     ?? {};
-    const defaultPermission = data?.default;
-    const [attachedIds, setAttachedIds] = useState<string[]>([defaultPermission?.id]);
 
-    useEffect(()=>{
-        if(defaultPermission) {
+    const { create }                    = useRoleMutations();
+    const { data }                      = usePermissions();
+    const permissions                   = data?.permissions  ?? [];
+    const grouped                       = data?.grouped      ?? {};
+    const defaultPermission             = data?.default;
+    const [attachedIds, setAttachedIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (defaultPermission) {
             setAttachedIds([defaultPermission.id]);
         }
-    },[defaultPermission])
+    }, [defaultPermission]);
 
     const handleClose = () => {
         setOpen(false);
@@ -38,31 +31,21 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // console.log(attachedIds);
-        // return;
-        createRole(
+        create.mutate(
             { name, permissions: attachedIds },
             {
-                onSuccess: () => {
-                    handleClose();
-                    onSuccess?.("Role Created Successfully");
-                },
-                onError: (err) => {
-                    handleClose();
-                    const msg = getErrorsMessages(err).join(", ") || "Failed to create role";
-                    onFailure?.(msg);
-                }
-            },
+                onSuccess:()=> handleClose()
+            }
         );
     };
 
     return (
         <>
-        <Can permission='roles.manage'>
-            <Button size="sm" onClick={() => setOpen(true)}>
-                + New role
-            </Button>
-        </Can>
+            <Can permission="roles.manage">
+                <Button size="sm" onClick={() => setOpen(true)}>
+                    + New role
+                </Button>
+            </Can>
             <Modal
                 isOpen={open}
                 onClose={handleClose}
@@ -75,7 +58,7 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
                             type="button"
                             variant="ghost"
                             onClick={handleClose}
-                            disabled={isPending}
+                            disabled={create.isPending}
                             size="sm"
                         >
                             Cancel
@@ -83,8 +66,8 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
                         <Button
                             type="submit"
                             variant="primary"
-                            loading={isPending}
-                            disabled={isPending}
+                            loading={create.isPending}
+                            disabled={create.isPending}
                             onClick={handleSubmit}
                             size="sm"
                         >
@@ -101,7 +84,7 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
                             placeholder="e.g. billing-manager"
                             value={name}
                             onChange={(e) => setName(toSnakeCase(e.target.value))}
-                            disabled={isPending}
+                            disabled={create.isPending}
                             required
                             maxLength={50}
                         />
@@ -114,7 +97,7 @@ export function CreateRole({ onSuccess, onFailure }: Props) {
                                 grouped={grouped}
                                 selectedIds={attachedIds}
                                 onChange={setAttachedIds}
-                                disabled={isPending}
+                                disabled={create.isPending}
                             />
                         </FormControl>
                     )}

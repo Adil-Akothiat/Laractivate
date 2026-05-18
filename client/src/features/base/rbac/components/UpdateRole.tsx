@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { useRoles } from "../index";
-import { usePermissions } from "../hooks";
+import { useRole, useRoleMutations, usePermissions } from "../hooks";
 import { LoadingOverlay, Input, Button } from "@/components";
-import { getErrorsMessages } from "@/app/utils";
 import { FormControl } from "@/components/FormControls";
-import { useToastContext } from "@/app/hooks/common";
 import PermissionsCheckbox from "./PermissionsCheckBox";
 import { toSnakeCase } from "../utils";
 
@@ -17,37 +14,31 @@ interface Props {
 export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
     const [name, setName]               = useState("");
     const [attachedIds, setAttachedIds] = useState<string[]>([]);
-    const { toast }                     = useToastContext();
 
-    const { data, isPending: isFetching }       = useRoles.getRole(roleId);
-    const { data: permissionsData }             = usePermissions.getPermissions();
-    const { mutate: updateRole, isPending: isUpdating } = useRoles.update();
+    const { data, isPending: isFetching } = useRole(roleId);
+    const { data: permissionsData }       = usePermissions();
+    const { update }                      = useRoleMutations();
 
     const permissions = permissionsData?.permissions ?? [];
     const grouped     = permissionsData?.grouped     ?? {};
-    const isLocked    = data?.role.is_locked;
-    const isPending   = isUpdating;
+    const isLocked    = data?.is_locked;
+
 
     // Seed form with existing role data
     useEffect(() => {
         if (data) {
-            setName(data.role.name);
-            setAttachedIds(data.attached_ids as string[]);
+            setName(data.name);
+            setAttachedIds(data.permissions?.map(({id}:{id:string})=> id) as string[]);
         }
     }, [data]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        updateRole(
-            { id: roleId, payload: { name, permissions: attachedIds } },
+        update.mutate(
+            { id: roleId, data: { name, permissions: attachedIds } },
             {
                 onSuccess: () => {
-                    toast.success("Role updated successfully.");
                     onSuccess();
-                },
-                onError: (err) => {
-                    const messages = getErrorsMessages(err);
-                    toast.error(messages.join("\n"));
                 },
             },
         );
@@ -64,7 +55,7 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
                     placeholder="e.g. billing-manager"
                     value={name}
                     onChange={(e) => setName(toSnakeCase(e.target.value))}
-                    disabled={isPending || !!isLocked}
+                    disabled={update.isPending || !!isLocked}
                     required
                     maxLength={50}
                 />
@@ -82,7 +73,7 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
                         grouped={grouped}
                         selectedIds={attachedIds}
                         onChange={setAttachedIds}
-                        disabled={isPending || !!isLocked}
+                        disabled={update.isPending || !!isLocked}
                     />
                 </FormControl>
             )}
@@ -93,7 +84,7 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
                         type="button"
                         variant="ghost"
                         onClick={onCancel}
-                        disabled={isPending}
+                        disabled={update.isPending}
                         size="sm"
                     >
                         Cancel
@@ -101,8 +92,8 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
                     <Button
                         type="submit"
                         variant="primary"
-                        loading={isPending}
-                        disabled={isPending}
+                        loading={update.isPending}
+                        disabled={update.isPending}
                         size="sm"
                     >
                         Save changes

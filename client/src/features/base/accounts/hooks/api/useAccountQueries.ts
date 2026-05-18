@@ -17,6 +17,7 @@ export const useAccount = (id: string | undefined) => {
     queryFn: () => accountApi.get(id!),
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
+    select: res=> res.data.data
   });
 };
 
@@ -25,6 +26,7 @@ export const useAccountSessions = (id: string | undefined) => {
     queryKey: accountKeys.sessions(id!),
     queryFn: () => accountApi.sessions.list(id!),
     enabled: !!id,
+    select: (res)=> res.data.data
   });
 };
 
