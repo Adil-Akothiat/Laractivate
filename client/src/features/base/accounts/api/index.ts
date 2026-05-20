@@ -6,6 +6,7 @@ import type {
   UserUpdatePayload,
 } from '../types';
 import type { LogSchema, SessionResponseSchema, UserSchema } from '../../shared';
+import { disableTwoFactor } from '../../shared/api';
 
 const BASE_ROUTE = '/user/accounts';
 
@@ -33,7 +34,7 @@ export const accountApi = {
     changePassword: (id: string, data: any) =>
       api.put(`${BASE_ROUTE}/${id}/security/password`, data),
     disableTwoFactor: (id: string, data: { password: string }) =>
-      api.delete(`${BASE_ROUTE}/${id}/security/two-factor`, { data }),
+      api.delete(`${BASE_ROUTE}/${id}/security/two-factor`, { data })
   },
 
   // --- Sessions ---

@@ -8,6 +8,7 @@ use App\Services\Security\TwoFactorAuthService;
 use App\Services\User\UserService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\Validation\Rules\Password;
+use App\Http\Resources\System\BaseResource;
 
 class SecurityController extends Controller
 {
@@ -31,7 +32,7 @@ class SecurityController extends Controller
         );
 
         $this->jwtService->invalidateUserTokens($request->user()->id);
-
+        
         return response()->json([
             'message' => 'Password changed successfully! Please log in again.',
         ], 200);
@@ -39,16 +40,15 @@ class SecurityController extends Controller
 
     public function init(): JsonResponse
     {
-        $qrCodeUrl = $this->tfaService->initializeSetup(auth()->user());
-        return response()->json(['qrCodeUrl' => $qrCodeUrl]);
+        $tfaQrcode = $this->tfaService->initializeSetup(auth()->user());
+        return (new BaseResource(['tfaQrcode' => $tfaQrcode]))->withMessage('2FA enabled successfully.')->response()->setStatusCode(200);
     }
 
     public function enable(Request $request):JsonResponse
     {
         $request->validate(['otp' => 'required|string']);
         $data = $this->tfaService->verifyAndEnable(auth()->user(), $request->otp);
-
-        return response()->json($data, 200);
+        return (new BaseResource($data))->withMessage('2FA enabled successfully.')->response()->setStatusCode(200);
     }
 
     public function disable(Request $request):JsonResponse
@@ -56,8 +56,7 @@ class SecurityController extends Controller
         $request->validate(['password' => 'required|string']);
 
         $this->tfaService->disable(auth()->user(), $request->password);
-
-        return response()->json(['disabled' => true], 200);
+        return (new BaseResource([]))->withMessage('2FA disabled successfully.')->response()->setStatusCode(200);
     }
 
     /**
@@ -66,6 +65,6 @@ class SecurityController extends Controller
     public function regenerateCodes():JsonResponse
     {
         $codes = $this->tfaService->generateRecoveryCodes(auth()->user());
-        return response()->json(['recovery_codes' => $codes], 200);
+        return (new BaseResource(['recoveryCodes' => $codes]))->withMessage('Recovery codes generated successfully.')->response()->setStatusCode(200);
     }
 }

@@ -9,12 +9,11 @@ interface CanProps {
 
 export const Can = ({ permission, children, fallback = null }: CanProps) => {
     const { can, canAny } = useCan();
-
+    
     // Determine access based on string or array
     const hasAccess = Array.isArray(permission) 
         ? canAny(permission) 
         : can(permission);
-
     if (!hasAccess) {
         return <>{fallback}</>;
     }

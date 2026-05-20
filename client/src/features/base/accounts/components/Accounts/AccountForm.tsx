@@ -1,4 +1,4 @@
-import type { SetStateSchema } from "@/app/types";
+import type { SetStateProps } from "@/app/types";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
 import Switch from "@/components/Switch";
@@ -10,7 +10,7 @@ type Props = {
   isPending: boolean;
   form: AccountFormValues;
   roles: RoleSchema[];
-  setForm: SetStateSchema<AccountFormValues>;
+  setForm: SetStateProps<AccountFormValues>;
   onClose: () => void;
 };
 

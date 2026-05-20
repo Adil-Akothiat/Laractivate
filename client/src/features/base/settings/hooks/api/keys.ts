@@ -9,5 +9,5 @@ export const settingsKeys = {
 
   // Activity Logs
   activityLogs:      () => [...settingsKeys.all, 'activity-logs'] as const,
-  activityLogsList:  (page: number) => [...settingsKeys.activityLogs(), page] as const,
+  activityLogsList:  (page: number) => [...settingsKeys.activityLogs(), page] as const
 };

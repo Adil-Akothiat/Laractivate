@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { ShieldCheck, RefreshCw } from 'lucide-react';
-import OtpInput from './OtpInput';
+import OtpInput from '../../../shared/components/2FA/OtpInput';
 import { getErrorsMessages } from '@/app/utils';
 import { Alert } from '@/components';
 
 interface Props {
-  onVerify:   (otp: string) => void;
-  isPending:  boolean;
-  isError:    boolean;
-  isInvalid:  boolean;  // server returned isValid: false
-  error:      unknown;
-  onBack:     () => void;
+  onVerify: (otp: string) => void;
+  isPending: boolean;
+  isError: boolean;
+  isInvalid: boolean;
+  error: unknown;
+  onBack: () => void;
 }
 
 const StepVerify = ({ onVerify, isPending, isError, isInvalid, error, onBack }: Props) => {
@@ -18,7 +18,9 @@ const StepVerify = ({ onVerify, isPending, isError, isInvalid, error, onBack }: 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.length === 6) onVerify(code);
+    if (code.length === 6) {
+      onVerify(code);
+    }
   };
 
   return (
@@ -51,11 +53,11 @@ const StepVerify = ({ onVerify, isPending, isError, isInvalid, error, onBack }: 
         className="btn btn-primary w-full"
         disabled={isPending || code.length < 6}
       >
-        {isPending ? <span className="loading loading-xs" /> : null}
+        {isPending && <span className="loading loading-xs" />}
         Verify & Activate
       </button>
 
-      <button type="button" onClick={onBack} className="btn btn-ghost btn-sm gap-1">
+      <button type="button" onClick={onBack} className="btn btn-ghost btn-sm gap-1" disabled={isPending}>
         <RefreshCw size={13} /> Re-scan QR Code
       </button>
     </form>

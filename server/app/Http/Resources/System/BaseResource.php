@@ -9,6 +9,15 @@ class BaseResource extends JsonResource
 {
     protected $message =  null;
     protected $extraMeta = [];
+
+    public function toArray(Request $request): array
+    {
+        if (is_array($this->resource)) {
+            return $this->resource;
+        }
+
+        return parent::toArray($request);
+    }
     
     /**
      * Fluent setter for the message

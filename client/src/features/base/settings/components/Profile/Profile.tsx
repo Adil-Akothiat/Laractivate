@@ -6,7 +6,6 @@ import { DataLoader } from "@/components/Loaders/DataLoader";
 
 export default function Profile() {
   const query = useProfile();
-
   return (
     <DataLoader query={query}>
       {(data) => {

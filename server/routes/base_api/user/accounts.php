@@ -27,8 +27,8 @@ Route::prefix('accounts')->group(function() {
         Route::put('/{user}/sessions', [AccountsController::class, 'revokeAllSessions']);
         Route::delete('/{user}/sessions/clear-history', [AccountsController::class, 'clearHistory']);
         
-        // activities
-        Route::get('/{user}/activity-logs', [ActivityLogController::class, 'show']);
+        // logs activities
+        Route::middleware('permission:logs.view')->get('/{user}/activity-logs', [ActivityLogController::class, 'show']);
 
         // rbac
         Route::post('/{user}/{role}/assign', [RbacController::class, 'assignRole']);

@@ -1,8 +1,8 @@
 import React from "react";
 
-type AlertVariant = "default" | "success" | "warning" | "error" | "info";
+export type AlertVariant = "default" | "success" | "warning" | "error" | "info";
 
-interface AlertProps {
+export interface AlertProps {
   variant?: AlertVariant;
   title?: string;
   message: string;

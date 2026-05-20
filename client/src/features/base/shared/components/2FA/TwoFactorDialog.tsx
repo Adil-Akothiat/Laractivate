@@ -3,7 +3,6 @@ import { ShieldCheck, X, KeyRound, Smartphone } from 'lucide-react';
 import { getErrorsMessagesStr } from '@/app/utils';
 import { Button, Input } from '@/components';
 import OtpInput from './OtpInput';
-import { useTwoFactor } from '../../hooks';
 import { useToastContext } from '@/app/hooks/common';
 
 interface Props {
@@ -20,10 +19,10 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
     const [otp, setOtp] = useState('');
     const [recoveryCode, setRecoveryCode] = useState('');
     const { toast } = useToastContext();
-    const { mutate, isPending, reset } = useTwoFactor.verify();
+    // const { mutate, isPending, reset } = useTwoFactor.verify();
 
     const switchMode = (next: Mode) => {
-        reset();
+        // reset();
         setOtp('');
         setRecoveryCode('');
         setMode(next);
@@ -31,26 +30,26 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        reset();
-        if (mode === 'otp') {
-            const sanitized = otp.replace(/\D/g, '').trim();
-            if (sanitized.length !== 6) return;
-            mutate({ code: sanitized, user_id: userId, token }, { 
-              onSuccess,
-              onError: (err:any)=> {
-                toast.error(getErrorsMessagesStr(err));
-              }
-            });
-        } else {
-            const sanitized = recoveryCode.trim();
-            if (!sanitized) return;
-            mutate({ code: sanitized, user_id: userId, token }, {
-              onSuccess,
-               onError: (err:any)=> {
-                toast.error(getErrorsMessagesStr(err));
-              }
-            });
-        }
+        // reset();
+        // if (mode === 'otp') {
+        //     const sanitized = otp.replace(/\D/g, '').trim();
+        //     if (sanitized.length !== 6) return;
+        //     mutate({ code: sanitized, user_id: userId, token }, { 
+        //       onSuccess,
+        //       onError: (err:any)=> {
+        //         toast.error(getErrorsMessagesStr(err));
+        //       }
+        //     });
+        // } else {
+        //     const sanitized = recoveryCode.trim();
+        //     if (!sanitized) return;
+        //     mutate({ code: sanitized, user_id: userId, token }, {
+        //       onSuccess,
+        //        onError: (err:any)=> {
+        //         toast.error(getErrorsMessagesStr(err));
+        //       }
+        //     });
+        // }
     };
 
     const canSubmit =
@@ -114,7 +113,7 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
                             <p className="text-sm text-base-content/60 text-center">
                                 Enter the 6-digit code from your authenticator app to complete sign in.
                             </p>
-                            <OtpInput value={otp} onChange={setOtp} disabled={isPending} />
+                            {/* <OtpInput value={otp} onChange={setOtp} disabled={isPending} /> */}
                         </>
                     ) : (
                         <>
@@ -124,7 +123,7 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
                             <Input
                                 value={recoveryCode}
                                 onChange={(e) => setRecoveryCode(e.target.value)}
-                                disabled={isPending}
+                                // disabled={isPending}
                                 placeholder="e.g. ku2HNXTRjD-Dt6Usz29DE"
                                 leftIcon={<KeyRound size={14} />}
                                 autoComplete="off"
@@ -137,7 +136,7 @@ const TwoFactorDialog = ({ userId, onSuccess, onCancel, token }: Props) => {
                         type="submit"
                         variant="primary"
                         block
-                        loading={isPending}
+                        // loading={isPending}
                         loadingText="Verifying..."
                         disabled={!canSubmit}
                     >

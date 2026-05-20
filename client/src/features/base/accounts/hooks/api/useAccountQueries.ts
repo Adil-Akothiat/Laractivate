@@ -35,6 +35,7 @@ export const useAccountLogs = (id: string | undefined, page: number) => {
     queryKey: accountKeys.logs(id!, page),
     queryFn: () => accountApi.logs.list(id!, page),
     enabled: !!id,
-    placeholderData: (previousData) => previousData, // smooth pagination
+    placeholderData: (previousData) => previousData,
+    select: res=> res.data
   });
 };

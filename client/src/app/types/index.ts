@@ -1,5 +1,3 @@
-export type SetStateSchema<T> = React.Dispatch<React.SetStateAction<T>>;
-
 // api
 export interface ApiResponseSchema<T> {
   data: T;
@@ -47,3 +45,6 @@ export interface PasswordSchema {
   password:string;
   password_confirmation:string;
 }
+
+// Props
+export type SetStateProps<T> = React.Dispatch<React.SetStateAction<T>>;

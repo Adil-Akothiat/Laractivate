@@ -2,7 +2,7 @@ import { Shield, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Card, Badge, Button } from "@/components";
 import { useAccountMutations } from "@/features/base/accounts";
-import Disable2FAModal from "@/features/base/shared/components/2FA/Disable2FAModal";
+import Disable2FAModal from "@/features/base/shared/components/2FA/Disable2FA";
 import type { UserSchema } from "@/features/base/shared";
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
 
 export default function AccountTwoFactorCard({ user }: Props) {
     const [open, setOpen] = useState(false);
-    // Initialize the hook
     const { disableTwoFactor } = useAccountMutations();
     const isEnabled = !!user?.two_factor_enabled;
 

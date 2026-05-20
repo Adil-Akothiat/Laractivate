@@ -10,7 +10,7 @@ export const useCan = () => {
         // Safe check: if user or permissionsSet isn't loaded, they can't do anything
         const permissions = user?.permissionsSet;
         if (!permissions) return false;
-
+        
         // 1. Super Admin Wildcard
         if (permissions.includes('all')) return true;
 
@@ -24,7 +24,6 @@ export const useCan = () => {
     const canAny = (permissionsArray: string[]): boolean => {
         return permissionsArray.some(p => can(p));
     };
-
     // ALWAYS return the object so destructuring { can, canAny } never fails
     return { can, canAny };
 };

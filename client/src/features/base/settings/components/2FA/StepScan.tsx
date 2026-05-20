@@ -19,10 +19,16 @@ const StepScan = ({ qrUrl, onNext }: Props) => (
     </div>
 
     <div className="bg-white p-4 rounded-2xl shadow-sm border border-base-300">
-      <QRCodeSVG value={qrUrl} size={180} />
+      {qrUrl ? (
+        <QRCodeSVG value={qrUrl} size={180} />
+      ) : (
+        <div className="w-[180px] h-[180px] flex items-center justify-center text-xs text-base-content/30">
+          Missing QR Stream
+        </div>
+      )}
     </div>
 
-    <button onClick={onNext} className="btn btn-primary w-full">
+    <button onClick={onNext} className="btn btn-primary w-full" disabled={!qrUrl}>
       Next — Enter Code
     </button>
   </div>

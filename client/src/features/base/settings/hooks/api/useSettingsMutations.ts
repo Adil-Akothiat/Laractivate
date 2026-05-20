@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsApi } from '../../api';
 import { settingsKeys } from './keys';
 import { useToastContext } from '@/app/hooks/common';
+import { getErrorsMessagesStr } from '@/app/utils';
 
 export const useSettingsMutations = () => {
   const queryClient = useQueryClient();
@@ -58,6 +59,42 @@ export const useSettingsMutations = () => {
     },
   });
 
+  // 2fa
+  const tfa = {
+    init: useMutation({
+      mutationFn: settingsApi.security.tfa.init,
+      onSuccess: (response) => {
+        queryClient.invalidateQueries({ queryKey: settingsKeys.profile() });
+        toast.success(response.data.message || 'Init successfully.');
+      },
+      onError: (err) => toast.error(getErrorsMessagesStr(err))
+    }),
+    enable: useMutation({
+      mutationFn: settingsApi.security.tfa.enable,
+      onSuccess: (response)=> {
+        queryClient.invalidateQueries({ queryKey: settingsKeys.profile() });
+        toast.success(response.data.message || 'Enabled successfully.');
+      },
+      onError: (err)=> toast.error(getErrorsMessagesStr(err))
+    }),
+    disable: useMutation({
+      mutationFn: settingsApi.security.tfa.disable,
+      onSuccess: (response)=> {
+        queryClient.invalidateQueries({ queryKey: settingsKeys.profile() });
+        toast.success(response.data.message || 'Disabled successfully.');
+      },
+      onError: (err)=> toast.error(getErrorsMessagesStr(err))
+    }),
+    regenerateRecoveryCodes: useMutation({
+      mutationFn: settingsApi.security.tfa.regenerateRecoveryCodes,
+      onSuccess: (response)=> {
+        queryClient.invalidateQueries({ queryKey: settingsKeys.profile() });
+        toast.success(response.data.message || 'Regenerated successfully.!');
+      },
+      onError: (err)=> toast.error(getErrorsMessagesStr(err))
+    })
+  }
+
   // --- Sessions ---
 
   const revokeSession = useMutation({
@@ -99,5 +136,6 @@ export const useSettingsMutations = () => {
     revokeSession,
     revokeAllSessions,
     clearHistory,
+    tfa
   };
 };

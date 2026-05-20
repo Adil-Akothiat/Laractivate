@@ -53,8 +53,7 @@ class TwoFactorAuthService
         $user->update(['two_factor_enabled' => true]);
 
         return [
-            'success' => true,
-            'recovery_codes' => $recoveryCodes
+            'recoveryCodes' => $recoveryCodes
         ];
     }
 

@@ -5,7 +5,7 @@ import AuthGuard from "../../middlewares/AuthGuard";
 import PermissionGuard from "../../middlewares/PermissionGuard";
 import { ResetPasswordGuard } from "../../middlewares/ResetPasswordGuard";
 import MiniSidebar from "@/features/base/settings/components/Shared/MiniSidebar";
-import TwoFactorAuth from "@/features/base/shared/components/2FA/TwoFactorAuth";
+import TwoFactorAuth from "@/features/base/settings/components/2FA/TwoFactorAuth";
 
 import Dashboard from "@/features/base/dashboard";
 import Notification from "@/features/base/notifications";
