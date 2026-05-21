@@ -67,7 +67,8 @@ export const useAccountMutations = () => {
     },
   });
 
-  const disableTwoFactor = useMutation({
+  const tfa = {
+    disable: useMutation({
     mutationFn: ({ id, data }: { id: string; data: { password: string } }) =>
       accountApi.profile.disableTwoFactor(id, data),
     onSuccess: (response, { id }) => {
@@ -82,7 +83,8 @@ export const useAccountMutations = () => {
           "Failed to disable two-factor authentication",
       );
     },
-  });
+  })
+  }
 
   // --- Sessions ---
 
@@ -146,7 +148,7 @@ export const useAccountMutations = () => {
     // Security & Profile
     updateAvatar,
     changePassword,
-    disableTwoFactor,
+    tfa,
     // Sessions
     revokeSession,
     revokeAllSessions,

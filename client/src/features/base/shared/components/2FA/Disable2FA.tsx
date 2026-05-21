@@ -7,7 +7,7 @@ export interface Disable2FAProps {
   disableApi: (password: string) => void;
   isPending: boolean;
   open:boolean;
-  setOpen: SetStateProps<boolean>
+  setOpen: SetStateProps<boolean>;
 }
 
 export default function Disable2FA({
@@ -26,7 +26,6 @@ export default function Disable2FA({
       <Button
         variant="error"
         outline
-        loading={isPending}
         leftIcon={<ShieldBan size={16} />}
         onClick={() => setOpen(true)}
       >

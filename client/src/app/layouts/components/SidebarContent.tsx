@@ -1,6 +1,6 @@
 import { Bell, LayoutDashboard, LifeBuoy, LogOut, Settings, ShieldIcon, UserKey, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useCan } from "../../middlewares/hooks/useCan";
+import { useCan } from "../../hooks/ui/useCan";
 import { APP_PERMISSIONS } from "../../constants/appPermissions";
 
 export default function SidebarContent() {
@@ -48,7 +48,7 @@ export default function SidebarContent() {
             items: [
                 {
                     label: "Settings",
-                    href: "/settings/profile",
+                    href: "/settings",
                     icon: <Settings size={16} />,
                     show: true,
                 }

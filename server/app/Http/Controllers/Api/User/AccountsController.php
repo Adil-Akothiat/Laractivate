@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\{User, Role};
 use App\Http\Resources\User\{UserCollection, UserResource};
 use App\Http\Resources\Security\SessionCollection;
+use App\Http\Resources\System\BaseResource;
 use App\Services\User\UserService;
 use App\Services\Security\JwtService;
 use Illuminate\Validation\ValidationException;
@@ -103,7 +104,7 @@ class AccountsController extends Controller
             'password' => 'required|string',
         ]);
         $this->userService->disableTwoFactor($user, $validated['password']);
-        return response()->json(['message' => 'Two-factor authentication disabled for this account.'], 200);
+        return (new BaseResource([]))->withMessage('Two-factor authentication disabled for this account.')->response()->setStatusCode(200);
     }
 
     public function destroy(User $user)

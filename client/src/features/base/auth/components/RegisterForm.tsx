@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/features/base/auth/hooks/useAuth";
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
+import { useAuthMutations } from "../hooks";
 
 export default function RegisterForm() {
-    const { mutate: register, isPending, error, isError } = useAuth.register();
+    const { register } = useAuthMutations();
     const navigate = useNavigate();
     const [form, setForm] = useState({
         firstName:                 "",
@@ -21,7 +21,7 @@ export default function RegisterForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        register(
+        register.mutate(
             {
                 first_name:                  form.firstName,
                 last_name:                  form.lastName,
@@ -36,7 +36,7 @@ export default function RegisterForm() {
     };
 
     return (
-        <div className="w-full max-w-sm mx-auto px-6">
+        <div className= "w-full max-w-sm mx-auto px-6">
             {/* Heading - Increased size and added tracking for a premium feel */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-base-content tracking-tight">
@@ -47,7 +47,7 @@ export default function RegisterForm() {
                 </p>
             </div>
 
-            {isError && getErrorsMessages(error).map((msg: string, i: number) => (
+            {register.isError && getErrorsMessages(register.error).map((msg: string, i: number) => (
                 <Alert key={i} variant="error" message={msg} className="mb-6" />
             ))}
 
@@ -60,7 +60,7 @@ export default function RegisterForm() {
                             placeholder="Mohamed"
                             value={form.firstName}
                             onChange={(e) => setValue("firstName", e.target.value)}
-                            disabled={isPending}
+                            disabled={register.isPending}
                             required
                             className="bg-base-200/40 h-11"
                         />
@@ -72,7 +72,7 @@ export default function RegisterForm() {
                             placeholder="Ali"
                             value={form.lastName}
                             onChange={(e) => setValue("lastName", e.target.value)}
-                            disabled={isPending}
+                            disabled={register.isPending}
                             required
                             className="bg-base-200/40 h-11"
                         />
@@ -86,7 +86,7 @@ export default function RegisterForm() {
                         placeholder="you@example.com"
                         value={form.email}
                         onChange={(e) => setValue("email", e.target.value)}
-                        disabled={isPending}
+                        disabled={register.isPending}
                         required
                         className="bg-base-200/40 h-11"
                     />
@@ -101,7 +101,7 @@ export default function RegisterForm() {
                             placeholder="••••••••"
                             value={form.password}
                             onChange={(e) => setValue("password", e.target.value)}
-                            disabled={isPending}
+                            disabled={register.isPending}
                             required
                             className="bg-base-200/40 h-11"
                         />
@@ -114,7 +114,7 @@ export default function RegisterForm() {
                             placeholder="••••••••"
                             value={form.passwordConfirmation}
                             onChange={(e) => setValue("passwordConfirmation", e.target.value)}
-                            disabled={isPending}
+                            disabled={register.isPending}
                             required
                             className="bg-base-200/40 h-11"
                         />
@@ -125,20 +125,11 @@ export default function RegisterForm() {
                     <Button
                         className="w-full"
                         type="submit"
-                        loading={isPending}
+                        loading={register.isPending}
                         loadingText="Sign Up..."
                     >
                         Create Account
                     </Button>
-                    {/* <button
-                        type="submit"
-                        className="btn btn-primary w-full shadow-lg shadow-primary/20 h-11"
-                        disabled={isPending}
-                    >
-                        {isPending ? (
-                            <><span className="loading loading-spinner loading-xs" /> Working...</>
-                        ) : "Create Account"}
-                    </button> */}
                 </div>
             </form>
 

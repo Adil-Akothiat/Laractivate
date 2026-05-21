@@ -9,6 +9,7 @@ use App\Http\Requests\{LoginRequest, RegisterRequest, ForgotPasswordRequest};
 use App\Services\System\SessionService;
 use App\Services\Security\{AuthService, JwtService};
 use App\Http\Resources\User\UserResource;
+use App\Http\Resources\System\BaseResource;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -46,8 +47,7 @@ class AuthController extends Controller
         $refreshToken = $request->cookie($this->jwtService->refresh_token_key);
         $accessToken = $request->cookie($this->jwtService->access_token_key);
         $this->auth->logout($accessToken, $refreshToken);
-        return response()->json(['message' => 'Successfully logged out'])
-            ->withoutCookie($this->jwtService->access_token_key)
+        return (new BaseResource([]))->withMessage('Logged out!')->response()->setStatusCode(200)->withoutCookie($this->jwtService->access_token_key)
             ->withoutCookie($this->jwtService->refresh_token_key);
     }
 
@@ -64,33 +64,33 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        return response()->json(['user'=> new UserResource($request->user())], 200);
+        return (new UserResource($request->user()))->response()->setStatusCode(200);
     }
 
     public function respondWithToken(string $accessToken, string $refreshToken, $data = null): JsonResponse
     {
-        return response()->json(['data' => $data, 'tokens'=> [$accessToken, $refreshToken]])
-            ->cookie(
-                $this->jwtService->access_token_key, 
-                $accessToken,
-                $this->jwtService->cookie_ttl,
-                '/', 
-                null,
-                true,
-                true,
-                false, 
-                'Strict'
-            )
-            ->cookie(
-                $this->jwtService->refresh_token_key,
-                $refreshToken,
-                $this->jwtService->refresh_ttl,
-                '/',
-                null,
-                true,
-                true,
-                false,
-                'Strict'
-            );
+        $refreshTokenCookie = cookie(
+            $this->jwtService->refresh_token_key,
+            $refreshToken,
+            $this->jwtService->refresh_ttl,
+            '/',
+            null,
+            true,
+            true,
+            false,
+            'Strict'
+        );
+        $accessTokenCookie = cookie(
+            $this->jwtService->access_token_key, 
+            $accessToken,
+            $this->jwtService->cookie_ttl,
+            '/', 
+            null,
+            true,
+            true,
+            false, 
+            'Strict'
+        );
+        return (new BaseResource($data))->response()->setStatusCode(200)->withCookie($refreshTokenCookie)->withCookie($accessTokenCookie);
     }
 }

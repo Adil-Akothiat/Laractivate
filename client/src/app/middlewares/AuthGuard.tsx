@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { GlobalPageLoader } from "@/components/Loaders/Loaders";
-import { useMe } from "./hooks/useMe";
+import { useMe } from "../hooks";
 
 export default function AuthGuard() {
     const { data, isPending, isError } = useMe();

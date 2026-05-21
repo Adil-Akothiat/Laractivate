@@ -60,7 +60,7 @@ export default function ProfilForm({ user }: Props) {
         label="Email"
         type="email"
         value={form?.email ? form.email : user?.email}
-        readOnly={form?.email ? false : true}
+        readOnly
         // onChange={}
         className="bg-base-200 cursor-not-allowed"
         helperText={form?.email ? "Email cannot be changed." : undefined}

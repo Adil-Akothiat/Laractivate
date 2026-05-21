@@ -11,7 +11,7 @@ import type { UserSchema } from "@/features/base/shared";
 type ModalStep = "idle" | "scan" | "verify" | "success";
 
 interface TwoFactorStepperProps {
-  user: UserSchema | undefined;
+  user: UserSchema;
 }
 
 export default function TwoFactorStepper({ user }: TwoFactorStepperProps) {
@@ -25,7 +25,7 @@ export default function TwoFactorStepper({ user }: TwoFactorStepperProps) {
   const [modalDisableOpened, setModalDisableOpened] = useState<boolean>(false);
 
   // Directly derive state status from server cache prop to avoid duplicate stale state traps
-  const isEnabled = !!user?.two_factor_enabled;
+  const isEnabled = user.two_factor_enabled;
 
   // Step 1 — Initialize flow & capture QR signature payload
   const handleInit = () => {
@@ -50,9 +50,6 @@ export default function TwoFactorStepper({ user }: TwoFactorStepperProps) {
         onSuccess: (res) => {
           setFreshCodes(res.data.data.recoveryCodes);
           setModalStep("success");
-          
-          // Force profile cache invalidation to hydrate user schema properties seamlessly
-          queryClient.invalidateQueries({ queryKey: ["profile"] });
         },
         onError: () => {
           setIsInvalid(true);
@@ -75,8 +72,6 @@ export default function TwoFactorStepper({ user }: TwoFactorStepperProps) {
       {
         onSuccess: () => {
           setModalDisableOpened(false);
-          // Drop stale authorization layouts
-          queryClient.invalidateQueries({ queryKey: ["profile"] });
         },
       }
     );

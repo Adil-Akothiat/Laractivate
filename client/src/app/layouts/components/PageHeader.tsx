@@ -8,7 +8,7 @@ import type { UserSchema } from "@/features/base/shared/types";
 type Props = {
     setDrawerOpen:(open:boolean)=>void;
     setIsLogoutModalOpen:(open:boolean)=>void;
-    user:UserSchema | null;
+    user:UserSchema;
 }
 export default function PageHeader({ setDrawerOpen, setIsLogoutModalOpen, user }:Props) {
     const navigate = useNavigate();

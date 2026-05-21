@@ -7,6 +7,7 @@ use App\Http\Requests\{ForgotPasswordRequest, ResetPasswordRequest};
 use App\Services\Security\PasswordService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\Facades\Support\DB;
+use App\Http\Resources\System\BaseResource;
 
 class PasswordController extends Controller
 {
@@ -16,13 +17,13 @@ class PasswordController extends Controller
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $result = $this->passwordService->forgotPassword($request->validated());
-        return response()->json($result, 200);
+        return (new BaseResource($result))->response()->setStatusCode(200);
     }
 
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $result = $this->passwordService->resetPassword($request->validated());
-        return response()->json($result,200);
+        return (new BaseResource($result))->response()->setStatusCode(200);
     }
 
     public function validateToken(Request $request): JsonResponse
@@ -32,12 +33,9 @@ class PasswordController extends Controller
             $request->query('token') ?? ''
         );
         if (!$isValid) {
-            return response()->json([
-                'status' => 'invalid',
-                'message' => 'This link has expired or is invalid.'
-            ], 403); 
+            return (new BaseResource(['status'=>'invalid']))->withMessage('This link has expired or is invalid.')->response()->setStatusCode(402);
         }
 
-        return response()->json(['status' => 'valid'], 200);
+        return (new BaseResource(['status'=> 'valid']))->response()->setStatusCode(200);
     }
 }

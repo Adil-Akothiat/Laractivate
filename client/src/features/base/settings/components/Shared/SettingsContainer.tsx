@@ -34,22 +34,28 @@ const headers = {
     },
 
 };
+export default function SettingsContainer({ children, settingsType }: Props) {
+  const { icon, title, description } = headers[settingsType];
+  return (
+    <div className="py-6 px-3 space-y-6">
 
-export default function SettingsContainer({ children, settingsType }:Props) {
-    const {icon, title, description} = headers[settingsType];
-    return (
-        <div className="py-6 px-3 space-y-6">
-            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
-                {icon}
-            </div>
-            {/* Title + description */}
-            <div className="space-y-1">
-                <h2 className="font-bold text-base-content">{title}</h2>
-                <p className="text-sm text-base-content/60 leading-relaxed w-[550px]">
-                    {description}
-                </p>
-            </div>
-            {children}
+      {/* Header: icon + text inline, compact and grouped */}
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+          {icon}
         </div>
-    );
+        <div>
+          <h2 className="font-bold text-base-content text-base">{title}</h2>
+          <p className="text-sm text-base-content/60 leading-relaxed">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      {/* Divider: clear boundary between header and content */}
+      <div className="h-px bg-base-content/10" />
+
+      {children}
+    </div>
+  );
 }

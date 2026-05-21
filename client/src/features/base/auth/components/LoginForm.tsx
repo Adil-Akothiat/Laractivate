@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/features/base/auth/hooks/useAuth";
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
-import TwoFactorDialog from "../../shared/components/2FA/TwoFactorDialog";
+import TwoFactorDialog from "./TwoFactorVerification";
+import { useAuthMutations } from "../hooks";
 
 export default function LoginForm() {
-    const { mutate, isPending, isError, error } = useAuth.login();
+    const { login } = useAuthMutations();
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -21,7 +21,7 @@ export default function LoginForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate(
+        login.mutate(
             { email: form.email, password: form.password },
             {
                 onSuccess: (res) => {
@@ -51,7 +51,7 @@ export default function LoginForm() {
                 <p className="text-sm text-base-content/60 mt-2">Sign in to your account to continue</p>
             </div>
 
-            {isError && getErrorsMessages(error).map((msg: string, i: number) => (
+            {login.isError && getErrorsMessages(login.error).map((msg: string, i: number) => (
                 <Alert key={i} variant="error" message={msg} className="mb-6" />
             ))}
 
@@ -63,7 +63,7 @@ export default function LoginForm() {
                         placeholder="you@example.com"
                         value={form.email}
                         onChange={(e) => setValue("email", e.target.value)}
-                        disabled={isPending}
+                        disabled={login.isPending}
                         required
                         className="bg-base-200/50"
                     />
@@ -81,14 +81,14 @@ export default function LoginForm() {
                         placeholder="••••••••"
                         value={form.password}
                         onChange={(e) => setValue("password", e.target.value)}
-                        disabled={isPending}
+                        disabled={login.isPending}
                         required
                         className="bg-base-200/50"
                     />
                 </FormControl>
                 <Button
                     type="submit"
-                    loading={isPending}
+                    loading={login.isPending}
                     loadingText="Sign In..."
                     className="w-full"
                 >

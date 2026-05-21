@@ -1,28 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { getErrorsMessagesStr } from "@/app/utils";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
-import { useToastContext } from "@/app/hooks/common";
+import { useAuthMutations } from "../hooks";
 
 export default function ForgotPasswordForm() {
-    const { mutate, isPending } = useAuth.forgotPassword();
+    const { password } = useAuthMutations();
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
-    const { toast } = useToastContext();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate(email, {
+        password.forgot.mutate(email, {
             onSuccess: () => {
-                toast.success('Reset link sent! Check your mail inbox!');
                 navigate('/login');
-            },
-            onError: (err:any)=> {
-                toast.error(getErrorsMessagesStr(err));  
             }
-           
         });
     };
 
@@ -41,13 +33,13 @@ export default function ForgotPasswordForm() {
                         placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        disabled={isPending}
+                        disabled={password.forgot.isPending}
                         required
                     />
                 </FormControl>
                 <Button
                     loadingText="Sending..."
-                    loading={isPending}
+                    loading={password.forgot.isPending}
                     className="w-full"
                 >
                     Send Reset Link

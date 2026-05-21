@@ -38,8 +38,9 @@ export interface UserSchema {
   permissions: PermissionSchema[];
   is_active: boolean;
   owner?: boolean;
-  two_factor_enabled?: boolean;
-  two_factor_recovery_codes?: string[];
+  two_factor_secret: string|null;
+  two_factor_enabled: boolean;
+  two_factor_recovery_codes: string[]|[];
   created_at?: string;
   updated_at?: string;
 }

@@ -1,5 +1,5 @@
 import { Button } from "@/components";
-import { ArrowDownToDot } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export type TFRCProps = {
@@ -7,6 +7,7 @@ export type TFRCProps = {
   isPending: boolean;
   regenerate: () => void;
 };
+
 export default function TwoFactorRecoveryCodes({
   recoveryCodes,
   isPending,
@@ -15,7 +16,7 @@ export default function TwoFactorRecoveryCodes({
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [showCodes, setShowCodes] = useState(false);
-  
+
   const copyCode = (code: string, index: number) => {
     navigator.clipboard.writeText(code);
     setCopiedIndex(index);
@@ -29,24 +30,31 @@ export default function TwoFactorRecoveryCodes({
   };
 
   return (
-    <div className="mt-2">
-      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-        <Button 
+    <div className="mt-2 space-y-3">
+      {/* Action row */}
+      <div className="flex items-center gap-3">
+        <Button
           onClick={() => setShowCodes((v) => !v)}
           variant="default"
           outline
           size="sm"
-          leftIcon={<ArrowDownToDot         className={`w-5 h-5 transition-transform duration-700 ${showCodes ? 'rotate-180' : 'rotate-0'}`} 
-/>}
+          leftIcon={
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-300 ${
+                showCodes ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          }
         >
           {showCodes ? "Hide recovery codes" : "View recovery codes"}
         </Button>
 
+        {/* Regenerate is destructive — warn with error variant */}
         <Button
           loading={isPending}
           loadingText="Regenerating..."
           onClick={regenerate}
-          variant="default"
+          variant="primary"
           outline
           size="sm"
         >
@@ -54,48 +62,36 @@ export default function TwoFactorRecoveryCodes({
         </Button>
       </div>
 
+      {/* Expanded codes panel */}
       {showCodes && (
-        <div className="mt-3" style={{ width: "100%" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <p style={{ fontWeight: 600 }}>Recovery Codes</p>
+        <div className="rounded-2xl border border-base-content/10 bg-base-200/30 p-4 space-y-3">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-base-content">Recovery Codes</p>
+              <p className="text-xs text-base-content/60 mt-0.5">
+                Each code can only be used once. Regenerating invalidates all previous codes.
+              </p>
+            </div>
             <Button size="xs" variant="primary" outline onClick={copyAll}>
               {copiedAll ? "Copied!" : "Copy all"}
             </Button>
           </div>
-          <p style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
-            Each code can only be used once. Regenerating invalidates all
-            previous codes.
-          </p>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 8,
-              marginTop: 12,
-            }}
-          >
+          {/* Code grid */}
+          <div className="grid grid-cols-2 gap-2">
             {recoveryCodes.map((code, index) => (
               <Button
                 key={index}
                 onClick={() => copyCode(code, index)}
                 size="xs"
                 variant="default"
-                style={{
-                  fontFamily: "monospace",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: 8,
-                }}
+                className="font-mono flex justify-between px-3 py-2"
               >
                 <span>{code}</span>
-                <span>{copiedIndex === index ? "✓" : "Copy"}</span>
+                <span className="text-base-content/40">
+                  {copiedIndex === index ? "✓" : "Copy"}
+                </span>
               </Button>
             ))}
           </div>

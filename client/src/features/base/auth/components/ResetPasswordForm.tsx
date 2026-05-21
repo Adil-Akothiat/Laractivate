@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { getErrorsMessagesStr } from "@/app/utils";
 import { Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
 import { useToastContext } from "@/app/hooks/common";
+import { useAuthMutations } from "../hooks";
 
 export default function ResetPasswordForm() {
     const [searchParams] = useSearchParams();
@@ -12,7 +12,8 @@ export default function ResetPasswordForm() {
     const { toast } = useToastContext();
     const navigate = useNavigate();
 
-    const { mutate, isPending } = useAuth.resetPassword();
+    const { password } = useAuthMutations();
+    const { isPending } = password.reset;
     const [form, setForm] = useState({
         password:             "",
         passwordConfirmation: "",
@@ -22,7 +23,7 @@ export default function ResetPasswordForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate(
+        password.reset.mutate(
             {
                 email:                 email||'',
                 token:                 token || '',
