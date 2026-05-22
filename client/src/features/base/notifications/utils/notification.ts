@@ -1,7 +1,7 @@
-import type { GroupedNotifications, NotificationProps, NotificationData } from "../types"
+import type { GroupedNotificationsSchema, NotificationDetailSchema, NotificationSchema } from "../types";
 
 export const typeConfig: Record<
-  NotificationData["type"],
+  NotificationDetailSchema["type"],
   { badge: string; dot: string; bg: string }
 > = {
   success: { badge: "badge-success", dot: "bg-success", bg: "bg-success/10" },
@@ -28,11 +28,11 @@ export function timeAgo(dateStr: string): string {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export function groupByDate(notifications: NotificationProps[]): GroupedNotifications[] {
-  const groups: Record<string, NotificationProps[]> = {};
+export function groupByDate(notifications: NotificationSchema[]): GroupedNotificationsSchema[] {
+  const groups: Record<string, NotificationSchema[]> = {};
 
-  notifications.forEach((n:NotificationProps) => {
-    const date = new Date(n.created_at);
+  notifications.forEach((n:NotificationSchema) => {
+    const date = new Date(n.createdAt);
     const now = new Date();
 
     const isToday = date.toDateString() === now.toDateString();

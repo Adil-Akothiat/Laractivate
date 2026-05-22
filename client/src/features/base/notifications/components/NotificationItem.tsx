@@ -1,32 +1,32 @@
 import { Badge, LoadingOverlay } from "@/components";
-import { useMarkAsRead } from "../hooks/useNotification";
-import type { NotificationProps } from "../types/index";
 import { typeConfig, iconMap, timeAgo } from "../utils/notification";
+import type { NotificationSchema } from "../types";
+import { useNotificationMutations } from "../hooks/useNotificationMutations";
 
 type Props = {
-  notif: NotificationProps;
+  notification: NotificationSchema;
 };
 
-export function NotificationItem({ notif }: Props) {
-  const isUnread = notif.read_at === null;
-  const cfg = typeConfig[notif.data.type] ?? typeConfig.info;
-  const { mutate:markAsRead, isPending } = useMarkAsRead();
+export function NotificationItem({ notification }: Props) {
+  const isUnread = notification.readAt === null;
+  const cfg = typeConfig[notification.details.type] ?? typeConfig.info;
+  const { markAsRead } = useNotificationMutations();
   const markReadHandler = ()=> {
     if(isUnread) {
-      markAsRead(
-        notif?.id,
+      markAsRead.mutate(
+        notification?.id,
         {
           onSuccess:()=> {
-            if(notif.data.action) {
+            if(notification.details.action) {
               setTimeout(()=>{
-                window.location.href = notif.data.action;
+                window.location.href = notification.details.action;
               }, 100)
             }
           }
         }
       );
     } else {
-      window.location.href = notif.data.action;
+      window.location.href = notification.details.action;
     }
   }
 
@@ -35,7 +35,7 @@ export function NotificationItem({ notif }: Props) {
       className="w-full min-w-0 overflow-hidden"
       onClick={markReadHandler}
     >
-      {isPending && <LoadingOverlay />}
+      {markAsRead.isPending && <LoadingOverlay />}
       <div
         className={`cursor-pointer flex gap-3 items-start rounded-xl px-3 py-2.5 cursor-default hover:bg-base-200 transition-colors
         ${isUnread ? "bg-base-200/50" : "opacity-60"}`}
@@ -51,7 +51,7 @@ export function NotificationItem({ notif }: Props) {
         <span
           className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm ${cfg.bg}`}
         >
-          {iconMap[notif.data.icon] ?? "🔔"}
+          {iconMap[notification.details.icon] ?? "🔔"}
         </span>
 
         {/* Content */}
@@ -61,22 +61,22 @@ export function NotificationItem({ notif }: Props) {
               isUnread ? "text-base-content" : "text-base-content/50"
             }`}
           >
-            {notif.data.title}
+            {notification.details.title}
           </p>
 
           <p className="text-xs text-base-content/50 mt-0.5 line-clamp-2 leading-relaxed break-words"> {/* ✅ Fix 3: break-words for long message text */}
-            {notif.data.message}
+            {notification.details.message}
           </p>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span className="text-[10px] text-base-content/35 font-mono">
-              {timeAgo(notif.created_at)}
+              {timeAgo(notification.createdAt)}
             </span>
             <Badge
-              variant={notif.data.type}
+              variant={notification.details.type}
               size="xs"
             >
-              {notif.data.type}
+              {notification.details.type}
             </Badge>
           </div>
         </div>

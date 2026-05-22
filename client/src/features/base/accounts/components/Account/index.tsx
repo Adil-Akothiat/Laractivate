@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { useAccount } from "@/features/base/accounts";
-import { Breadcrumb, LoadingOverlay } from "@/components";
+import { Breadcrumb } from "@/components";
 import AccountProfile from "./Profile/AccountProfile";
 import AccountSecurity from "./Security/AccountSecurity";
 import AccountDangerZone from "./DangerZone/AccountDangerZone";

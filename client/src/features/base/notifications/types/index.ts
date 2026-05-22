@@ -1,4 +1,4 @@
-export interface NotificationData {
+export interface NotificationDetailSchema {
   title: string;
   message: string;
   action: string;
@@ -6,15 +6,19 @@ export interface NotificationData {
   icon: string;
 }
 
-export interface NotificationProps {
+export interface NotificationSchema {
   id: string;
-  data: NotificationData;
-  read_at: string | null;
-  created_at: string;
+  details: NotificationDetailSchema;
+  readAt: string | null;
+  createdAt: string;
 }
 
+export interface NotificationResponseSchema {
+  unreadCount:number;
+  notifications: NotificationSchema[];
+}
 
-export type GroupedNotifications = {
+export interface GroupedNotificationsSchema {
   label: string;
-  notifications: NotificationProps[];
-};
+  notifications: NotificationSchema[];
+}

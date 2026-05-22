@@ -1,17 +1,18 @@
-import { useGetNotifications, useMarkAllRead } from "./hooks/useNotification";
 import { ScrollContainer } from "@/components/ScrollContainer";
 import { Bell, RefreshCw } from "lucide-react";
-import type { NotificationProps } from "./types";
 import { groupByDate } from "./utils/notification";
 import { Button } from "@/components";
 import { NotificationItem } from "./components/NotificationItem";
+import type { NotificationSchema } from "./types";
+import { useNotifications } from "./hooks/useNotificationQueries";
+import { useNotificationMutations } from "./hooks/useNotificationMutations";
 
-export default function NotificationsPage() {
-    const { data, isPending, refetch, isFetching } = useGetNotifications();
-    const { mutate: markAllRead, isPending: isMarking } = useMarkAllRead();
+export default function Notifications() {
+    const { data, isPending, refetch, isFetching } = useNotifications();
+    const { markAllRead } = useNotificationMutations();
 
-    const notifications: NotificationProps[] = data?.data?.notifications ?? [];
-    const unreadCount = data?.data?.unread_count ?? 0;
+    const notifications: NotificationSchema[] = data?.notifications ?? [];
+    const unreadCount = data?.unreadCount ?? 0;
     const grouped = groupByDate(notifications);
 
     if (isPending) return (
@@ -53,8 +54,8 @@ export default function NotificationsPage() {
                         <Button
                             variant="ghost"
                             size="xs"
-                            onClick={()=> markAllRead()}
-                            loading={isMarking}
+                            onClick={()=> markAllRead.mutate()}
+                            loading={markAllRead.isPending}
                         >
                             Mark all as Read
                         </Button>
@@ -78,10 +79,10 @@ export default function NotificationsPage() {
                     </p>
                     {/* Group items */}
                     <div className="rounded-2xl border border-base-300 bg-base-100 overflow-hidden divide-y divide-base-200">
-                        {group.notifications.map((notif:NotificationProps) => (
+                        {group.notifications.map((notification) => (
                             <NotificationItem
-                                key={notif.id}
-                                notif={notif}
+                                key={notification.id}
+                                notification={notification}
                             />
                         ))}
                     </div>

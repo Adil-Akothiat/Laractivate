@@ -30,10 +30,10 @@ class UserResource extends BaseResource
             'owner' => $this->id === auth()->user()->id,
             'permissions' => $this->roles->flatMap(function($role) {
                 return $role->permissions;
-            }),
+            })->unique('id')->values(),
             'permissionsSet'=> $this->roles->flatMap(function($role) {
                 return $role->permissions->pluck('name');
-            })
+            })->unique('id')->values()
         ];
     }
     protected function getRecoveryCodes(): ?array

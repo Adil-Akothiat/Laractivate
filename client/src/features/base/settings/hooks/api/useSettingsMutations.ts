@@ -3,6 +3,7 @@ import { settingsApi } from '../../api';
 import { settingsKeys } from './keys';
 import { useToastContext } from '@/app/hooks/common';
 import { getErrorsMessagesStr } from '@/app/utils';
+import { authCoreKeys } from '@/app/hooks';
 
 export const useSettingsMutations = () => {
   const queryClient = useQueryClient();
@@ -25,6 +26,7 @@ export const useSettingsMutations = () => {
     mutationFn: settingsApi.profile.updateAvatar,
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: settingsKeys.profile() });
+      queryClient.invalidateQueries({ queryKey: authCoreKeys.session() });
       toast.success(response.data.message || 'Avatar updated');
     },
     onError: () => toast.error('Failed to update avatar'),

@@ -8,7 +8,6 @@ import MiniSidebar from "@/features/base/settings/components/Shared/MiniSidebar"
 import TwoFactorAuth from "@/features/base/settings/components/2FA/TwoFactorAuth";
 
 import Dashboard from "@/features/base/dashboard";
-import Notification from "@/features/base/notifications";
 import ActivityLogs from "@/features/base/settings/components/ActivityLogs/ActivityLogs";
 
 import LoginPage from "../../pages/base/auth/LoginPage";
@@ -23,6 +22,7 @@ import ChangePasswordPage from "../../pages/base/settings/ChangePasswordPage";
 import SessionsPage from "../../pages/base/settings/SessionsPage";
 
 import { APP_PERMISSIONS } from "../../constants/appPermissions";
+import NotificationsPage from "@/app/pages/base/notifications/NotificationsPage";
 
 export default function baseRoutes() {
     return (
@@ -48,7 +48,7 @@ export default function baseRoutes() {
                         }
                     />
 
-                    <Route path="/notifications" element={<Notification />} />
+                    <Route path="/notifications" element={<NotificationsPage />} />
 
                     <Route
                         path="/accounts"

@@ -74,7 +74,6 @@ const StepIntro = ({ disable2fa, enable2fa, isEnabled, tfaRecoveryCodes }: Props
       <TwoFactorGuide isEnabled={false} />
 
       {/* <div className="h-px bg-base-content/10" /> */}
-
       {/* CTA pinned bottom-right */}
       <div className="flex justify-end">
         <Enable2FA

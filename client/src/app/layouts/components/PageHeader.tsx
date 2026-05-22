@@ -2,8 +2,8 @@ import { Menu, ShieldIcon } from "lucide-react";
 import { ProfileDropdown } from "./ProfileDropdown";
 import { imageRender } from "../../utils/imagePreviewHandler";
 import { useNavigate } from "react-router-dom";
-import NotificationBell from "@/features/base/notifications/components/NotificationBell";
 import type { UserSchema } from "@/features/base/shared/types";
+import NotificationBell from "@/features/base/notifications/components/NotificationBell";
 
 type Props = {
     setDrawerOpen:(open:boolean)=>void;

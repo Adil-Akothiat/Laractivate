@@ -1,21 +1,21 @@
 import { Bell } from "lucide-react";
 import { Badge, Button, LoadingOverlay } from "@/components";
-import { useGetNotifications, useMarkAllRead } from "../hooks/useNotification";
-import type { NotificationProps } from "../types";
 import { NotificationsList } from "./NotificationsList";
 import NotificationDropDown from "./NotificationDropDown";
+import { useNotificationMutations } from "../hooks/useNotificationMutations";
+import { useNotifications } from "../hooks/useNotificationQueries";
 
 export default function NotificationBell() {
-    const { data, isPending, refetch, isFetching } = useGetNotifications();
-    const { mutate:markAllRead, isPending:isMarking } = useMarkAllRead();
-    const notifications: NotificationProps[] = data?.data?.notifications ?? [];
-    const unreadCount = data?.data?.unread_count ?? 0;
+    const { data, isPending, refetch, isFetching } = useNotifications();
+    const { markAllRead } = useNotificationMutations();
 
     const markAllReadHandler = ()=> {
-        markAllRead();
+        markAllRead.mutate();
     }
-
+    
     if (isPending) return <LoadingOverlay />;
+    const unreadCount = data?.unreadCount ?? 0;
+    const notifications = data?.notifications || [];
     const summary = (
         <>
             <Bell size={18} />
@@ -26,7 +26,6 @@ export default function NotificationBell() {
             )}
         </>
     );
-
     const header = (
         <>
             <div className="flex items-center gap-2">
@@ -44,7 +43,7 @@ export default function NotificationBell() {
                         size="xs"
                         className="text-[11px]"
                         onClick={markAllReadHandler}
-                        loading={isMarking}
+                        loading={markAllRead.isPending}
                     >
                         Mark all read
                     </Button>
@@ -61,7 +60,7 @@ export default function NotificationBell() {
             </div>
         </>
     );
-
+    
     return (
         <NotificationDropDown
             summary={summary}
