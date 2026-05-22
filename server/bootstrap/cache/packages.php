@@ -10,6 +10,13 @@
       0 => 'Jenssegers\\Agent\\AgentServiceProvider',
     ),
   ),
+  'laravel/cashier' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Cashier\\CashierServiceProvider',
+    ),
+  ),
   'laravel/pail' => 
   array (
     'providers' => 
