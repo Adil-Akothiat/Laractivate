@@ -15,7 +15,7 @@ class ActivityLogResource extends BaseResource
     {
         return [
             'id'=> $this->id,
-            'users_id'=> $this->users_id,
+            'user_id'=> $this->user_id,
             'description'=> $this->description,
             'event'=> $this->event,
             'properties'=> $this->properties,

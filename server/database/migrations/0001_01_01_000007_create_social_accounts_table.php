@@ -15,9 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('provider', 50);
             $table->string('provider_id', 45);
-            $table->foreignUuid('users_id')->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-
             $table->unique(['provider', 'provider_id']);
         });
     }

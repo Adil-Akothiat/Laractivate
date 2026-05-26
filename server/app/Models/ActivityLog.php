@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ActivityLog extends Model
 {
     protected $fillable = [
-        'users_id',
+        'user_id',
         'description',
         'event',
         'properties',
@@ -21,8 +21,8 @@ class ActivityLog extends Model
     protected $casts = [
         'properties' => 'array',
     ];
-     public function user(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class);
     }
 }

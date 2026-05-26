@@ -118,7 +118,7 @@ class SystemSupportService
             $request->header('Sec-CH-UA', '')
         );
         ActivityLog::create([
-            'users_id' => $finalUserId,
+            'user_id' => $finalUserId,
             'description' => $description,
             'event' => $event,
             'properties' => [...$metadata, ...$properties],

@@ -40,7 +40,7 @@ class JwtService
         $expiresAt = Carbon::now()->addMinutes($this->refresh_ttl);
         $refreshToken = RefreshToken::create([
             'token_hash' => hash('sha256', $token),
-            'users_id'   => $userId,
+            'user_id'   => $userId,
             'expires_at' => $expiresAt,
             'revoked'    => false,
             'metadata'   => $metadata
@@ -68,7 +68,7 @@ class JwtService
             if (!$record) {
                 throw new AuthenticationException("INVALID_TOKEN");
             }
-            $user      = User::findOrFail($record->users_id);
+            $user      = User::findOrFail($record->user_id);
             $newToken  = Str::random(64);
             $newHashed = hash('sha256', $newToken);
             $record->update([
@@ -88,10 +88,10 @@ class JwtService
     
     private function pruneOldTokens(string $userId): void
     {
-        $count = RefreshToken::where('users_id', $userId)->count();
+        $count = RefreshToken::where('user_id', $userId)->count();
 
         if ($count > 5) {
-            RefreshToken::where('users_id', $userId)
+            RefreshToken::where('user_id', $userId)
                 ->orderBy('created_at', 'asc')
                 ->limit($count - 5)
                 ->delete();
@@ -100,7 +100,7 @@ class JwtService
 
     public function invalidateUserTokens(string $userId): void
     {
-        RefreshToken::where('users_id', $userId)
+        RefreshToken::where('user_id', $userId)
             ->update(['revoked' => true]);
     }
 

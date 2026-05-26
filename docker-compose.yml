@@ -70,7 +70,19 @@ services:
       - app
     networks:
       - app-network
-
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    container_name: auth_system_stripe_cli
+    env_file:
+      - ./server/.env
+    # The image entrypoint natively parses environment variables passed this way!
+    command: listen --forward-to nginx:80/api/stripe/webhook
+    environment:
+      - STRIPE_API_KEY=${STRIPE_SECRET}
+    volumes:
+      - stripe_config:/root/.config/stripe
+    depends_on:
+      - nginx
 networks:
   app-network:
     driver: bridge
@@ -79,3 +91,4 @@ volumes:
   vendor-cache:
   db-data:
   public-storage:
+  stripe_config:

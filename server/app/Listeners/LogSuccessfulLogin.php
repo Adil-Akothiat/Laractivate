@@ -15,7 +15,7 @@ class LogSuccessfulLogin
 
     public function handle(Login $event): void
     {
-        $alreadyLogged = ActivityLog::where('users_id', $event->user->id)
+        $alreadyLogged = ActivityLog::where('user_id', $event->user->id)
         ->where('event', 'auth.login')
         ->where('created_at', '>=', now()->subSeconds(5))
         ->exists();

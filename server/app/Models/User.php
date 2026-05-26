@@ -10,11 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -69,12 +70,12 @@ class User extends Authenticatable implements JWTSubject
      */
     public function refreshTokens(): HasMany
     {
-        return $this->hasMany(RefreshToken::class, 'users_id');
+        return $this->hasMany(RefreshToken::class);
     }
 
     public function activityLogs(): HasMany
     {
-        return $this->hasMany(ActivityLog::class, 'users_id');
+        return $this->hasMany(ActivityLog::class);
     }
 
     /**
@@ -82,7 +83,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function socialAccounts(): HasMany
     {
-        return $this->hasMany(SocialAccount::class, 'users_id');
+        return $this->hasMany(SocialAccount::class);
     }
 
     /**
@@ -90,7 +91,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'users_id', 'roles_id');
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
     public function getJWTIdentifier()
@@ -110,7 +111,5 @@ class User extends Authenticatable implements JWTSubject
         return $this->roles()->whereHas('permissions', function(Builder $query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
-    }
-
-    
+    }    
 }

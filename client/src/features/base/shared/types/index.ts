@@ -48,7 +48,7 @@ export interface UserSchema {
 
 export interface SessionSchema {
     session_id:       number;
-    users_id:         string;
+    user_id:         string;
     device:           string;
     device_name?:     string;
     browser:          string;
@@ -90,7 +90,7 @@ export interface LogPropertiesSchema {
 
 export interface LogSchema {
     id: number;
-    users_id: string;
+    user_id: string;
     description: string;
     event: string;
     properties: LogPropertiesSchema | null;

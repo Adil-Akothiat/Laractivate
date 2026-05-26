@@ -24,7 +24,7 @@ class SessionResource extends BaseResource
             'is_active'   => !$this->revoked && $this->expires_at->isFuture(),
             'revoked'     => $this->revoked,
             'last_active' => $this->updated_at->diffForHumans(),
-            'users_id' => $this->users_id
+            'user_id' => $this->user_id
         ];
     }
 }

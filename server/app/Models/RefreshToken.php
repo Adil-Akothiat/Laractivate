@@ -19,7 +19,7 @@ class RefreshToken extends Model
         'token_hash',
         'expires_at',
         'revoked',
-        'users_id',
+        'user_id',
         'clients_id',
         'metadata'
     ];
@@ -43,14 +43,6 @@ class RefreshToken extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'users_id');
-    }
-
-    /**
-     * Get the client that owns the refresh token.
-     */
-    public function client(): BelongsTo
-    {
-        return $this->belongsTo(Client::class, 'clients_id');
+        return $this->belongsTo(User::class);
     }
 }

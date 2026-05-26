@@ -23,6 +23,7 @@ import SessionsPage from "../../pages/base/settings/SessionsPage";
 
 import { APP_PERMISSIONS } from "../../constants/appPermissions";
 import NotificationsPage from "@/app/pages/base/notifications/NotificationsPage";
+import BillingPage from "@/app/pages/base/dashboard/BillingPage";
 
 export default function baseRoutes() {
     return (
@@ -35,7 +36,6 @@ export default function baseRoutes() {
             <Route element={<ResetPasswordGuard />}>
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
             </Route>
-
             {/* Protected */}
             <Route element={<AuthGuard />}>
                 <Route element={<Sidebar />}>
@@ -47,9 +47,15 @@ export default function baseRoutes() {
                             </PermissionGuard>
                         }
                     />
-
+                    <Route
+                        path="/dashboard/billing"
+                        element={
+                            <PermissionGuard permission={APP_PERMISSIONS.dashboard}>
+                                <BillingPage />
+                            </PermissionGuard>
+                        }
+                    />
                     <Route path="/notifications" element={<NotificationsPage />} />
-
                     <Route
                         path="/accounts"
                         element={
@@ -75,7 +81,6 @@ export default function baseRoutes() {
                             </PermissionGuard>
                         }
                     />
-
                     {/* Settings */}
                     <Route path="/settings" element={<MiniSidebar />}>
                         <Route index element={<Navigate to="profile" replace />} />

@@ -20,7 +20,7 @@ public function handle(Logout $event): void
     }
 
     // 2. Idempotency check: prevent duplicate logs
-    $alreadyLoggedOut = ActivityLog::where('users_id', $event->user->id)
+    $alreadyLoggedOut = ActivityLog::where('user_id', $event->user->id)
         ->where('event', 'auth.logout')
         ->where('created_at', '>=', now()->subSeconds(5))
         ->exists();

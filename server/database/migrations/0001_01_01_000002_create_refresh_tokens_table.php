@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('token_hash', 255)->unique();
             $table->boolean('revoked')->default(false);
-            $table->foreignUuid('users_id')->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamp('expires_at');
             $table->json('metadata')->nullable();
             $table->timestamps();

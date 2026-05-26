@@ -83,7 +83,7 @@ class SessionService
     // get Sessions
     public function getSessions(User $user, int $perPage = 10): LengthAwarePaginator
     {
-        return RefreshToken::where('users_id', $user->id)
+        return RefreshToken::where('user_id', $user->id)
             ->orderBy('updated_at', 'desc')
             ->paginate($perPage)
             ->withQueryString();
@@ -92,14 +92,14 @@ class SessionService
     public function revokeSession(User $user, string $sessionId): void
     {
         RefreshToken::where('id', $sessionId)
-            ->where('users_id', $user->id)
+            ->where('user_id', $user->id)
             ->update(['revoked' => true]);
     }
 
     // revoke all except current
     public function revokeAllExceptCurrent(User $user, string $currentTokenHash): void
     {
-        RefreshToken::where('users_id', $user->id)
+        RefreshToken::where('user_id', $user->id)
             ->where('token_hash', '!=', $currentTokenHash)
             ->update(['revoked' => true]);
     }
@@ -107,7 +107,7 @@ class SessionService
     // clear history
     public function clearHistory(User $user): void
     {
-        RefreshToken::where('users_id', $user->id)
+        RefreshToken::where('user_id', $user->id)
             ->where('revoked', true)
             ->delete();
     }

@@ -18,7 +18,7 @@ class SocialAccount extends Model
     protected $fillable = [
         'provider',
         'provider_id',
-        'users_id',
+        'user_id',
     ];
 
     /**
@@ -26,6 +26,6 @@ class SocialAccount extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class);
     }
 }

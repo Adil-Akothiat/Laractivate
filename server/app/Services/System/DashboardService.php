@@ -113,7 +113,7 @@ class DashboardService
         $query = ActivityLog::with('user')->latest();
 
         if ($userId) {
-            $query->where('users_id', $userId);
+            $query->where('user_id', $userId);
         }
         return $query->take(3)->get()->map(fn($log) => [
             'id'          => $log->id,

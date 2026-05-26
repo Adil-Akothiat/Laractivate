@@ -25,7 +25,6 @@ cd laractivate
 ```
 
 ### 2. Configure Environment
-
 ```bash
 cp .env.example .env
 ```
@@ -81,11 +80,37 @@ Update your root `.env`:
 JWT_SECRET=your_generated_jwt_secret_here
 ```
 
-#### C. Apply Changes
-For the changes to take effect within the Docker environment, you must restart the application service:
+#### C. Connect and Pair Stripe CLI Webhooks 💳
+Laractivate abstracts local package dependencies by hosting an official `stripe/stripe-cli` service inside Docker. This captures transaction lifecycle events from your Stripe dashboard and routes them straight to your application database.
+
+##### 1. Link to Your Stripe Sandbox Account
+Initialize the pairing process inside the temporary CLI instance container:
+```bash
+docker-compose run --rm stripe-cli login
+```
+Docker will output a unique pairing URL. Copy it, paste it into your browser, log in, and click Allow. Your configuration token session will persist securely inside the named Docker volume layer.
+
+##### 2. Capture Your Webhook Secret Key
+Now, run the temporary listener check process once to extract your local container signing secret:
+```bash
+docker-compose up stripe-cli
+```
+
+Look closely at the initial boot logs terminal interface. You will see a line outputted like this:
+> Ready! Your webhook signing secret is whsec_...
+
+Copy that whsec_... string token, open your root .env file, and assign it to your configuration variable key:
+`STRIPE_WEBHOOK_SECRET=whsec_your_copied_secret_here`
+
+##### 3. Boot Up the Automated Webhook Background Service
+Hit `ctrl + c` to safely close the active terminal process view, then restart your core stack services inside the global background loop:
 
 ```bash
-docker-compose restart app
+docker-compose down
+```
+Then
+```bash
+docker-compose up -d
 ```
 **Pro Tip:** Never share your `.env` file or commit it to version control. These keys are unique to your production or local instance and are critical for security.
 
