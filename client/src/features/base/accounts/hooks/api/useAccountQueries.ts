@@ -39,3 +39,13 @@ export const useAccountLogs = (id: string | undefined, page: number) => {
     select: res=> res.data
   });
 };
+
+export const useAccountInvoices = (id: string | undefined, page:number) => {
+  return useQuery({
+    queryKey: accountKeys.invoices(id!, page),
+    queryFn: () => accountApi.billing.invoices.list(id!, page),
+    enabled: !!id,
+    placeholderData: (previousData) => previousData,
+    select: res=> res.data
+  });
+}

@@ -63,5 +63,13 @@ export const accountApi = {
   rbac: {
     assignRole: (userId:string, roleId:string)=> api.post<ApiResponseSchema<null>>(`${BASE_ROUTE}/${userId}/${roleId}/assign`),
     unAssignRole: (userId:string, roleId:string)=> api.delete<ApiResponseSchema<null>>(`${BASE_ROUTE}/${userId}/${roleId}/unassign`),
+  },
+
+  // billing 
+    // invoices
+  billing: {
+    invoices: {
+      list: (userId: string, page: number)=> api.get<PaginatedResponseSchema<any>>(`${BASE_ROUTE}/${userId}/billing/invoices`, { params: { page } }),
+    }
   }
 };

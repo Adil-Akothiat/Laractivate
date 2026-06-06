@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Cashier\Billable;
+use App\Services\Billing\BillingService;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -111,5 +112,36 @@ class User extends Authenticatable implements JWTSubject
         return $this->roles()->whereHas('permissions', function(Builder $query) use ($permission) {
             $query->where('name', $permission);
         })->exists();
-    }    
+    }
+
+    /**
+        * Get all payment methods saved by the user.
+    */
+    public function paymentMethods(): HasMany
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
+    /**
+     * Get all billing invoices for the user.
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     * Get all subscriptions belonging to the user.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    // Validate Subscription status
+    public function isSubscribed(): bool
+    {
+        // Resolve the BillingService directly from Laravel's Service Container
+        return app(BillingService::class)->isSubscribed($this);
+    }
 }

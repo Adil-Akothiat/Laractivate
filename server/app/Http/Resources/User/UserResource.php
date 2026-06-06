@@ -33,7 +33,7 @@ class UserResource extends BaseResource
             })->unique('id')->values(),
             'permissionsSet'=> $this->roles->flatMap(function($role) {
                 return $role->permissions->pluck('name');
-            })->unique('id')->values()
+            })->unique('id')->values(), 
         ];
     }
     protected function getRecoveryCodes(): ?array

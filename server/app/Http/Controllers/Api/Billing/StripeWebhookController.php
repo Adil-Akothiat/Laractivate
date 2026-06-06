@@ -1,32 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Billing;
+namespace App\Http\Controllers\Api\Billing;
 
 use App\Http\Controllers\Controller;
-use App\Models\User; // Or Member model depending on your layout
+use App\Services\Billing\BillingService;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
 use UnexpectedValueException;
 
 class StripeWebhookController extends Controller
 {
-    /**
-     * Handle incoming Stripe webhook streams over the internal network.
-     */
-    public function handle(Request $request)
+    public function __construct(
+        protected BillingService $billingService
+    )
     {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
-        $endpointSecret = config('services.stripe.webhook_secret'); // Parsed via config/services.php
+        // 
+    }
 
-        $event = null;
-
+    public function handle(Request $request): JsonResponse
+    {
         try {
-            // 1. Cryptographically verify the event payload came from Stripe
-            $event = Webhook::constructEvent(
-                $payload, $sigHeader, $endpointSecret
+            // Cryptographic handshake validation decoupled to service
+            $event = $this->billingService->verifyWebhookPayload(
+                $request->getContent(),
+                $request->header('Stripe-Signature')
             );
         } catch (UnexpectedValueException $e) {
             Log::error('❌ Invalid Stripe Webhook Payload structure.');
@@ -36,21 +35,25 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        // 2. Route payload events cleanly based on type execution loops
+        // Process routing logic
+        Log::info("Event ", ['payload'=> $event]);
         switch ($event->type) {
             case 'checkout.session.completed':
-                $session = $event->data->object;
-                $this->handleCheckoutSessionCompleted($session);
+                $this->billingService->handleCheckoutSessionCompleted($event->data->object);
                 break;
 
             case 'customer.subscription.updated':
-                $subscription = $event->data->object;
-                $this->handleSubscriptionUpdated($subscription);
+            case 'customer.subscription.created':
+                $this->billingService->handleSubscriptionUpdated($event->data->object);
                 break;
 
             case 'customer.subscription.deleted':
-                $subscription = $event->data->object;
-                $this->handleSubscriptionDeleted($subscription);
+                $this->billingService->handleSubscriptionDeleted($event->data->object);
+                break;
+            
+            // 🟢 NEW CASE FOR INVOICE TRACKING
+            case 'invoice.payment_succeeded':
+                $this->billingService->handleInvoicePaymentSucceeded($event->data->object);
                 break;
 
             default:
@@ -58,67 +61,5 @@ class StripeWebhookController extends Controller
         }
 
         return response()->json(['status' => 'success'], 200);
-    }
-
-    /**
-     * Handle initial successful checkout session fulfillment context mapping.
-     */
-    protected function handleCheckoutSessionCompleted($session)
-    {
-        $userId = $session->client_reference_id; // Passed when creating checkout link
-        $stripeCustomerId = $session->customer;
-        $stripeSubscriptionId = $session->subscription;
-
-        if (!$userId) {
-            Log::warning('Stripe session missing client_reference_id mapping.');
-            return;
-        }
-
-        $user = User::find($userId);
-        if ($user) {
-            // Update user role state to reflect Pro access credentials
-            $user->update([
-                'stripe_customer_id' => $stripeCustomerId,
-                'stripe_subscription_id' => $stripeSubscriptionId,
-                'plan_tier' => 'pro',
-                'subscription_status' => 'active',
-            ]);
-            Log::info("🚀 User ID {$userId} upgraded to PRO tier via secure Webhook sync loop.");
-        }
-    }
-
-    /**
-     * Handle structural lifecycle changes (e.g., payment failure updates, grace periods)
-     */
-    protected function handleSubscriptionUpdated($subscription)
-    {
-        $user = User::where('stripe_subscription_id', $subscription->id)->first();
-        
-        if ($user) {
-            $status = $subscription->status; // active, past_due, unpaid, trialing
-            $user->update([
-                'subscription_status' => $status,
-                // Automatically revoke tier features if billing fails completely
-                'plan_tier' => in_array($status, ['active', 'trialing']) ? 'pro' : 'free'
-            ]);
-            Log::info("🔄 Subscription updated for User ID {$user->id}. Status: {$status}");
-        }
-    }
-
-    /**
-     * Handle clean subscription cancellations gracefully.
-     */
-    protected function handleSubscriptionDeleted($subscription)
-    {
-        $user = User::where('stripe_subscription_id', $subscription->id)->first();
-
-        if ($user) {
-            $user->update([
-                'plan_tier' => 'free',
-                'subscription_status' => 'canceled',
-                'stripe_subscription_id' => null
-            ]);
-            Log::info("🛑 Subscription canceled and access structures revoked for User ID {$user->id}.");
-        }
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\User\AccountsController;
 use App\Http\Controllers\Api\System\ActivityLogController;
 use App\Http\Controllers\Api\Access\RbacController;
+use App\Http\Controllers\Api\Billing\InvoiceController;
 
  // Accounts
 Route::prefix('accounts')->group(function() {
@@ -33,5 +34,9 @@ Route::prefix('accounts')->group(function() {
         // rbac
         Route::post('/{user}/{role}/assign', [RbacController::class, 'assignRole']);
         Route::delete('/{user}/{role}/unassign', [RbacController::class, 'unassignRole']);
+
+        // billing
+        // invoices
+        Route::get('/{user}/billing/invoices', [InvoiceController::class, 'show']);
     });
 });

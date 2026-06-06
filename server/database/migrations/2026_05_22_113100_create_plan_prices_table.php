@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('plan_prices', function (Blueprint $table) {
             $table->id();
-            $table->string('name');                  // e.g., "Monthly Hobby", "Yearly Enterprise"
+            $table->foreignId('plan_id')->constrained()->onDelete('cascade');
             $table->string('currency', 3)->default('USD'); // e.g., "USD", "MAD", "EUR"
             $table->integer('amount');               // Stored in CENTS (e.g., $9.99 = 999)
             $table->string('interval')->default('month'); // e.g., "month", "year"
             $table->boolean('is_active')->default(true); // Soft-retire old prices without deleting rows
-            
             // Stripe product/price mapping
             $table->string('stripe_product_id');
             $table->string('stripe_price_id')->unique();

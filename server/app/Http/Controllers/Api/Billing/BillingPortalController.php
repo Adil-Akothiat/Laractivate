@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
-class CheckoutController extends Controller
+class BillingPortalController extends Controller
 {
     public function __construct(
-         protected BillingService $billingService
+        protected BillingService $billingService
     )
     {
         // 
@@ -19,18 +19,9 @@ class CheckoutController extends Controller
 
     public function createSession(Request $request): JsonResponse
     {
-        $request->validate([
-            'plan_slug' => 'required|string',
-        ]);
-
         try {
-            $checkoutUrl = $this->billingService->createCheckoutSession(
-                $request->user(), 
-                $request->plan_slug
-            );
-
-            return response()->json(['url' => $checkoutUrl], 200);
-
+            $portalUrl = $this->billingService->createPortalSession($request->user());
+            return response()->json(['url' => $portalUrl], 200);
         } catch (Exception $e) {
             $statusCode = $e->getCode() === 422 ? 422 : 500;
             return response()->json(['message' => $e->getMessage()], $statusCode);

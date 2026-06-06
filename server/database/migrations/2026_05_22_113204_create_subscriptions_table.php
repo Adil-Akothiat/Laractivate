@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignUuid('permission_id')->constrained('permissions')->onDelete('cascade');
             $table->foreignId('plan_price_id')->constrained('plan_prices')->onDelete('restrict');
             $table->string('type');
             $table->string('stripe_id')->unique();
@@ -23,6 +22,7 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('ends_at')->nullable();
+            $table->timestamp('current_period_end')->nullable();
             $table->timestamps();
             $table->index(['user_id', 'stripe_status']);
         });

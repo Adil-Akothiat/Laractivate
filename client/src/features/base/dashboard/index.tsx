@@ -7,7 +7,6 @@ import { useDashboard } from "./hooks/useDashboard";
 const Dashboard = () => {
     const { data, isPending } = useDashboard();
     const info = data?.data;
-
     if (isPending) return <LoadingOverlay />
     if (!info) return null;
     return (
