@@ -1,15 +1,13 @@
-import type { PasswordSchema } from "@/app/types";
+import type { PaginationParams, PasswordSchema } from "@/app/types";
 import type { UserSchema } from "../../shared";
 
 // Data Schema
 
 
 // Search Queries Params
-export type FilterAccountsParams = {
-    search?: string;
+export interface FilterAccountsParams extends PaginationParams {
     role?: string;
     status?: string;
-    page?: number;
 };
 
 // ui components

@@ -1,3 +1,5 @@
+import type { PaginationParams } from "@/app/types";
+
 export const settingsKeys = {
   all: ['settings'] as const,
 
@@ -9,5 +11,9 @@ export const settingsKeys = {
 
   // Activity Logs
   activityLogs:      () => [...settingsKeys.all, 'activity-logs'] as const,
-  activityLogsList:  (page: number) => [...settingsKeys.activityLogs(), page] as const
+  activityLogsList:  (page: number) => [...settingsKeys.activityLogs(), page] as const,
+
+  // billing
+  invoicesHistory: (params:PaginationParams) => [...settingsKeys.all, 'invoices', { params }] as const,
+  subscriptionOverview: () => [...settingsKeys.all, 'subscription-overview'] as const,
 };

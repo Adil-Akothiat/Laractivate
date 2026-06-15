@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\Security\SessionCollection;
+use App\Http\Resources\Billing\{InvoiceCollection, SubscriptionResource};
 use App\Services\User\UserService;
+use App\Services\Billing\BillingService;
 use App\Services\System\SessionService;
 use App\Services\Security\JwtService;
 
@@ -17,6 +19,7 @@ class ProfileController extends Controller
         protected UserService $userService,
         protected SessionService $sessionService,
         protected JwtService $jwtService,
+        protected BillingService $billingService
     ) {}
     public function show(Request $request)
     {
@@ -109,4 +112,36 @@ class ProfileController extends Controller
 
         return response()->json(['message' => 'History cleared successfully!']);
     }
+
+    // billing
+    public function invoicesHistory(Request $request) 
+    {
+        $user = auth()->user();
+        
+        // $request->query() safely captures all URL strings (?page=2&status=paid&query=inv_123) as an array
+        $filters = $request->query();
+        
+        $invoices = $this->billingService->getUserInvoices($user, $filters);
+        
+        return new InvoiceCollection($invoices);   
+    }
+   
+    public function getSubscriptions(Request $request)
+{
+    $user = auth()->user();
+
+    // Look for a live subscription row
+    $activeSubscription = $user->subscriptions()
+        ->whereIn('stripe_status', ['active', 'trialing', 'past_due'])
+        ->latest('updated_at')
+        ->first();
+
+    // ⚪ If no live row exists, return an explicit structural fallback state
+    if (!$activeSubscription) {
+        return response()->json(['data' => null], 200);
+    }
+
+    // 🟢 If an active row exists, the Resource dynamically marks 'subscribed' as true
+    return new SubscriptionResource($activeSubscription);
+}
 }

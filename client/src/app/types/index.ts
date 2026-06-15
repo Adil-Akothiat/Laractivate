@@ -48,3 +48,9 @@ export interface PasswordSchema {
 
 // Props
 export type SetStateProps<T> = React.Dispatch<React.SetStateAction<T>>;
+
+// PaginationParams
+export interface PaginationParams {
+    search?: string;
+    page?: number;
+}

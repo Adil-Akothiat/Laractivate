@@ -1,80 +1,88 @@
-import React from 'react';
-import { useBillingMutations } from '../hooks/api/useBillingMutations';
-import type { PlanDetailsSchema } from "../types"
-import Card from '@/components/Card';
-import Button from '@/components/Button';
+import React from "react";
+import type { PricingGridProps } from "../types";
 
-const PLANS: PlanDetailsSchema[] = [
-  {
-    title: 'Free Plan',
-    slug: 'free',
-    price: '$0',
-    features: ['Standard authentication options', 'Basic profile dashboard', '2 active sessions limit'],
-    cta: 'Current Plan',
-    popular: false,
-  },
-  {
-    title: 'Pro Developer Tier',
-    slug: 'pro', // Matches configuration array structure keys inside Laravel config/billing.php
-    price: '$19',
-    features: ['Full application state parameters', 'Advanced RBAC permission layers', 'Infinite concurrent connections', 'Priority developer support streams'],
-    cta: 'Upgrade to Pro',
-    popular: true,
-  },
-];
-
-export const PricingGrid: React.FC = () => {
-  const { createCheckoutMutation } = useBillingMutations();
-
-  const handleSubscriptionPurchase = (planSlug: string) => {
-    if (planSlug === 'free') return;
-    createCheckoutMutation.mutate({ plan_slug: planSlug });
-  };
-
+export const PricingGrid: React.FC<PricingGridProps> = ({
+  plans,
+  showTitle = true,
+  renderAction,
+}) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto py-8 px-4">
-      {PLANS.map((plan) => (
-        <Card 
-          key={plan.slug} 
-          className={`relative flex flex-col justify-between p-6 rounded-2xl border transition-all ${
-            plan.popular ? 'border-indigo-600 ring-2 ring-indigo-600/20' : 'border-gray-200'
-          }`}
-        >
-          {plan.popular && (
-            <span className="absolute -top-3 right-4 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              POPULAR
-            </span>
-          )}
-          
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">{plan.title}</h3>
-            <div className="mt-4 flex items-baseline text-gray-900">
-              <span className="text-4xl font-extrabold tracking-tight">{plan.price}</span>
-              <span className="ml-1 text-xl font-semibold text-gray-500">/month</span>
-            </div>
-            
-            <ul className="mt-6 space-y-4">
-              {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-start text-sm text-gray-600">
-                  <span className="text-green-500 mr-2 font-bold">✓</span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="w-full max-w-6xl mx-auto px-4 py-12">
+      {showTitle && (
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-extrabold tracking-tight mb-2">
+            Flexible Subscription Tiers
+          </h2>
+          <p className="text-base-content/70">
+            Find the optimal plan tailored to your goals.
+          </p>
+        </div>
+      )}
 
-          <div className="mt-8">
-            <Button
-              onClick={() => handleSubscriptionPurchase(plan.slug)}
-              disabled={plan.slug === 'free' || createCheckoutMutation.isPending}
-              className="w-full justify-center"
-              variant={plan.popular ? 'primary' : 'secondary'}
-            >
-              {createCheckoutMutation.isPending && plan.slug !== 'free' ? 'Redirecting...' : plan.cta}
-            </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {plans.map((plan) => (
+          <div
+            key={plan.slug}
+            className={`card bg-base-100 border transition-all duration-200 shadow-sm hover:shadow-md ${
+              plan.slug === "pro"
+                ? "border-primary border-2 relative"
+                : "border-base-300"
+            }`}
+          >
+            {plan.slug === "pro" && (
+              <span className="badge badge-primary absolute -top-3 right-4 font-semibold text-xs py-2 px-3">
+                POPULAR CHOICE
+              </span>
+            )}
+
+            <div className="card-body p-8 flex flex-col">
+              <h3 className="card-title text-2xl font-bold mb-1">
+                {plan.name}
+              </h3>
+              <p className="text-base-content/70 text-sm min-h-[40px] mb-4">
+                {plan.description}
+              </p>
+
+              <div className="flex items-baseline mb-6">
+                <span className="text-5xl font-black tracking-tight">
+                  ${plan.price}
+                </span>
+                <span className="text-base-content/60 text-sm ml-2">
+                  / {plan.interval}
+                </span>
+              </div>
+
+              <div className="divider my-2" />
+
+              <ul className="space-y-3 my-4 flex-1">
+                {plan.features.map((feature, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 text-sm text-base-content/90"
+                  >
+                    <svg
+                      className="w-5 h-5 text-success flex-shrink-0 mt-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="card-actions mt-8">{renderAction(plan)}</div>
+            </div>
           </div>
-        </Card>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

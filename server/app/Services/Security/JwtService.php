@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Log;
 
 class JwtService
 {
+    public string $refresh_token_key;
+    public string $access_token_key;
+    public int $refresh_ttl;
+    public int $cookie_ttl;
+    
     public function __construct()
     {
         $this->refresh_ttl = config('jwt.refresh_ttl');

@@ -53,6 +53,7 @@ class StripeWebhookController extends Controller
             
             // 🟢 NEW CASE FOR INVOICE TRACKING
             case 'invoice.payment_succeeded':
+                Log::info('INVOICES-----START ' . $event->type);
                 $this->billingService->handleInvoicePaymentSucceeded($event->data->object);
                 break;
 

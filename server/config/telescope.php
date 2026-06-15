@@ -164,8 +164,10 @@ return [
             'ignore' => [],
         ],
 
-        Watchers\ExceptionWatcher::class => env('TELESCOPE_EXCEPTION_WATCHER', true),
-
+        Watchers\ExceptionWatcher::class => [
+            'enabled' => env('TELESCOPE_EXCEPTION_WATCHER', true),
+            'status_codes' => [500],
+        ],
         Watchers\GateWatcher::class => [
             'enabled' => env('TELESCOPE_GATE_WATCHER', true),
             'ignore_abilities' => [],
@@ -177,7 +179,7 @@ return [
 
         Watchers\LogWatcher::class => [
             'enabled' => env('TELESCOPE_LOG_WATCHER', true),
-            'level' => 'error',
+            'level' => 'debug',
         ],
 
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),

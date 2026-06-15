@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class GeneralAppNotification extends Notification
 {
     use Queueable;
+    public $details;
 
     /**
      * Create a new notification instance.

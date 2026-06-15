@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { User, RectangleEllipsis, FingerprintPattern, UserKey, Logs } from "lucide-react";
+import { User, RectangleEllipsis, FingerprintPattern, UserKey, Logs, CreditCard } from "lucide-react";
 import { ScrollContainer } from "@/components/ScrollContainer";
 import { useState } from "react";
 import { Button } from "@/components";
@@ -30,6 +30,11 @@ export const sidebarItems: SidebarItem[] = [
         label: "Sessions",
         icon: <UserKey size={18} />,
         path: "/settings/sessions"
+    },
+    {
+        label: "Billing",
+        icon: <CreditCard size={18} />,
+        path: "/settings/billing"
     },
     {
         label: "Activity logs",

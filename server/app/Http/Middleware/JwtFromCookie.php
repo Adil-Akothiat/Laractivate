@@ -18,8 +18,10 @@ class JwtFromCookie
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function __construct() {
-        $this->jwtService = new JwtService();
+    public function __construct(
+        protected JwtService $jwtService
+    ) {
+        // 
     }
     public function handle(Request $request, Closure $next): Response
     {

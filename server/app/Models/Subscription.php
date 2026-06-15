@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Subscription as CashierSubscription;
 
-class Subscription extends Model
+class Subscription extends CashierSubscription
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'plan_price_id',
         'type',
         'stripe_id',
         'stripe_status',
@@ -38,18 +37,15 @@ class Subscription extends Model
     }
 
     /**
-     * Get the specific plan price tier attached to this subscription.
-     */
-    public function planPrice(): BelongsTo
-    {
-        return $this->belongsTo(PlanPrice::class);
-    }
-
-    /**
      * Get the metered/breakdown items bundled inside this subscription.
      */
     public function items(): HasMany
     {
         return $this->hasMany(SubscriptionItem::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->user();
     }
 }

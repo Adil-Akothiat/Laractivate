@@ -22,4 +22,10 @@ Route::prefix('profile')->group(function() {
 
     // activity logs
     Route::get('/activity-logs', [ActivityLogController::class, 'index']);
+
+    // billing
+    Route::prefix('/billing')->group(function() {
+        Route::get('/invoices', [ProfileController::class, 'invoicesHistory']);
+        Route::get('/subscriptions', [ProfileController::class, 'getSubscriptions']);
+    });
 });

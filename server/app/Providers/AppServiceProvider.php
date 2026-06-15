@@ -5,10 +5,11 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Observers\UserObserver;
-use App\Models\User;
+use App\Models\{User, Subscription, SubscriptionItem};
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\{ Login, Logout, PasswordReset };
 use App\Listeners\{ LogSuccessfulLogin, LogSuccessfulLogout, LogResetPassword };
+use Laravel\Cashier\Cashier;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Schema::defaultMorphKeyType('uuid');
+        Cashier::useSubscriptionModel(Subscription::class);
+        Cashier::useSubscriptionItemModel(SubscriptionItem::class);
         // The Magic Line:
         Schema::blueprintResolver(function ($table, $callback) {
             $blueprint = new Blueprint($table, $callback);

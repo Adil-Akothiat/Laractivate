@@ -2,6 +2,7 @@ import { api } from "@/app/services/api";
 import type {
   ApiResponseSchema,
   PaginatedResponseSchema,
+  PaginationParams,
   ResourceSchema,
 } from "@/app/types";
 import type {
@@ -14,6 +15,7 @@ import type {
   SessionResponseSchema,
   UserSchema,
 } from "../../shared";
+import type { ActiveSubscriptionSchema, InvoiceSchema } from "../../billing";
 
 const BASE_ROUTE = "/user";
 export const settingsApi = {
@@ -104,4 +106,15 @@ export const settingsApi = {
         `${BASE_ROUTE}/profile/activity-logs?page=${page}`,
       ),
   },
+
+  // billing
+  billing: {
+    invoicesHistory: (params: PaginationParams) =>
+      api.get<PaginatedResponseSchema<InvoiceSchema>>(
+        `${BASE_ROUTE}/profile/billing/invoices`, {params}
+      ),
+    getSubscriptions: () => 
+        api.get<ApiResponseSchema<ActiveSubscriptionSchema>>(`${BASE_ROUTE}/profile/billing/subscriptions`),
+    
+  }
 };

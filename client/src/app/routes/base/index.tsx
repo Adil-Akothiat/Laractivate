@@ -23,13 +23,17 @@ import SessionsPage from "../../pages/base/settings/SessionsPage";
 
 import { APP_PERMISSIONS } from "../../constants/appPermissions";
 import NotificationsPage from "@/app/pages/base/notifications/NotificationsPage";
-import BillingPage from "@/app/pages/base/dashboard/BillingPage";
+import InvoicePage from "@/app/pages/base/dashboard/InvoicePage";
+import BillingSettings from "@/features/base/settings/components/Billing/BillingSettings";
+import Home from "@/app/pages/base/home";
+import PricingPage from "@/app/pages/base/billing/PricingPage";
+import UserPricingPage from "@/app/pages/base/billing/UserPricingPage";
 
 export default function baseRoutes() {
     return (
         <>
             {/* Auth */}
-            <Route index element={<Navigate to="/login" replace />} />
+            <Route index element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -48,10 +52,18 @@ export default function baseRoutes() {
                         }
                     />
                     <Route
-                        path="/dashboard/billing"
+                        path="/dashboard/pricing"
                         element={
                             <PermissionGuard permission={APP_PERMISSIONS.dashboard}>
-                                <BillingPage />
+                                <UserPricingPage />
+                            </PermissionGuard>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/invoices"
+                        element={
+                            <PermissionGuard permission={APP_PERMISSIONS.dashboard}>
+                                <InvoicePage />
                             </PermissionGuard>
                         }
                     />
@@ -72,7 +84,6 @@ export default function baseRoutes() {
                             </PermissionGuard>
                         }
                     />
-
                     <Route
                         path="/roles-permissions"
                         element={
@@ -89,8 +100,11 @@ export default function baseRoutes() {
                         <Route path="two-factor" element={<TwoFactorAuth />} />
                         <Route path="sessions" element={<SessionsPage />} />
                         <Route path="activity-logs" element={<ActivityLogs />} />
+                        <Route path="billing" element={<BillingSettings />} />
                     </Route>
                 </Route>
+                {/* Pricing */}
+                <Route path="/pricing" element={<PricingPage />} />
             </Route>
         </>
     );

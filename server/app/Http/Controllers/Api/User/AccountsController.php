@@ -140,4 +140,9 @@ class AccountsController extends Controller
         $this->sessionService->clearHistory($user);
         return response()->json(['message' => 'History cleared successfully!']);
     }
+
+    // billings
+    public function invoicesHistory() {
+        
+    }
 }
