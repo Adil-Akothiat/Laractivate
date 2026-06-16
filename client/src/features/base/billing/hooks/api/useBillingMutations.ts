@@ -1,8 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CreateCheckoutPayload } from '../../types';
 import { billingApi } from '../../api';
+import { billingKeys } from './keys';
 
 export const useBillingMutations = () => {
+  const queryClient = useQueryClient();
   return {
     /**
      * Mutation handler for forwarding user out to Stripe hosted payment gateways
@@ -37,11 +39,20 @@ export const useBillingMutations = () => {
       }),
 
       usePreviewUpgrade: ()=> useMutation({
-        mutationFn: (payload:CreateCheckoutPayload) =>  billingApi.previewUpgrade(payload)
+        mutationFn: async (payload:CreateCheckoutPayload) =>  {
+          const { data } = await billingApi.previewUpgrade(payload);
+          return data;
+        }
       }),
       
       useSubscriptionUpgrade: ()=> useMutation({
-        mutationFn: () =>  billingApi.upgradeSubscription()
+        mutationFn: async (payload: CreateCheckoutPayload) => {
+          const { data } = await  billingApi.upgradeSubscription(payload);
+          return data;
+        },
+        onSuccess: ()=> {
+          queryClient.invalidateQueries({ queryKey: billingKeys.pricing() });
+        }
       
       })
   };

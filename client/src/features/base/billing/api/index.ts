@@ -53,6 +53,6 @@ export const billingApi = {
     api.get<ActiveSubscriptionSchema>(`${BASE_ROUTE}/subscription`),
   previewUpgrade: (payload:CreateCheckoutPayload)=> 
     api.post<ApiResponseSchema<ProrationPreviewSchema>>(`${BASE_ROUTE}/subscription/preview-upgrade`, payload),
-  upgradeSubscription: ()=> 
-    api.get<ActiveSubscriptionSchema>(`${BASE_ROUTE}/subscription/upgrade`),
+  upgradeSubscription: (payload:CreateCheckoutPayload)=> 
+    api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/upgrade`, payload),
 };

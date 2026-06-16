@@ -8,6 +8,9 @@ use Carbon\Carbon;
 
 class SubscriptionService
 {
+    public function __construct() {
+        // 
+    }
     /**
      * Handle immediate subscription terminations or full expirations.
      */
@@ -146,5 +149,22 @@ class SubscriptionService
         // 3. Case B: Standard Active Lifecycle (Subscribed & Auto-renewing normally).
         // Verify current time is before 'current_period_end' + our 2-day safety bank buffer window.
         return $subscription->current_period_end->addDays(2)->isFuture();
+    }
+
+    public function upgradeSubscription(User $user, string $newPriceId)
+    {
+        $subscription = $user->subscriptions()->where('stripe_status', 'active')->first();
+        if(!$subscription):
+            throw new Exception("The selected subscription does not exist.", 422);
+        endif;
+
+        try {
+            $subscription->swapAndInvoice($newPriceId);
+        } catch (IncompletePayment $exception) {
+            throw new Exception("Extra authentication required to complete the upgrade payment.", 422);
+        } catch (\Exception $e) {
+            throw new Exception("An error occurred during upgrade: " . $e->getMessage(), 500);
+        }
+
     }
 }

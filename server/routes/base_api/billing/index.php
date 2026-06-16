@@ -14,10 +14,10 @@ Route::prefix('/billing')->group(function () {
         Route::post('/checkout', [CheckoutController::class, 'createSession']);
         Route::post('/portal', [BillingPortalController::class, 'createSession']);
         Route::middleware('permission:all')->get('/invoices', [InvoiceController::class, 'index']);
-        Route::get('/subscription', [SubscriptionController::class, 'show']); // 🟢 Added
+        Route::get('/subscription', [SubscriptionController::class, 'show']);
         Route::post('/subscription/preview-upgrade', [SubscriptionController::class, 'previewUpgrade']);
         Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade']);
-        Route::get('/user-pricing', [PlanController::class, 'userPricing']); // 🟢 Added
+        Route::get('/user-pricing', [PlanController::class, 'userPricing']);
     });
 });
 

@@ -47,34 +47,37 @@ class PlanController extends Controller
             return response()->json(['message' => 'Billing tiers configuration file missing.'], 500);
         }
 
-        Log::info('User accessing internal plans schema grid', ['user_id' => $user->id]);
-
-        // Find the user's active local subscription tier
+        // 1. Get the active subscription
         $activeSub = $user->subscriptions()->where('stripe_status', 'active')->first();
-        Log::info('ACTIVE SUBSCRIPTION', ['acsub'=> $activeSub]);
-        $currentPlanSlug = $activeSub ? strtolower($activeSub->type) : null;
+        
+        // 2. Fetch the actual active Stripe Price ID from Cashier's relation
+        // Cashier loads the active item via the items relationship out-of-the-box
+        $currentStripePrice = $activeSub ? $activeSub->stripe_price : null;
 
-        $mappedPlans = collect($plans)->map(function ($plan) use ($currentPlanSlug) {
-            $slug = strtolower($plan['slug']);
+        $mappedPlans = collect($plans)->map(function ($plan) use ($currentStripePrice) {
             return [
-                'slug'        => $slug,
+                'slug'        => strtolower($plan['slug']),
                 'name'        => $plan['name'] ?? ucfirst($plan['slug']),
                 'description' => $plan['description'] ?? '',
                 'price'       => $plan['price'] ?? 0,
                 'currency'    => $plan['currency'] ?? 'usd',
                 'interval'    => $plan['interval'] ?? 'month',
                 'features'    => $plan['features'] ?? [],
-                // Structural helper context switches for React component styling
-                'is_current'  => ($currentPlanSlug === $slug),
+                // 3. Match against the unique Price ID instead of the type column
+                'is_current'  => ($currentStripePrice === $plan['price_id']),
             ];
         })->values();
 
-        return (new BaseResource([
-            'plans'=> $mappedPlans,
-             'meta'  => [
+        // Determine current slug for meta block based on what matched
+        $currentPlan = collect($mappedPlans)->firstWhere('is_current', true);
+        $currentPlanSlug = $currentPlan ? $currentPlan['slug'] : null;
+
+        return BaseResource::make([
+            'plans' => $mappedPlans,
+            'meta'  => [
                 'has_active_subscription' => !empty($activeSub),
                 'current_plan_slug'       => $currentPlanSlug,
             ]
-        ]))->response()->setStatusCode(200);
+        ])->response()->setStatusCode(200);
     }
 }
