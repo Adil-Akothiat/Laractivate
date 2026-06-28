@@ -38,9 +38,9 @@ export const useBillingMutations = () => {
         },
       }),
 
-      usePreviewUpgrade: ()=> useMutation({
+      usePreviewProration: ()=> useMutation({
         mutationFn: async (payload:CreateCheckoutPayload) =>  {
-          const { data } = await billingApi.previewUpgrade(payload);
+          const { data } = await billingApi.previewProration(payload);
           return data;
         }
       }),
@@ -54,6 +54,13 @@ export const useBillingMutations = () => {
           queryClient.invalidateQueries({ queryKey: billingKeys.pricing() });
         }
       
+      }),
+      
+      useSubscriptionDowngrade: ()=> useMutation({
+        mutationFn: async (payload: CreateCheckoutPayload) => {
+          const { data } = await  billingApi.downgradeSubscription(payload);
+          return data;
+        }
       })
   };
 };

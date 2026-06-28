@@ -10,10 +10,15 @@ use Stripe\Stripe;
 
 class CheckoutService
 {
+    public function __construct(
+        protected PlanService $planService
+    ) {
+        // 
+    }
     public function createPortalSession(User $user): string
     {
         if (!$user->stripe_id) {
-            throw new Exception("The user does not possess an active payment profile history.", 422);
+            throw new \Exception("The user does not possess an active payment profile history.", 422);
         }
 
         // Generate hosted customer configuration portal link 
@@ -52,9 +57,9 @@ class CheckoutService
 
    public function createCheckoutSession(User $user, string $planSlug): string
     {
-        $targetPlan = (new PlanService())->getPlan($planSlug);
+        $targetPlan = $this->planService->getPlan($planSlug);
         if(!$targetPlan):
-            throw new Exception("The selected subscription plan configuration does not exist.", 422);
+            throw new \Exception("The selected subscription plan configuration does not exist.", 422);
         endif;
 
         $stripePriceId = $targetPlan['price_id'];

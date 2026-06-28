@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\Security\SessionCollection;
 use App\Http\Resources\Billing\{InvoiceCollection, SubscriptionResource};
+use App\Http\Resources\System\BaseResource;
 use App\Services\User\UserService;
 use App\Services\Billing\BillingService;
 use App\Services\System\SessionService;
@@ -127,21 +128,22 @@ class ProfileController extends Controller
     }
    
     public function getSubscriptions(Request $request)
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    // Look for a live subscription row
-    $activeSubscription = $user->subscriptions()
-        ->whereIn('stripe_status', ['active', 'trialing', 'past_due'])
-        ->latest('updated_at')
-        ->first();
+        // Look for a live subscription row
+        $activeSubscription = $user->subscriptions()
+            ->whereIn('stripe_status', ['active', 'trialing', 'past_due'])
+            ->latest('updated_at')
+            ->first();
 
-    // ⚪ If no live row exists, return an explicit structural fallback state
-    if (!$activeSubscription) {
-        return response()->json(['data' => null], 200);
+        // ⚪ If no live row exists, return an explicit structural fallback state
+        if (!$activeSubscription) {
+            return (new BaseResource([data=> null]))->response()->setStatusCode(200);
+            return response()->json(['data' => null], 200);
+        }
+
+        // 🟢 If an active row exists, the Resource dynamically marks 'subscribed' as true
+        return new SubscriptionResource($activeSubscription);
     }
-
-    // 🟢 If an active row exists, the Resource dynamically marks 'subscribed' as true
-    return new SubscriptionResource($activeSubscription);
-}
 }

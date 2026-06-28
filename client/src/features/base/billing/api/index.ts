@@ -8,7 +8,7 @@ import type {
   ActiveSubscriptionSchema,
   PlanSchema,
   UserPlanSchemaResponse,
-  ProrationPreviewSchema
+  ProrationResponseSchema
 } from '../types';
 import type { ApiResponseSchema } from '@/app/types';
 
@@ -51,8 +51,10 @@ export const billingApi = {
    */
   getSubscription: () => 
     api.get<ActiveSubscriptionSchema>(`${BASE_ROUTE}/subscription`),
-  previewUpgrade: (payload:CreateCheckoutPayload)=> 
-    api.post<ApiResponseSchema<ProrationPreviewSchema>>(`${BASE_ROUTE}/subscription/preview-upgrade`, payload),
+  previewProration: (payload:CreateCheckoutPayload)=> 
+    api.post<ApiResponseSchema<ProrationResponseSchema>>(`${BASE_ROUTE}/subscription/preview-proration`, payload),
   upgradeSubscription: (payload:CreateCheckoutPayload)=> 
     api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/upgrade`, payload),
+  downgradeSubscription: (payload:CreateCheckoutPayload)=> 
+    api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/downgrade`, payload)
 };

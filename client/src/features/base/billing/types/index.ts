@@ -56,6 +56,19 @@ export interface ProrationPreviewSchema {
   currency: string
 }
 
+export interface DownGradePreventSchema {
+  message: string,
+  amount_due_today: number,
+  next_billing_amount: number,
+  effective_date: string
+}
+
+export interface ProrationResponseSchema {
+  action_type: 'upgrade' | 'downgrade',
+  proration?: ProrationPreviewSchema,
+  downgradePrevent?: DownGradePreventSchema
+}
+
 // ==========================================
 // 3. Params
 // ==========================================

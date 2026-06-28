@@ -38,6 +38,7 @@ return [
     'stripe' => [
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'active_test_clock'=> env('STRIPE_TEST_CLOCK_ID')
     ],
 
     'client'=> [

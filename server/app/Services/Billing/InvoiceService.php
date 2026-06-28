@@ -6,6 +6,7 @@ use App\Models\{User, PaymentMethod, TaxRate, Invoice, Subscription};
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Laravel\Cashier\Cashier;
+use Exception;
 
 
 class InvoiceService
@@ -127,26 +128,28 @@ class InvoiceService
             // This appends the dynamic parameters to the generated pagination links layout
             ->appends($filters);
     }
+    
     public function previewProration(User $user, string $newPriceId): array
     {
         $subscription = $user->subscriptions()->where('stripe_status', 'active')->first();
         if (!$subscription) {
-            throw new Exception("The selected subscription does not exist.", 422);
+            throw new \Exception("The selected subscription does not exist.", 422);
         }
-        $subscriptionItemId = $subscription->asStripeSubscription()->items->data[0]->id;
-        
+        $stripeSubscription =  $subscription->asStripeSubscription();
+        $subscriptionItemId = $stripeSubscription->items->data[0]->id;
+
+        // Log::info('SUB', ['SUBSCRIPTION'=> $stripeSubscription]);
         $preview = Cashier::stripe()->invoices->createPreview([
             'customer' => $user->stripe_id,
             'subscription' => $subscription->stripe_id,
             'subscription_details' => [
+                'proration_behavior' => 'always_invoice',
                 'items' => [
                     [
                         'id' => $subscriptionItemId,
                         'price' => $newPriceId,
-                    ]
-                ],
-                'proration_date' => now()->timestamp,
-                'proration_behavior' => 'create_prorations',
+                    ],
+            ],
             ],
         ]);
         

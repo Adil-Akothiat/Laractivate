@@ -153,18 +153,23 @@ class SubscriptionService
 
     public function upgradeSubscription(User $user, string $newPriceId)
     {
-        $subscription = $user->subscriptions()->where('stripe_status', 'active')->first();
-        if(!$subscription):
-            throw new Exception("The selected subscription does not exist.", 422);
-        endif;
-
+        $subscription = $this->getActiveSubscription($user); 
         try {
             $subscription->swapAndInvoice($newPriceId);
         } catch (IncompletePayment $exception) {
-            throw new Exception("Extra authentication required to complete the upgrade payment.", 422);
+            throw new \Exception("Extra authentication required to complete the upgrade payment.", 422);
         } catch (\Exception $e) {
-            throw new Exception("An error occurred during upgrade: " . $e->getMessage(), 500);
+            throw new \Exception("An error occurred during upgrade: " . $e->getMessage(), 500);
         }
 
+    }
+
+    public function getActiveSubscription(User $user, bool $withException = true)
+    {
+        $subscription = $user->subscriptions()->where('stripe_status', 'active')->first();
+        if(!$subscription && $withException):
+            throw new \Exception("The selected subscription does not exist.", 422);
+        endif;
+        return $subscription;
     }
 }
