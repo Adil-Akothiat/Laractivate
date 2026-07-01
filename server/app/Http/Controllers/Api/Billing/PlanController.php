@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\System\BaseResource;
 use App\Services\Billing\{SubscriptionService, PlanService};
+use Illuminate\Support\Collection;
 
 class PlanController extends Controller
 {

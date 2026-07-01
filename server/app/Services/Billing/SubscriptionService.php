@@ -5,15 +5,149 @@ namespace App\Services\Billing;
 use App\Models\{User, Subscription, SubscriptionItem};
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Stripe\StripeClient;
 
 class SubscriptionService
 {
-    public function __construct() {
-        // 
+    public function __construct()
+    {
+        $this->stripe = new StripeClient(config('cashier.secret') ?? env('STRIPE_SECRET'));
     }
+
+    public function upgrade(string $planSlug) {
+        $planService = app(PlanService::class);
+        $user = auth()->user();
+        $activeSub = $this->getActiveSubscription($user);
+        $stripeSub = $activeSub->asStripeSubscription();
+        $subscriptionSchedule = $this->stripe->subscriptionSchedules->retrieve($stripeSub->schedule);
+
+        // Log::info('INFO', ['subscriptionSchedule'=> $subscriptionSchedule]);
+        if($subscriptionSchedule):
+            $this->stripe->subscriptionSchedules->release($stripeSub->schedule, [
+                'preserve_cancel_date'=> false
+            ]);
+        endif;
+        
+        $targetPlan = $planService->getPlan($planSlug ?? '');
+        $newPriceId = $targetPlan['price_id'];
+        $this->upgradeSubscription($user, $newPriceId);
+    }
+
+    public function downgrade(string $planSlug) {
+        $user = auth()->user();
+        $subscriptionService = app(SubscriptionService::class);
+        $planService = app(PlanService::class);
+        
+        $subscription = $subscriptionService->getActiveSubscription($user);
+        $stripeSubscription = $subscription->asStripeSubscription();
+        
+        $scheduleId = $stripeSubscription->schedule;
+        if ($scheduleId) {
+            // If it already has a schedule attached, you can safely retrieve it using the real schedule ID
+            $subscriptionSchedule = $this->stripe->subscriptionSchedules->retrieve($scheduleId);
+            $currentPhase = collect($subscriptionSchedule->phases)->first(function ($phase) {
+                return time() >= $phase->start_date && time() <= $phase->end_date;
+            });
+            $endDateTimestamp = $currentPhase ? $currentPhase->end_date : $subscriptionSchedule->phases[0]->end_date;
+
+            // 2. Format the timestamp with Carbon for your message string
+            $formattedDate = Carbon::createFromTimestamp($endDateTimestamp)->toFormattedDateString();
+
+            return [
+                'response'=> [],
+                'message'=> "Your subscription downgrade is already scheduled to take effect on {$formattedDate}.",
+                'status_code'=> 422
+            ];
+        }
+
+        // Log::info('SUBSCRIPTION', ['SUB'=> $stripeSubscription]);
+        $subscriptionSchedule = $this->stripe->subscriptionSchedules->create([
+            'from_subscription' => $stripeSubscription->id,
+        ]);
+        $targetPlan = $planService->getPlan($planSlug ?? '');
+
+        $items = $stripeSubscription->items;
+        $sub_start_date = $items->data[0]->current_period_start;
+        $sub_end_date = $items->data[0]->current_period_end;
+        $priceId = $items->data[0]->price->id;
+        $quantity = $items->data[0]->quantity;
+
+        $this->stripe->subscriptionSchedules->update($subscriptionSchedule->id, [
+            'end_behavior'=> 'release',
+            'phases'=> [
+                [
+                    'start_date'=> $sub_start_date,
+                    'end_date'=> $sub_end_date,
+                    'proration_behavior'=> 'none',
+                    'items'=> [
+                        ['price'=> $priceId,
+                        'quantity'=> $quantity]
+                    ]
+                ],
+                [
+                    'start_date'=> $sub_end_date,
+                    'end_date'=> Carbon::createFromTimestamp($sub_end_date)->addMonth()->timestamp,
+                    'proration_behavior'=> 'none',
+                    'items'=> [
+                        ['price' => $targetPlan['price_id'],
+                        'quantity' => $quantity,]
+                    ]
+                ],
+            ]
+        ]);
+        return [
+            'response'=> [],
+            'message'=> "Your plan downgrade to {$targetPlan['name']} has been successfully scheduled.",
+            'status_code'=> 200
+        ];
+    }
+
+    public function cancel() {
+        $user = auth()->user();
+        $subscriptionService = app(SubscriptionService::class);
+        $subscription = $subscriptionService->getActiveSubscription($user);
+        $stripeSubscription = $subscription->asStripeSubscription();
+
+        // Cancel the subscription at the end of the current billing period
+        $this->stripe->subscriptions->cancel($stripeSubscription->id, [
+            'cancel_at_period_end' => true,
+        ])
+
+        return [
+            'response'=> [],
+            'message'=> "Your subscription has been canceled and will remain active until the end of the current billing period.",
+            'status_code'=> 200
+        ];
+    }
+
+    public function resume() {
+        $user = auth()->user();
+        $subscriptionService = app(SubscriptionService::class);
+        $subscription = $subscriptionService->getActiveSubscription($user);
+        $stripeSubscription = $subscription->asStripeSubscription();
+
+        // Resume the subscription by setting cancel_at_period_end to false
+        if($stripeSubscription->status === 'active' && $stripeSubscription->cancel_at_period_end):
+            $this->stripe->subscriptions->update($stripeSubscription->id, [
+                'cancel_at_period_end' => false,
+            ]);
+        endif;
+        if($stripeSubscription->status === 'paused' && $stripeSubscription->pause_collection):
+            $this->stripe->subscriptions->resume($stripeSubscription->id, [
+                'billing_cycle_anchor' => 'unchanged'
+            ]);
+        endif;
+
+        return [
+            'response'=> [],
+            'message'=> "Your subscription has been resumed and will continue to be active.",
+            'status_code'=> 200
+        ];
+    }
+
     /**
      * Handle immediate subscription terminations or full expirations.
-     */
+    */
     public function handleSubscriptionDeleted(object $stripeSubscription): void
     {
         $subscription = Subscription::where('stripe_id', $stripeSubscription->id)->first();

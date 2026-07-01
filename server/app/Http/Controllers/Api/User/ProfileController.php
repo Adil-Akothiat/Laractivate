@@ -139,7 +139,7 @@ class ProfileController extends Controller
 
         // ⚪ If no live row exists, return an explicit structural fallback state
         if (!$activeSubscription) {
-            return (new BaseResource([data=> null]))->response()->setStatusCode(200);
+            return (new BaseResource(['data'=> null]))->response()->setStatusCode(200);
             return response()->json(['data' => null], 200);
         }
 

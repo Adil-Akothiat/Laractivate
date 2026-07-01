@@ -4,22 +4,21 @@ namespace App\Services\Billing;
 
 use App\Models\User;
 use Stripe\Event;
+use Illuminate\Support\Facades\Log;
 
 class PlanService
 {
     private $plans;
-    public function __construct(
-        protected SubscriptionService $subscriptionService
-    ){
+    public function __construct(){
         $this->plans = config('billing.plans');
         if(empty($this->plans)):
             throw new \Exception("Billing tiers configuration file missing.", 422);
         endif;
     }
 
-    public function sanitizedPlans():Array
+    public function sanitizedPlans(): Array
     {
-        return collect($this->plans)->map(function ($plan) {
+        $collection = collect($this->plans)->map(function ($plan) {
             return [
                 'slug'        => $plan['slug'],
                 'name'        => $plan['name'] ?? ucfirst($plan['slug']),
@@ -29,7 +28,8 @@ class PlanService
                 'interval'    => $plan['interval'] ?? 'month',
                 'features'    => $plan['features'] ?? [],
             ];
-        })->values() ?? [];
+        })->values();
+        return $collection->toArray();
     }   
     
     public function getPlan(string $slug, bool $withException = true): Array
@@ -42,7 +42,8 @@ class PlanService
     }
 
     public function getActivePlan(User $user) {
-        $subscription = $this->subscriptionService->getActiveSubscription($user);
+        $subscriptionService = app(SubscriptionService::class);
+        $subscription = $subscriptionService->getActiveSubscription($user);
         $stripPriceId = $subscription->stripe_price;
         $activePlan = collect($this->plans)->firstWhere('price_id', $subscription->stripe_price);
         return $activePlan;
@@ -50,6 +51,7 @@ class PlanService
 
     public function getUserPlans():Array 
     {
+        $subscriptionService = app(SubscriptionService::class);
         $user = auth()->user();
         $user->subscriptions->each(function ($subscription) {
             $subscription->syncStripeStatus();
@@ -59,7 +61,7 @@ class PlanService
         $user->refresh();
 
         // 1. Get the active subscription
-        $activeSub = $this->subscriptionService->getActiveSubscription($user, false);
+        $activeSub = $subscriptionService->getActiveSubscription($user, false);
         // Log::info('SUBSCRIPTION', ['SUB'=> $activeSub?->asStripeSubscription()]);
         
         // 2. Fetch the actual active Stripe Price ID from Cashier's relation

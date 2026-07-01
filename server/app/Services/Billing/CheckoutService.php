@@ -10,10 +10,8 @@ use Stripe\Stripe;
 
 class CheckoutService
 {
-    public function __construct(
-        protected PlanService $planService
-    ) {
-        // 
+    public function __construct() {
+        // write your constant initialization code here if needed
     }
     public function createPortalSession(User $user): string
     {
@@ -57,7 +55,8 @@ class CheckoutService
 
    public function createCheckoutSession(User $user, string $planSlug): string
     {
-        $targetPlan = $this->planService->getPlan($planSlug);
+        $planService = app(PlanService::class);
+        $targetPlan = $planService->getPlan($planSlug);
         if(!$targetPlan):
             throw new \Exception("The selected subscription plan configuration does not exist.", 422);
         endif;

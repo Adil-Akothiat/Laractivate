@@ -13,7 +13,7 @@ class InvoiceService
 {
     /**
      * Synchronize invoice transaction data rows for dashboard ledger tables.
-     */
+    */
 
     public function handleInvoicePaymentSucceeded(object $invoiceData): bool
     {
@@ -129,19 +129,56 @@ class InvoiceService
             ->appends($filters);
     }
     
-    public function previewProration(User $user, string $newPriceId): array
+    public function previewProration(string $planSlug): array
     {
-        $subscription = $user->subscriptions()->where('stripe_status', 'active')->first();
-        if (!$subscription) {
-            throw new \Exception("The selected subscription does not exist.", 422);
+        $user = auth()->user();
+        $planService = app(PlanService::class);
+        $subscriptionService = app(SubscriptionService::class);
+        
+        $targetPlan = $planService->getPlan($planSlug ?? '');
+        $currentPlan = $planService->getActivePlan($user);
+
+        if($currentPlan && $targetPlan['price_id'] === $currentPlan['price_id']):
+            return [
+                'response'=> [
+                    'action_type' => 'same_plan',
+                    'proration' => null,
+                    'message' => 'You are already on this plan.'
+                ],
+                'status_code' => 422
+            ];
+        endif;
+
+        if ($targetPlan['price'] < $currentPlan['price']) {
+            $subscription = $subscriptionService->getActiveSubscription($user);
+            // Grab the period end timestamp from your DB subscription record
+            $periodEnd = $subscription->ends_at ?? now()->addMonth(); 
+
+            return [
+                'response'=> [
+                    'action_type' => 'downgrade',
+                    'proration' => null,
+                    'downgradePrevent' => [
+                        'amount_due_today' => 0,
+                        'next_billing_amount' => $targetPlan['price'],
+                        'effective_date' => $periodEnd->toIso8601String(),
+                        'message' => "You will keep your {$currentPlan['name']} features until the end of your billing cycle. Your plan will automatically switch to {$targetPlan['name']} on renewal."
+                    ]
+                ],
+                'status_code' => 200
+            ];
         }
-        $stripeSubscription =  $subscription->asStripeSubscription();
+
+        $newPriceId = $targetPlan['price_id'] ?? '';
+        $activeSub = $subscriptionService->getActiveSubscription($user);
+
+        $stripeSubscription =  $activeSub->asStripeSubscription();
         $subscriptionItemId = $stripeSubscription->items->data[0]->id;
 
         // Log::info('SUB', ['SUBSCRIPTION'=> $stripeSubscription]);
         $preview = Cashier::stripe()->invoices->createPreview([
             'customer' => $user->stripe_id,
-            'subscription' => $subscription->stripe_id,
+            'subscription' => $activeSub->stripe_id,
             'subscription_details' => [
                 'proration_behavior' => 'always_invoice',
                 'items' => [
@@ -176,11 +213,20 @@ class InvoiceService
             }
         }
 
-        return [
+        $prorationDetails = [
             'unused_credit_on_old_plan' => -round($unusedTimeCreditCents / 100, 2),
             'remaining_cost_on_new_plan' => round($remainingTimeCostCents / 100, 2),
             'net_adjustment_due_today' => round($prorationTotalCents / 100, 2),
             'currency' => strtolower($preview->currency)
+        ];
+
+        return [
+            'response'=> [
+                'action_type' => 'upgrade',
+                'proration' => $prorationDetails,
+                'downgradePrevent' => null
+            ],
+            'status_code' => 200
         ];
     }
 }

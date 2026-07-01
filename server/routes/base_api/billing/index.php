@@ -10,16 +10,21 @@ use App\Http\Controllers\Api\Billing\{
 
 Route::prefix('/billing')->group(function () {
     Route::get('/pricing', [PlanController::class, 'index']);
+
     Route::middleware('auth:api')->group(function () {
         Route::post('/checkout', [CheckoutController::class, 'createSession']);
         Route::post('/portal', [BillingPortalController::class, 'createSession']);
-        Route::middleware('permission:all')->get('/invoices', [InvoiceController::class, 'index']);
-        // Route::get('/subscription', [SubscriptionController::class, 'show']);
-        Route::post('/subscription/preview-proration', [SubscriptionController::class, 'previewProration']);
+        
         Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade']);
         Route::post('/subscription/downgrade', [SubscriptionController::class, 'downgrade']);
-        Route::get('/user-pricing', [PlanController::class, 'userPricing']);
+        ROute::post('/subscription/cancel', [SubscriptionController::class, 'cancel']);
+        Route::post('/subscription/resume', [SubscriptionController::class, 'resume']);
+        
+        Route::middleware('permission:all')->get('/invoices', [InvoiceController::class, 'index']);
+        Route::post('/subscription/preview-proration', [SubscriptionController::class, 'previewProration']);
+        
         Route::get('/setup', [BillingPortalController::class, 'initializePortal']);
+        Route::get('/user-pricing', [PlanController::class, 'userPricing']);
     });
 });
 

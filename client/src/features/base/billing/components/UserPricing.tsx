@@ -91,21 +91,8 @@ export default function UserPricing() {
     setConfirmOpen(false);
     setPreview(null);
     setPlanSlug('');
-    setDowngradeResult(null);
+    setDowngradeResult(null); 
   };
-
-  useEffect(()=>{
-    api.get('/billing/setup')
-            .then(response => {
-                // setBillingData(response.data);
-                // setLoading(false);
-                console.log(response);
-            })
-            .catch(error => {
-                // console.error("Failed to initialize billing profile:", error);
-                // setLoading(false);
-            });
-  },[])
 
   // ─── Modal footer ──────────────────────────────────────────────────────────
 

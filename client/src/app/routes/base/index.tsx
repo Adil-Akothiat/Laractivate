@@ -104,8 +104,8 @@ export default function baseRoutes() {
                     </Route>
                 </Route>
                 {/* Pricing */}
-                <Route path="/pricing" element={<PricingPage />} />
             </Route>
+            <Route path="/pricing" element={<PricingPage />} />
         </>
     );
 }
