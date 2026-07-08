@@ -87,7 +87,7 @@ JWT_SECRET=your_generated_jwt_secret_here
 
 ### 6. Set Up Stripe (only if you need payments) 💳
 
-The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`docs/billing.md`](./docs/billing.md) to connect your Stripe sandbox and capture your webhook secret.
+The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`docs/billing.md`](./docs/billing/doc.md) to connect your Stripe sandbox and capture your webhook secret.
 
 ### 7. Verify Everything Is Running
 
