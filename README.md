@@ -25,11 +25,12 @@ cd laractivate
 ```
 
 ### 2. Configure Environment
+
 ```bash
 cp .env.example .env
 ```
 
-> Open `.env` and adjust database credentials or ports if needed. The defaults work out of the box with Docker.
+> 📖 Full breakdown of every variable — what it does, its default, and whether you need to change it — lives in [`docs/env.md`](./docs/env.md).
 
 ### 3. Start Docker Containers
 
@@ -44,77 +45,33 @@ docker-compose up -d --build
 docker-compose exec app php artisan migrate --seed
 ```
 
-### 5. Application Keys Configuration 🔑
+### 5. Generate Application Keys 🔑
 
-Because Laractivate uses Docker to manage environment variables, the standard `php artisan` commands cannot modify your `.env` file directly. You must generate the keys and manually add them to your root `.env` file.
+Because Laractivate uses Docker, the standard `php artisan` commands can't write to your `.env` file directly. Generate each key, then paste it into your root `.env` yourself.
 
-#### A. Generate Laravel Application Key
-The `APP_KEY` is used by Laravel to encrypt your user sessions and other sensitive data.
-
-Run the following command:
+**Laravel App Key** — encrypts sessions and sensitive data:
 
 ```bash
 docker-compose exec app php artisan key:generate --show
 ```
-Copy the outputted string (e.g., `base64:abc...`).
-
-Open your root `.env` and paste it:
-
 ```plaintext
 APP_KEY=base64:your_generated_key_here
 ```
 
-#### B. Generate JWT Secret
-This secret is used to sign your authentication tokens. Without this, users will not be able to log in.
-
-Run the following command:
+**JWT Secret** — signs authentication tokens (required for login to work):
 
 ```bash
 docker-compose exec app php artisan jwt:secret --show
 ```
-Copy the generated secret string.
-
-Update your root `.env`:
-
 ```plaintext
 JWT_SECRET=your_generated_jwt_secret_here
 ```
 
-#### C. Connect and Pair Stripe CLI Webhooks 💳
-Laractivate abstracts local package dependencies by hosting an official `stripe/stripe-cli` service inside Docker. This captures transaction lifecycle events from your Stripe dashboard and routes them straight to your application database.
+### 6. Set Up Stripe (only if you need payments) 💳
 
-##### 1. Link to Your Stripe Sandbox Account
-Initialize the pairing process inside the temporary CLI instance container:
-```bash
-docker-compose run --rm stripe-cli login
-```
-Docker will output a unique pairing URL. Copy it, paste it into your browser, log in, and click Allow. Your configuration token session will persist securely inside the named Docker volume layer.
+The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`docs/billing.md`](./docs/billing.md) to connect your Stripe sandbox and capture your webhook secret.
 
-##### 2. Capture Your Webhook Secret Key
-Now, run the temporary listener check process once to extract your local container signing secret:
-```bash
-docker-compose up stripe-cli
-```
-
-Look closely at the initial boot logs terminal interface. You will see a line outputted like this:
-> Ready! Your webhook signing secret is whsec_...
-
-Copy that whsec_... string token, open your root .env file, and assign it to your configuration variable key:
-`STRIPE_WEBHOOK_SECRET=whsec_your_copied_secret_here`
-
-##### 3. Boot Up the Automated Webhook Background Service
-Hit `ctrl + c` to safely close the active terminal process view, then restart your core stack services inside the global background loop:
-
-```bash
-docker-compose down
-```
-Then
-```bash
-docker-compose up -d
-```
-**Pro Tip:** Never share your `.env` file or commit it to version control. These keys are unique to your production or local instance and are critical for security.
-
-### 6. Verify Everything Is Running
+### 7. Verify Everything Is Running
 
 ```bash
 docker-compose ps
@@ -128,21 +85,33 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 ## 🖥️ Backend (Laravel)
 
-| Component           | Link                                        |
-| :------------------ | :------------------------------------------ |
-| Core Server Docs    | [./server/README.md](./server/README.md) |
+| Component        | Link                                        |
+| :---------------- | :------------------------------------------ |
+| Core Server Docs | [./server/README.md](./server/README.md)    |
 
 ## 💻 Frontend (React.js)
 
-| Component           | Link                                        |
-| :------------------ | :------------------------------------------ |
-| Core Client Docs    | [./client/README.md](./client/README.md) |
+| Component        | Link                                        |
+| :---------------- | :------------------------------------------ |
+| Core Client Docs | [./client/README.md](./client/README.md)    |
 
 ## 🐳 Docker & Infrastructure
 
 | Component                  | Link                                          |
-| :------------------------- | :-------------------------------------------- |
+| :-------------------------- | :--------------------------------------------- |
 | Docker Infrastructure Docs | [./docs/docker/doc.md](./docs/docker/doc.md)  |
+
+## ⚙️ Environment Variables
+
+| Component            | Link                                |
+| :--------------------- | :------------------------------------ |
+| Full `.env` Reference | [./docs/env.md](./docs/env.md)      |
+
+## 💳 Billing (Stripe)
+
+| Component        | Link                                        |
+| :----------------- | :-------------------------------------------- |
+| Stripe & Webhook Setup | [./docs/billing.md](./docs/billing.md) |
 
 ## 🌐 External References
 
@@ -151,21 +120,6 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 ---
 
-# 📂 Documentation Structure
-
-```txt
-docs/
-├─ assets/
-│  └─ docker_installer_config.png
-├─ docker/
-│  └─ doc.md
-├─ server/
-│  └─ doc.md
-└─ client/
-   └─ doc.md
-```
-
----
 
 # 🛠️ Common Commands
 

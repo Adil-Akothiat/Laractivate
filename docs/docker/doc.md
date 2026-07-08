@@ -1,138 +1,44 @@
-# Docker & Infrastructure
+# 🐳 Docker Infrastructure Setup Guide
 
-This document covers Docker installation, container architecture, and troubleshooting for Laractivate.
-
----
-
-## Installation Requirements
-
-| Requirement     | Link                                                            |
-| :-------------- | :-------------------------------------------------------------- |
-| Docker Desktop  | https://www.docker.com/products/docker-desktop/                 |
-| WSL2 (optional) | https://learn.microsoft.com/en-us/windows/wsl/install           |
-
-> **Windows users:** Docker Desktop works with either **Hyper-V** or **WSL2** as the backend. Both are valid — pick one based on your setup.
-
-### Install Steps
-
-1. Download and install **Docker Desktop**
-2. During setup, the installer will show a Configuration screen:
-
-   ![Docker installer config](../assets/dockerconfinstaller.jpg)
-
-   - **Hyper-V (default):** Leave "Use WSL 2 instead of Hyper-V" unchecked. No extra setup needed.
-   - **WSL2 (optional):** Check "Use WSL 2 instead of Hyper-V" — requires WSL2 to be installed first via the link above.
-
-3. After installation, verify Docker is running:
-
-```bash
-docker --version
-docker-compose --version
-```
+This guide ensures your host development environment is optimally configured to run the Laractivate boilerplate.
 
 ---
 
-## Container Architecture
+## 1. System Requirements & Installation
 
-Laractivate runs three containers orchestrated via `docker-compose`:
+Rather than reinventing the wheel, please follow the official, up-to-date instructions to install **Docker Desktop** or **Docker Engine** for your specific operating system:
 
-| Container | Service | Description                  |
-| :-------- | :------ | :--------------------------- |
-| `app`     | Laravel | PHP API server               |
-| `client`  | React   | Vite dev server              |
-| `db`      | MySQL   | Database                     |
+* 🪟 [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) *(Requires WSL2 or Hyper-V enablement)*
+* 🍏 [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/) *(Supports both Apple Silicon and Intel chips)*
+* 🐧 [Docker Engine for Linux](https://docs.docker.com/desktop/install/linux-install/) *(Make sure to complete the [Post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) to run docker without sudo)*
 
 ---
 
-## Configuration
+## 2. Platform-Specific Optimization
 
-Environment variables are managed via `.env` at the project root.
+### 🪟 Windows Setup (Crucial)
+To prevent extreme slowdowns when running Laravel and React inside containers, you **must use the WSL2 (Windows Subsystem for Linux) backend**.
 
-| Variable        | Default       | Description              |
-| :-------------- | :------------ | :----------------------- |
-| `DB_HOST`       | `db`          | MySQL container hostname |
-| `DB_DATABASE`   | `laractivate` | Database name            |
-| `DB_USERNAME`   | `root`        | Database user            |
-| `DB_PASSWORD`   | `secret`      | Database password        |
-| `APP_PORT`      | `8000`        | Laravel API port         |
-| `CLIENT_PORT`   | `5173`        | Vite frontend port       |
+1. Open Docker Desktop Settings.
+2. Navigate to **General** -> Check **Use the WSL 2 based engine**.
+3. For maximum file system performance, **clone this repository inside your WSL2 Linux file system** (e.g., `\\wsl$\Ubuntu\home\username\projects`), *not* on your local Windows `C:\` drive.
 
-> To find your running URLs after setup, check `APP_PORT` and `CLIENT_PORT` in your `.env` — these are the ports your services are bound to.
+### 🍏 Mac Setup
+* Ensure **VirtioFS** is enabled under *Settings -> Virtualization* for near-native file sharing speeds between your Mac host and the containers.
 
 ---
 
-## Common Commands
+## 3. Troubleshooting & Common Roadblocks
 
-### Start containers
+### 🛑 Error: "Port 3306 or 8000 is already allocated"
+If you are running a local copy of MySQL or PHP natively on your host computer, Docker will fail to bind the ports.
 
-```bash
-docker-compose up -d --build
-```
+* **The Fix:** Open your `.env` file and look for custom port bindings (or change the external port mapping inside your `docker-compose.yml` file to `3307:3306`).
 
-### Stop containers
+### 🐌 App is running extremely slow on Windows
+This happens when Docker is forced to cross-mount files between the Windows NTFS file system and Linux containers.
+* **The Fix:** Move your project directory into your WSL2 home directory.
 
-```bash
-docker-compose down
-```
-
-### Check container status
-
-```bash
-docker-compose ps
-```
-
-### View logs
-
-```bash
-# All services
-docker-compose logs -f
-
-# Specific service
-docker-compose logs -f app
-docker-compose logs -f client
-docker-compose logs -f db
-```
-
-### Restart a specific service
-
-```bash
-docker-compose restart client
-```
-
----
-
-## Troubleshooting
-
-### Port already in use
-
-Update `APP_PORT` or `CLIENT_PORT` in `.env` to a free port, then restart:
-
-```bash
-docker-compose down
-docker-compose up -d --build
-```
-
-### `docker-compose exec` fails with "no such service"
-
-The container may have exited. Check its status then bring it back up:
-
-```bash
-docker-compose ps
-docker-compose up -d
-```
-
-### Database connection refused
-
-If you run migrations immediately after `up`, the `db` container may not be fully ready. Add a short delay:
-
-```bash
-docker-compose up -d --build && sleep 5 && docker-compose exec app php artisan migrate --seed
-```
-
-### Reset everything from scratch
-
-```bash
-docker-compose down -v        # removes containers AND volumes (wipes the database)
-docker-compose up -d --build
-docker-compose exec app php artisan migrate --seed
-```
+### 🔒 Permission Denied on Linux (`/var/run/docker.sock`)
+If your terminal window complains about system permissions, your user group is out of sync.
+* **The Fix:** Run `sudo usermod -aG docker $USER` and restart your terminal window.
