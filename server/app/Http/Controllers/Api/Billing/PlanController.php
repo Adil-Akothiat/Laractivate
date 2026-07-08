@@ -22,8 +22,12 @@ class PlanController extends Controller
     public function index(): JsonResponse
     {
         // Return clean, public-facing data structures
-        $sanitizedPlans = $this->planService->sanitizedPlans();
-        return (new BaseResource($sanitizedPlans))->response()->setStatusCode(200);
+        try {
+            $sanitizedPlans = $this->planService->sanitizedPlans();
+            return (new BaseResource($sanitizedPlans))->response()->setStatusCode(200);
+        } catch(\Exception $e) {
+            return  response()->json(['e'=> $e->getMessage()], 550);
+        }
     }
 
     /**

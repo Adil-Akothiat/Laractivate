@@ -108,10 +108,18 @@ class SubscriptionService
         $subscription = $subscriptionService->getActiveSubscription($user);
         $stripeSubscription = $subscription->asStripeSubscription();
 
+        if($stripeSubscription->cancel_at_period_end) {
+            return [
+                'response'=> [],
+                'message'=> "Your subscription is already set to cancel at the end of the current billing period.",
+                'status_code'=> 422
+            ];
+        }
+        
         // Cancel the subscription at the end of the current billing period
         $this->stripe->subscriptions->cancel($stripeSubscription->id, [
             'cancel_at_period_end' => true,
-        ])
+        ]);
 
         return [
             'response'=> [],
@@ -125,6 +133,14 @@ class SubscriptionService
         $subscriptionService = app(SubscriptionService::class);
         $subscription = $subscriptionService->getActiveSubscription($user);
         $stripeSubscription = $subscription->asStripeSubscription();
+
+        if($stripeSubscription->status !== 'active' && $stripeSubscription->status !== 'paused') {
+            return [
+                'response'=> [],
+                'message'=> "Your subscription is not in a state that can be resumed.",
+                'status_code'=> 422
+            ];
+        }
 
         // Resume the subscription by setting cancel_at_period_end to false
         if($stripeSubscription->status === 'active' && $stripeSubscription->cancel_at_period_end):
