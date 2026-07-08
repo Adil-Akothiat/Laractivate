@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Globe, Monitor, ChevronDown } from "lucide-react";
-import { getEventConfig } from "../utils/logs/eventConfig";
-import { fullDate, parseDevice, relativeTime } from "../utils/logs/helpers";
+import { getEventConfig } from "../utils/customLogs/eventConfig";
+import { fullDate, parseDevice, relativeTime } from "../utils/customLogs/helpers";
 import ProfileDiff from "../../settings/components/ActivityLogs/ProfileDiff";
 import type { LogSchema } from "../types";
 
