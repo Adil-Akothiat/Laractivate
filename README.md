@@ -11,6 +11,23 @@
 
 Before running the project, make sure **Docker** is installed and running on your machine.
 
+**Check if Docker is installed:**
+
+```bash
+docker --version
+docker-compose --version
+```
+
+You should see output like `Docker version 27.x.x` and `Docker Compose version v2.x.x`. If instead you get a `command not found` error, Docker isn't installed yet — see the setup guide below.
+
+**Check that Docker is actually running:**
+
+```bash
+docker info
+```
+
+If this hangs or errors out (e.g. `Cannot connect to the Docker daemon`), Docker is installed but not running — start Docker Desktop (or the Docker service) and try again.
+
 > 📖 See the [Docker Setup Guide](./docs/docker/doc.md) for installation instructions (Docker Desktop, Hyper-V vs WSL2, and troubleshooting).
 
 ---
@@ -27,7 +44,7 @@ cd laractivate
 ### 2. Configure Environment
 
 ```bash
-cp .env.example .env
+cp ./server/.env.example ./server/.env
 ```
 
 > 📖 Full breakdown of every variable — what it does, its default, and whether you need to change it — lives in [`docs/env.md`](./docs/env.md).
@@ -47,7 +64,7 @@ docker-compose exec app php artisan migrate --seed
 
 ### 5. Generate Application Keys 🔑
 
-Because Laractivate uses Docker, the standard `php artisan` commands can't write to your `.env` file directly. Generate each key, then paste it into your root `.env` yourself.
+Because Laractivate uses Docker, the standard `php artisan` commands can't write to your `.env` file directly. Generate each key, then paste it into `server/.env` yourself.
 
 **Laravel App Key** — encrypts sessions and sensitive data:
 
@@ -120,6 +137,23 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 ---
 
+# 📂 Documentation Structure
+
+```txt
+docs/
+├─ assets/
+│  └─ docker_installer_config.png
+├─ docker/
+│  └─ doc.md
+├─ server/
+│  └─ doc.md
+├─ client/
+│  └─ doc.md
+├─ env.md
+└─ billing.md
+```
+
+---
 
 # 🛠️ Common Commands
 
