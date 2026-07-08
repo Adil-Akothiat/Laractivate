@@ -47,7 +47,7 @@ cd laractivate
 cp ./server/.env.example ./server/.env
 ```
 
-> 📖 Full breakdown of every variable — what it does, its default, and whether you need to change it — lives in [`docs/env.md`](./docs/env.md).
+> 📖 Full breakdown of every variable — what it does, its default, and whether you need to change it — lives in [`./server/docs/env.md`](./server/docs/env.md).
 
 ### 3. Start Docker Containers
 
@@ -86,7 +86,7 @@ JWT_SECRET=your_generated_jwt_secret_here
 
 ### 6. Set Up Stripe (only if you need payments) 💳
 
-The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`docs/billing.md`](./docs/billing.md) to connect your Stripe sandbox and capture your webhook secret.
+The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`./server/docs/billing.md`](./server/docs/billing.md) to connect your Stripe sandbox and capture your webhook secret.
 
 ### 7. Verify Everything Is Running
 
