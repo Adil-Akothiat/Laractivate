@@ -3,7 +3,7 @@
 This is the full reference for every variable in `.env.example`. Copy the file first:
 
 ```bash
-cp .env.example .env
+cp ./server/.env.example ./server/.env
 ```
 
 Then work through the **Required** section below — that's the minimum needed to get the project running. Everything else has a working default and can be left alone until you actually need it.
