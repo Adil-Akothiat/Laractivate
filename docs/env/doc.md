@@ -1,27 +1,30 @@
 # ⚙️ Environment Variables
 
-This is the full reference for every variable in `.env.example`. Copy the file first:
+Laractivate has **two separate `.env` files** — one for the Laravel API, one for the Vite client. Copy both before starting the project:
 
 ```bash
 cp ./server/.env.example ./server/.env
+cp ./client/.env.example ./client/.env
 ```
 
-Then work through the **Required** section below — that's the minimum needed to get the project running. Everything else has a working default and can be left alone until you actually need it.
+Then work through the **Required** section below for each — that's the minimum needed to get the project running. Everything else has a working default and can be left alone until you actually need it.
 
 ---
 
-## 🚀 Required — Change Before You Run
+# 🖥️ Server (`server/.env`)
 
-These are the only variables you *must* look at to boot the project.
+Config for the Laravel API.
+
+## 🚀 Required — Change Before You Run
 
 | Variable       | Default                  | Notes                                                                 |
 | :------------- | :------------------------ | :---------------------------------------------------------------------|
 | `APP_NAME`     | `Laractivate`             | Used in emails, page titles, etc.                                    |
 | `APP_ENV`      | `local`                   | Leave as `local` for development.                                    |
-| `APP_KEY`      | *(empty)*                 | **Required.** Generate with `php artisan key:generate --show` — see [main Quick Start](../README.md#5-generate-application-keys-). |
+| `APP_KEY`      | *(empty)*                 | **Required.** Generate with `php artisan key:generate --show` — see [main Quick Start](../../README.md#5-generate-application-keys-). |
 | `APP_DEBUG`    | `true`                    | Set to `false` in production.                                        |
-| `APP_URL`      | `http://localhost:8000`   | Backend URL.                                                          |
-| `FRONTEND_URL` | `http://localhost:5173`   | Vite dev server URL.                                                  |
+| `APP_URL`      | `http://localhost:8000`   | Backend URL. **Cloud/Codespaces:** set this to your forwarded API URL (e.g. `https://<name>-8000.app.github.dev`). |
+| `FRONTEND_URL` | `http://localhost:5173`   | Used for CORS — must exactly match the client's origin. **Cloud/Codespaces:** set to your forwarded client URL. |
 | `DB_CONNECTION`| `mysql`                   | Pre-configured for Docker.                                            |
 | `DB_HOST`      | `db`                      | Matches the Docker Compose service name — don't change unless you rename the service. |
 | `DB_PORT`      | `3306`                    | —                                                                      |
@@ -29,13 +32,11 @@ These are the only variables you *must* look at to boot the project.
 | `DB_USERNAME`  | `root`                    | —                                                                      |
 | `DB_PASSWORD`  | `root`                    | Change for anything beyond local dev.                                 |
 
----
-
 ## 🔐 Authentication & Security (JWT / Cookies)
 
 | Variable                  | Default                          | Notes                                                        |
 | :------------------------- | :--------------------------------- | :-------------------------------------------------------------|
-| `JWT_SECRET`               | *(empty)*                          | **Required.** Generate with `php artisan jwt:secret --show` — see [main Quick Start](../README.md#5-generate-application-keys-). Without it, login won't work. |
+| `JWT_SECRET`               | *(empty)*                          | **Required.** Generate with `php artisan jwt:secret --show` — see [main Quick Start](../../README.md#5-generate-application-keys-). Without it, login won't work. |
 | `JWT_TTL`                  | `25`                               | Access token lifetime, in minutes.                            |
 | `JWT_REFRESH_TTL`          | `10080`                            | Refresh token lifetime, in minutes (default = 7 days).        |
 | `JWT_BLACKLIST_ENABLED`    | `true`                             | Invalidates tokens on logout.                                 |
@@ -44,11 +45,9 @@ These are the only variables you *must* look at to boot the project.
 | `COOKIE_TTL`                | `30`                               | Cookie lifetime, in minutes.                                   |
 | `BCRYPT_ROUNDS`             | `12`                               | Password hashing cost factor.                                  |
 
----
-
 ## 💳 Stripe & Billing
 
-Only needed if your app uses payments/subscriptions. Full setup walkthrough: **[docs/billing.md](./billing.md)**.
+Only needed if your app uses payments/subscriptions. Full setup walkthrough: **[docs/billing/doc.md](../billing/doc.md)**.
 
 | Variable                   | Default          | Notes                                             |
 | :--------------------------- | :----------------- | :---------------------------------------------------|
@@ -60,8 +59,6 @@ Only needed if your app uses payments/subscriptions. Full setup walkthrough: **[
 | `CASHIER_CURRENCY`          | `usd`               | Default billing currency.                          |
 | `CASHIER_MODEL`             | `App\Models\User`  | Model that owns subscriptions.                     |
 | `STRIPE_TEST_CLOCK_ID`      | `clock_...`         | Optional — for simulating time-based billing in tests. |
-
----
 
 ## 📧 Mail
 
@@ -78,8 +75,6 @@ Defaults to `log` so no external credentials are needed for local dev — outgoi
 | `MAIL_FROM_ADDRESS`  | `hello@example.com`       | —                                        |
 | `MAIL_FROM_NAME`     | `"${APP_NAME}"`           | Inherits from `APP_NAME`.                |
 
----
-
 ## ☁️ External Integrations (AWS / Storage)
 
 Only needed if you're using S3-compatible storage.
@@ -91,8 +86,6 @@ Only needed if you're using S3-compatible storage.
 | `AWS_DEFAULT_REGION`         | `us-east-1`      | —                                |
 | `AWS_BUCKET`                 | *(empty)*        | —                                |
 | `AWS_USE_PATH_STYLE_ENDPOINT`| `false`          | Set `true` for MinIO or similar. |
-
----
 
 ## 🧩 Internal Infrastructure & Drivers
 
@@ -126,4 +119,24 @@ Standard Laravel defaults. Usually left untouched during local setup.
 
 ---
 
-⬅ [Back to main README](../README.md)
+# 💻 Client (`client/.env`)
+
+Config for the React + Vite frontend.
+
+| Variable          | Default                          | Notes                                                                 |
+| :------------------ | :---------------------------------- | :-------------------------------------------------------------------- |
+| `VITE_API_URL`      | `http://localhost:8000/api`         | **Required.** Base URL the frontend uses for API calls (axios, fetch, etc). **Cloud/Codespaces:** set to your forwarded API URL + `/api`, e.g. `https://<name>-8000.app.github.dev/api`. |
+| `VITE_PUBLIC_API`   | `http://localhost:8000`             | Base URL without the `/api` prefix — used for things like public asset/storage links. **Cloud/Codespaces:** set to your forwarded API URL. |
+
+> ⚠️ **Vite bakes `VITE_*` variables in at dev-server start, not at container boot.** If you change either value, you must restart the client container for it to take effect:
+> ```bash
+> docker-compose restart client
+> ```
+
+### ☁️ Running in Codespaces / a cloud VM?
+
+`localhost` in the browser refers to *your own machine*, not the cloud container. Both `server/.env` (`APP_URL`, `FRONTEND_URL`) and `client/.env` (`VITE_API_URL`, `VITE_PUBLIC_API`) need to be updated to your environment's forwarded URLs, or you'll hit CORS errors and failed requests. See the [Docker Infrastructure Docs](../docker/doc.md) for the full walkthrough.
+
+---
+
+⬅ [Back to main README](../../README.md)

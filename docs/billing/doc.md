@@ -9,7 +9,7 @@ Laractivate ships with an official `stripe/stripe-cli` service running inside Do
 ## Before You Start
 
 Make sure you've already:
-1. Copied `.env.example` to `.env` (see [main README](../README.md#2-configure-environment))
+1. Copied `.env.example` to `.env` (see [main README](../../README.md#2-configure-environment))
 2. Run `docker-compose up -d --build`
 3. Created a free [Stripe account](https://dashboard.stripe.com/register) if you don't have one
 
@@ -111,4 +111,4 @@ Never share your `.env` file or commit it to version control. Your Stripe keys a
 
 ---
 
-⬅ [Back to main README](../README.md)
+⬅ [Back to main README](../../README.md)
