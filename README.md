@@ -1,10 +1,21 @@
 # 📦 Laractivate Boilerplate
-
+ 
+A production-ready **SaaS boilerplate** — the auth, roles, billing, security, and admin foundation every SaaS product needs, already built, so you can start on your actual product instead of rebuilding the basics.
+ 
 - Laravel API
 - React + Vite Client
 - MySQL
 - Docker Infrastructure
-
+## ✨ Features
+ 
+- 🔑 JWT authentication, token stored in an HTTP-only cookie
+- 🛡️ Role-Based Access Control (RBAC)
+- 🔒 Security: 2FA, session management, activity logs
+- 👤 Account management (super admin)
+- 💳 Billing — Stripe + Laravel Cashier
+- 🔔 Notification management
+> 📖 Full breakdown of every feature: [`docs/info/doc.md`](./docs/info/doc.md)
+ 
 ---
 
 # 📌 Requirements
