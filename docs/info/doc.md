@@ -14,6 +14,9 @@ JWT-based auth with the token stored in an **HTTP-only cookie** rather than loca
 ### 🛡️ Role-Based Access Control (RBAC)
 Permissions and roles are decoupled from users, so access rules live in one place instead of being scattered across `if` statements throughout the codebase. Add a new role or tighten a permission without touching business logic.
 
+<img src="../assets/rbac-roles.png" alt="RBAC roles list" width="720"/>
+<img src="../assets/rbac-create-role-dialog.png" alt="Creating a new role in RBAC" width="720"/>
+
 ### 🔒 Security
 
 | Capability | What it does |
@@ -22,14 +25,23 @@ Permissions and roles are decoupled from users, so access rules live in one plac
 | **Session management** | Users can see their active sessions/devices and revoke any of them remotely. |
 | **Activity logs tracker** | Records key account and admin actions for auditing — who did what, and when. |
 
+<img src="../assets/two-factor-auth.png" alt="Two-factor authentication setup" width="720"/>
+
 ### 👤 Account Management (Super Admin)
 A super-admin layer for managing every account on the platform — user lookups, role assignment, and account-level actions — separate from a regular user's own settings.
+
+<img src="../assets/dashboard-super-admin.png" alt="Super admin dashboard" width="720"/>
+<img src="../assets/user-management.png" alt="User management table" width="720"/>
 
 ### 💳 Billing (Stripe + Laravel Cashier)
 Subscription billing wired up with **Laravel Cashier** on top of Stripe — plans, price tiers, webhook handling, and lifecycle events (upgrades, cancellations, failed payments) come pre-built. Full setup walkthrough: [`docs/billing/doc.md`](../billing/doc.md).
 
+<img src="../assets/pricing-plans.png" alt="Pricing and plans" width="720"/>
+
 ### 🔔 Notification Management
 A notification system for delivering account and system events to users (e.g. billing events, security alerts, admin actions) through configurable channels.
+
+<img src="../assets/notifications.png" alt="Notification management" width="720"/>
 
 ---
 
