@@ -18,13 +18,11 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::updateOrInsert(
+            Role::firstOrCreate(
                 ['name' => $role['name']], 
                 [
                     'id' => (string) Str::uuid(),
-                    'is_locked' => $role['is_locked'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'is_locked' => $role['is_locked']
                 ]
             );
         }

@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
         $faker = Faker::create();
         
         // 1. Create the Main Super Admin (Your primary account)
-        $admin = User::create([
+        $admin = User::firstOrCreate([
             'id' => (string) Str::uuid(),
             'first_name' => 'Admin',
             'last_name' => 'User',
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
 
         // 3. Generate 40 Mock Users
         for ($i = 0; $i < 40; $i++) {
-            $user = User::create([
+            $user = User::firstOrCreate([
                 'id' => (string) Str::uuid(),
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,

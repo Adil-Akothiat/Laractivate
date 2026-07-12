@@ -34,7 +34,7 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::updateOrInsert(
+            Permission::firstOrCreate(
                 ['name' => $permission['name']], // Unique check
                 [
                     'id' => (string) Str::uuid(),
