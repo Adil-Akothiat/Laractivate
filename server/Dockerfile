@@ -1,37 +1,36 @@
-FROM php:8.4-fpm
+# استخدام الصورة الرسمية المستقرة (تأكد من رقم الإصدار المتوافق مع Laravel لديك)
+FROM dunglas/frankenphp:1.4-php8.4
 
+# تثبيت ملحقات PHP الأساسية لـ Laravel باستخدام الأداة الذكية المدمجة في الصورة
+RUN install-php-extensions pdo_mysql mbstring zip exif pcntl bcmath gd
+
+# تثبيت الأدوات المساعدة للنظام
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
     zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
     unzip \
     git \
     curl \
-    libzip-dev \
-    libonig-dev \
-    libfcgi-dev
+    vim
 
+# تنظيف الـ Cache لتقليل حجم الحاوية
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
-
+# إعداد الـ Entrypoint الخاص بك
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]
 
+# جلب الـ Composer داخل الحاوية
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
+# ضبط الصلاحيات للمستخدم الافتراضي لـ FrankenPHP/Apache
 RUN chown -R www-data:www-data /var/www
 
-EXPOSE 9000
+# فتح المنافذ اللازمة (FrankenPHP يدعم 80 و 443 مسبقاً، و8000 لـ Octane)
+EXPOSE 80 443 8000
+
+# تشغيل Laravel Octane مع FrankenPHP كمحرك أساسي
 CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
