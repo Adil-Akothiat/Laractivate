@@ -1,0 +1,4 @@
+.git
+.github
+./server/vendor
+./client/node_modules

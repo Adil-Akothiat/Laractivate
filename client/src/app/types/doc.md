@@ -1,0 +1,1 @@
+This is include global types that will be used in the whole app (multiple parts)

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow-y: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar Type 1: Light & Slim */
+.scrolltype-1::-webkit-scrollbar {
+  width: 5px; /* Very thin width */
+  height: 5px; /* For horizontal scroll if needed */
+}
+
+.scrolltype-1::-webkit-scrollbar-track {
+  background: transparent; /* Makes the background invisible/clean */
+}
+
+.scrolltype-1::-webkit-scrollbar-thumb {
+  background: #e2e8f0; /* Light gray (Tailwind slate-200) */
+  border-radius: 10px; /* Fully rounded edges */
+}
+
+.scrolltype-1::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1; /* Slightly darker on hover (slate-300) */
+}
+
+/* Firefox Support */
+.scrolltype-1 {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.blocked-element {
+  position: relative;
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  pointer-events: none;
+}
