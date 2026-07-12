@@ -1,31 +1,34 @@
 import http from 'k6/http';
-import { sleep, check } from 'k6';
+import { check } from 'k6';
 
-// Define the workload options
 export const options = {
     stages: [
-        { duration: '30s', target: 20 },  // Ramp up to 20 users
-        { duration: '1m', target: 20 },   // Stay at 20 users (stress test)
-        { duration: '30s', target: 0 },   // Ramp down to 0
+        { duration: '30s', target: 100 }, // رفع الحمل سريعاً إلى 100 مستخدم
+        { duration: '30s', target: 200 }, // ثم إلى 200 مستخدم
+        { duration: '30s', target: 500 }, // ثم قفزة عنيفة إلى 500 مستخدم متزامن!
+        { duration: '30s', target: 500 }, // الثبات عند القمة لمعرفة نقطة الانهيار
+        { duration: '20s', target: 0 },   // التخفيف والعودة للصفر
     ],
+    thresholds: {
+        // نراقب فقط، لن نضع قيوداً صارمة لأننا نتوقع الفشل في هذا الاختبار
+        http_req_failed: ['rate<0.05'], // نتوقع ألا تتعدى الأخطاء 5% في أسوأ الحروف
+    },
 };
 
 export default function () {
-    // 1. Fire the request
-    // https://legendary-rotary-phone-rprxww65vxw3xv4j-8000.app.github.dev/
-    const res = http.get('https://legendary-rotary-phone-rprxww65vxw3xv4j-8000.app.github.dev/api/billing/pricing');
+    const url = 'http://localhost:8000/api/billing/pricing';
+    
+    const params = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+    };
 
-    // 2. Validate the response status is 200
+    const res = http.get(url, params);
+
+    // التحقق من أن السيرفر لا يزال حياً ويرد بـ 200
     check(res, {
         'status is 200': (r) => r.status === 200,
     });
 }
-
-
-// export const options = {
-//     stages: [
-//         { duration: '30s', target: 20 },  // Ramp up to 20 users
-//         { duration: '1m', target: 20 },   // Stay at 20 users (stress test)
-//         { duration: '30s', target: 0 },   // Ramp down to 0
-//     ],
-// };

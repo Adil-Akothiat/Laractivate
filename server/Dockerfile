@@ -33,4 +33,7 @@ RUN chown -R www-data:www-data /var/www
 EXPOSE 80 443 8000
 
 # تشغيل Laravel Octane مع FrankenPHP كمحرك أساسي
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
+# CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
+
+# for test
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--workers=8", "--max-requests=1000"]

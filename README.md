@@ -52,55 +52,23 @@ git clone https://github.com/Adil-Akothiat/Laractivate.git
 cd laractivate
 ```
 
-### 2. Configure Environment
+### 2. Start Docker Containers
 
 ```bash
-cp ./server/.env.example ./server/.env
-cp ./client/.env.example ./client/.env
+chmod +x setup.sh
 ```
-
-> 📖 Full breakdown of every variable — what it does, its default, and whether you need to change it — lives in [`docs/env/doc.md`](./docs/env/doc.md).
-
-### 3. Start Docker Containers
-
+Then:
 ```bash
-docker-compose up -d --build
+./setup.sh
 ```
 > ⏳ The first build may take a few minutes.
 
-### 4. Setup Database
-
-```bash
-docker-compose exec app php artisan migrate --seed
-```
-
-### 5. Generate Application Keys 🔑
-
-Because Laractivate uses Docker, the standard `php artisan` commands can't write to your `.env` file directly. Generate each key, then paste it into `server/.env` yourself.
-
-**Laravel App Key** — encrypts sessions and sensitive data:
-
-```bash
-docker-compose exec app php artisan key:generate --show
-```
-```plaintext
-APP_KEY=base64:your_generated_key_here
-```
-
-**JWT Secret** — signs authentication tokens (required for login to work):
-
-```bash
-docker-compose exec app php artisan jwt:secret --show
-```
-```plaintext
-JWT_SECRET=your_generated_jwt_secret_here
-```
-
-### 6. Set Up Stripe (only if you need payments) 💳
+### 3. Set Up Stripe (only if you need payments) 💳
 
 The project runs fine without Stripe configured. If your app needs billing/subscriptions, follow the full walkthrough in [`docs/billing.md`](./docs/billing/doc.md) to connect your Stripe sandbox and capture your webhook secret.
 
-### 7. Verify Everything Is Running
+
+### 4. Verify Everything Is Running
 
 ```bash
 docker-compose ps
@@ -134,13 +102,13 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 | Component            | Link                                |
 | :--------------------- | :------------------------------------ |
-| Full `.env` Reference | [./docs/env.md](./docs/env.md)      |
+| Full `.env` Reference | [./docs/env.md](./docs/env/doc.md)      |
 
 ## 💳 Billing (Stripe)
 
 | Component        | Link                                        |
 | :----------------- | :-------------------------------------------- |
-| Stripe & Webhook Setup | [./docs/billing.md](./docs/billing.md) |
+| Stripe & Webhook Setup | [./docs/billing.md](./docs/billing/doc.md) |
 
 ## 🌐 External References
 
@@ -151,55 +119,4 @@ All services (`app`, `client`, `db`) should show status **Up**.
 ---
 
 # 🛠️ Common Commands
-
-### Stop Containers
-
-```bash
-docker-compose stop
-```
-### Start Containers
-
-```bash
-docker-compose start
-```
-
-### Restart Containers
-
-```bash
-docker-compose restart
-```
-
-### View Logs
-
-```bash
-docker-compose logs -f
-```
-
-### Restart Client
-
-```bash
-docker-compose restart client
-```
-
-### Reset Database
-
-```bash
-docker-compose exec app php artisan migrate:fresh --seed
-```
-
-### The "Bridge" Command: `docker-compose exec`
-
-```bash
-docker-compose exec [service_name] [command]
-```
-
-#### Example
-- Client:
-```bash
-docker-compose exec client npm install <package-name>
-```
-
-- Server:
-```bash
-docker-compose exec app composer require <package-name>
-```
+Check more docker compose commands here: [./docs/docker/commands](./docs/docker/commands.md)
