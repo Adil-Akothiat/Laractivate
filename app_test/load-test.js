@@ -12,7 +12,8 @@ export const options = {
 
 export default function () {
     // 1. Fire the request
-    const res = http.get('http://127.0.0.1:8000/api/bench-test');
+    // https://legendary-rotary-phone-rprxww65vxw3xv4j-8000.app.github.dev/
+    const res = http.get('https://legendary-rotary-phone-rprxww65vxw3xv4j-8000.app.github.dev/api/billing/pricing');
 
     // 2. Validate the response status is 200
     check(res, {
