@@ -34,8 +34,21 @@ export interface InvoiceSchema {
   created_at: string;
 }
 
+export interface PendingDowngradeSchema {
+  id: string;
+  plan_name: string;
+  plan_slug: string;
+  transitions_at: string;
+}
+
+export interface NextInvoiceSchema {
+  amount: number;
+  currency: string;
+  billing_at: string;
+}
+
 export interface ActiveSubscriptionSchema {
-  subscription_id: string | null;
+  id: string;
   status: string | null;
   plan: {
     name: string;
@@ -43,10 +56,13 @@ export interface ActiveSubscriptionSchema {
     price: number;
     currency: string;
     interval: string;
-  } | null;
-  renews_at: string | null;
+  };
   ends_at: string | null;
   on_grace_period: boolean;
+  pending_downgrade: PendingDowngradeSchema | null,
+  next_invoice: NextInvoiceSchema | null,
+  can_cancel: boolean;
+  can_resume: boolean;
 }
 
 export interface ProrationPreviewSchema {

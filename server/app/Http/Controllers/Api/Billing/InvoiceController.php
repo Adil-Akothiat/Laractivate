@@ -6,19 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Billing\InvoiceCollection;
 use App\Models\User;
-use App\Services\Billing\BillingService;
+use App\Services\Billing\{ InvoiceService };
 
 class InvoiceController extends Controller
 {
     public function __construct(
-        protected BillingService $billingService
+        protected InvoiceService $invoiceService
     ) {}
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $invoices = $this->billingService->getUserInvoices($request->user());   
+        $invoices = $this->invoiceService->getUserInvoices($request->user());   
         // Return wrapped resource collection safely
         return new InvoiceCollection($invoices);   
     }
@@ -44,7 +44,7 @@ class InvoiceController extends Controller
      */
     public function show(User $user)
     {
-        return new InvoiceCollection($this->billingService->getUserInvoices($user));   
+        return new InvoiceCollection($this->invoiceService->getUserInvoices($user));   
     }
 
     /**

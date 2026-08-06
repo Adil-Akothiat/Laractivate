@@ -39,7 +39,7 @@ export const PricingGrid: React.FC<PricingGridProps> = ({
               <h3 className="card-title text-2xl font-bold mb-1">
                 {plan.name}
               </h3>
-              <p className="text-base-content/70 text-sm min-h-[40px] mb-4">
+              <p className="text-base-content/70 text-sm min-h-10 mb-4">
                 {plan.description}
               </p>
 
@@ -61,7 +61,7 @@ export const PricingGrid: React.FC<PricingGridProps> = ({
                     className="flex items-start gap-3 text-sm text-base-content/90"
                   >
                     <svg
-                      className="w-5 h-5 text-success flex-shrink-0 mt-0.5"
+                      className="w-5 h-5 text-success shrink-0 mt-0.5"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"

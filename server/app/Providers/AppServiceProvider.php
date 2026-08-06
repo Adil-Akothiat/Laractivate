@@ -6,9 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Observers\UserObserver;
 use App\Models\{User, Subscription, SubscriptionItem};
-use Illuminate\Support\Facades\Event;
+// use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\{ Login, Logout, PasswordReset };
-use App\Listeners\{ LogSuccessfulLogin, LogSuccessfulLogout, LogResetPassword };
+// use App\Listeners\{ LogSuccessfulLogin, LogSuccessfulLogout, LogResetPassword };
 use Laravel\Cashier\Cashier;
 
 
@@ -41,17 +41,17 @@ class AppServiceProvider extends ServiceProvider
             return $blueprint;
         });
         User::observe(UserObserver::class);
-        Event::listen(
-            Login::class,
-            LogSuccessfulLogin::class
-        );
-        Event::listen(
-            Logout::class,
-            LogSuccessfulLogout::class
-        );
-        Event::listen(
-            PasswordReset::class,
-            LogResetPassword::class
-        );
+        // Event::listen(
+        //     Login::class,
+        //     LogSuccessfulLogin::class
+        // );
+        // Event::listen(
+        //     Logout::class,
+        //     LogSuccessfulLogout::class
+        // );
+        // Event::listen(
+        //     PasswordReset::class,
+        //     LogResetPassword::class
+        // );
     }
 }

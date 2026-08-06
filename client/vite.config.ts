@@ -9,6 +9,14 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  server: {
+    watch: {
+      usePolling: true
+    },
+    host: true,
+    strictPort: true,
+    port: 5173
+  }, // <--- THIS COMMA WAS MISSING AND WILL CAUSE A SYNTAX ERROR
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')

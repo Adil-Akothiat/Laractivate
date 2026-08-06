@@ -49,11 +49,18 @@ class CheckoutService
         // Save Stripe Customer ID to the user record for future matching references
         $user->update(['stripe_id' => $stripeCustomerId]);
 
-        Log::info("🚀 User ID {$userId} successfully completed subscription checkout.");
+        // Log::info("🚀 User ID {$userId} successfully completed subscription checkout.");
+        $paymentMethodService = app(PaymentMethodService::class);
+        $resolvedUser = $this->resolveUserFromSession($session);
+        $paymentMethodId = $paymentMethodService->extractPaymentMethodIdFromSession($session);
+
+        if ($paymentMethodId) {
+            $paymentMethodService->syncAndSetDefault($user, $paymentMethodId);
+        }
         return true;
     }
 
-   public function createCheckoutSession(User $user, string $planSlug): string
+    public function createCheckoutSession(User $user, string $planSlug): string
     {
         $planService = app(PlanService::class);
         $targetPlan = $planService->getPlan($planSlug);
@@ -66,10 +73,24 @@ class CheckoutService
         
         $checkout = $user->newSubscription($slug, $stripePriceId)
             ->checkout([
-                'payment_method_types' => ['card'],
+                // 'payment_method_types' => ['card'],
                 'success_url' => config('services.client.url') . '/dashboard/pricing?session_id={CHECKOUT_SESSION_ID}&status=success',
                 'cancel_url'  => config('services.client.url') . '/dashboard/pricing?status=cancelled',
         ]);
         return $checkout->url;
+    }
+
+    protected function resolveUserFromSession(object $session): ?User
+    {
+        if (! empty($session->customer)) {
+            $user = User::where('stripe_id', $session->customer)->first();
+            if ($user) return $user;
+        }
+
+        if (! empty($session->client_reference_id)) {
+            return User::find($session->client_reference_id);
+        }
+
+        return null;
     }
 }

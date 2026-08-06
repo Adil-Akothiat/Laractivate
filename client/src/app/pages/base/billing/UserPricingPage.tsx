@@ -1,5 +1,5 @@
 import { ScrollContainer } from "@/components/ScrollContainer";
-import UserPricing from "@/features/base/billing/components/UserPricing";
+import UserPricing from "@/features/base/billing/components/Pricing/UserPricing";
 
 export default function UserPricingPage() {
   return (

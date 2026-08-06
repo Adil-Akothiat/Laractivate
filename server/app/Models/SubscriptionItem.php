@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Cashier\SubscriptionItem as CashierSubscriptionItem;
 
-class SubscriptionItem extends Model
+class SubscriptionItem extends CashierSubscriptionItem
 {
     use HasFactory;
 

@@ -30,5 +30,6 @@ export const useInvoicesQuery = (filters: FilterInvoicesParams = {}) =>
 export const useSubscriptionQuery = () =>
   useQuery({
     queryKey: billingKeys.subscription(),
-    queryFn: async () => billingApi.getSubscription()
+    queryFn: async () => billingApi.getSubscription(),
+    select: data=> data?.data
   });

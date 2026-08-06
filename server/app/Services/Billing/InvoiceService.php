@@ -15,6 +15,11 @@ class InvoiceService
      * Synchronize invoice transaction data rows for dashboard ledger tables.
     */
 
+    protected $stripe;
+    public function __construct() {
+        $this->stripe = Cashier::stripe();
+    }
+
     public function handleInvoicePaymentSucceeded(object $invoiceData): bool
     {
         // 1. 🟢 Extract ALL required properties safely from the Stripe object
@@ -128,6 +133,92 @@ class InvoiceService
             // This appends the dynamic parameters to the generated pagination links layout
             ->appends($filters);
     }
+
+    public function previewUpcomingInvoice(object $stripeSubscription, bool $withProration = false, string $newPriceId = null): array|object
+    {
+        try {
+            $params = [
+                'customer' => $stripeSubscription->customer,
+            ];
+            
+            if(!empty($stripeSubscription->schedule)) {
+                $params['schedule'] = $stripeSubscription->schedule;
+            } else {
+                $params['subscription'] = $stripeSubscription->id;
+            }
+            if($withProration) {
+                $params['subscription_details'] = [
+                    'proration_behavior' => 'always_invoice',
+                    'items' => [
+                        [
+                            'id' => $stripeSubscription->items->data[0]->id,
+                            'price' => $newPriceId ?? $stripeSubscription->items->data[0]->price->id,
+                        ],
+                    ],
+                ];
+            }
+            $invoice = $this->stripe->invoices->createPreview($params);
+            if ($invoice) {
+                return $withProration ? $invoice :
+                [
+                    'amount'     => $invoice->amount_due / 100,
+                    'currency'   => strtoupper($invoice->currency),
+                    'billing_at' => Carbon::createFromTimestamp($invoice->next_payment_attempt)->toIso8601String(),
+                ];
+            }
+            return [];
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to preview upcoming invoice: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getUnusedCredit(object $preview): float
+    {
+        $unusedCredit = 0;
+        foreach ($preview->lines->data as $line) {
+            $isProration = $line->parent->subscription_item_details->proration ?? false;
+
+            if ($isProration) {
+                if ($line->amount < 0) {
+                    // Negative amount = credit for unused time
+                    $unusedCredit += abs($line->amount);
+                }
+            }
+        }
+        return $unusedCredit / 100; // Convert cents to dollars
+    }
+    
+    public function calculateUpgradeProration(object $preview): array
+    {
+        $newPlanChargeCents = 0;      // Positive amount for new plan
+        $oldPlanCreditCents = 0;      // Negative amount for old plan credit
+        $netChargeCents = 0;
+
+        foreach ($preview->lines->data as $line) {
+            $isProration = $line->parent->subscription_item_details->proration ?? false;
+
+            if ($isProration) {
+                if ($line->amount < 0) {
+                    // Credit for unused time on old plan (Pro plan)
+                    $oldPlanCreditCents += abs($line->amount);
+                } else {
+                    // Charge for remaining time on new plan (Enterprise plan)
+                    $newPlanChargeCents += $line->amount;
+                }
+                
+                // Net total (what customer pays today)
+                $netChargeCents += $line->amount;
+            }
+        }
+
+        return [
+            'unused_credit_on_old_plan' => round($oldPlanCreditCents / 100, 2),    // $9.50
+            'remaining_cost_on_new_plan' => round($newPlanChargeCents / 100, 2),    // $49.50
+            'net_adjustment_due_today' => round($netChargeCents / 100, 2),              // $40.00
+            'currency' => strtolower($preview->currency)
+        ];
+    }
     
     public function previewProration(string $planSlug): array
     {
@@ -173,52 +264,15 @@ class InvoiceService
         $activeSub = $subscriptionService->getActiveSubscription($user);
 
         $stripeSubscription =  $activeSub->asStripeSubscription();
-        $subscriptionItemId = $stripeSubscription->items->data[0]->id;
+        // $subscriptionItemId = $stripeSubscription->items->data[0]->id;
 
         // Log::info('SUB', ['SUBSCRIPTION'=> $stripeSubscription]);
-        $preview = Cashier::stripe()->invoices->createPreview([
-            'customer' => $user->stripe_id,
-            'subscription' => $activeSub->stripe_id,
-            'subscription_details' => [
-                'proration_behavior' => 'always_invoice',
-                'items' => [
-                    [
-                        'id' => $subscriptionItemId,
-                        'price' => $newPriceId,
-                    ],
-            ],
-            ],
-        ]);
-        
-        // 1. Calculate ONLY the immediate proration cost (the upgrade adjustment)
-        $prorationTotalCents = 0;
-        $unusedTimeCreditCents = 0;
-        $remainingTimeCostCents = 0;
-
-        foreach ($preview->lines->data as $line) {
-            $isProration = $line->parent->subscription_item_details->proration ?? false;
-
-            if ($isProration === true) {
-                // Accumulate the net upgrade adjustment total
-                $prorationTotalCents += $line->amount;
-
-                if ($line->amount < 0) {
-                    // This is the negative credit for the unused time on the old plan
-                    // Using abs() converts it to a positive number for cleaner UI display if needed
-                    $unusedTimeCreditCents += abs($line->amount);
-                } else {
-                    // This is the positive cost for the remaining time on the new plan
-                    $remainingTimeCostCents += $line->amount;
-                }
-            }
-        }
-
-        $prorationDetails = [
-            'unused_credit_on_old_plan' => -round($unusedTimeCreditCents / 100, 2),
-            'remaining_cost_on_new_plan' => round($remainingTimeCostCents / 100, 2),
-            'net_adjustment_due_today' => round($prorationTotalCents / 100, 2),
-            'currency' => strtolower($preview->currency)
-        ];
+        $preview = $this->previewUpcomingInvoice($stripeSubscription, true, $newPriceId) ?? null;
+        // Log::info('PREVIEW', ['PREVIEW'=> $preview]);
+        // Log::info('preview data type', ['type' => gettype($preview)]);
+        // $unusedCredit = $this->getUnusedCredit($preview);
+        $prorationDetails = $this->calculateUpgradeProration($preview);
+        Log::info('PRORATION', ['PRORATION'=> $prorationDetails]);
 
         return [
             'response'=> [

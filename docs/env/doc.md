@@ -52,7 +52,7 @@ Only needed if your app uses payments/subscriptions. Full setup walkthrough: **[
 | Variable                   | Default          | Notes                                             |
 | :--------------------------- | :----------------- | :---------------------------------------------------|
 | `STRIPE_KEY`                | `your_pk_test_...` | Publishable key from your Stripe dashboard.        |
-| `STRIPE_SECRET`             | `your_sk_test_...` | Secret key from your Stripe dashboard.             |
+| `STRIPE_API_KEY`             | `your_sk_test_...` | Secret key from your Stripe dashboard.             |
 | `STRIPE_WEBHOOK_SECRET`     | `your_whsec_...`   | Captured from the Stripe CLI — see billing doc.    |
 | `STRIPE_PRICE_PRO`          | `price_...`        | Price ID for your Pro tier.                        |
 | `STRIPE_PRICE_ENTERPRISE`   | `price_...`        | Price ID for your Enterprise tier.                 |

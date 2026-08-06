@@ -21,7 +21,7 @@ From your [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys) (Test mo
 
 ```plaintext
 STRIPE_KEY=pk_test_your_key_here
-STRIPE_SECRET=sk_test_your_key_here
+STRIPE_API_KEY=sk_test_your_key_here
 ```
 
 ---
@@ -31,7 +31,7 @@ STRIPE_SECRET=sk_test_your_key_here
 Initialize the pairing process inside the CLI container:
 
 ```bash
-docker-compose run --rm stripe-cli login
+docker compose run --rm stripe-cli login
 ```
 
 Docker will output a unique pairing URL. Copy it into your browser, log in, and click **Allow**. Your session token is stored securely inside the named Docker volume, so you only need to do this once.
@@ -43,7 +43,7 @@ Docker will output a unique pairing URL. Copy it into your browser, log in, and 
 Run the listener once to extract your local webhook secret:
 
 ```bash
-docker-compose up stripe-cli
+docker compose up stripe-cli
 ```
 
 Watch the boot logs — you'll see a line like:
@@ -65,8 +65,8 @@ Then stop the process with `Ctrl + C`.
 ## 4. Restart Your Stack
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 This boots everything back up, including the webhook listener, running in the background this time.
@@ -93,6 +93,24 @@ docker-compose ps
 The `stripe-cli` service should show as **Up**. Trigger a test event from the Stripe Dashboard (or `stripe trigger payment_intent.succeeded` from inside the container) and confirm it shows up in `docker-compose logs -f stripe-cli`.
 
 ---
+
+## 7. Simulate or Process a Payment (Local Testing)
+
+Once your setup is complete and your webhook tunnel is active, you can begin processing subscriptions and payments. 
+
+To simulate a real purchase or test event during local development, you **must run the following command** in a separate terminal window:
+
+```bash
+docker run --rm -it \
+  --network=laractivate_app-network \
+  -e STRIPE_API_KEY="sk_test_your_secret_key_here" \
+  stripe/stripe-cli logs tail
+
+```
+---
+
+run this command
+
 
 ## ⚠️ Security
 

@@ -78,6 +78,12 @@ All services (`app`, `client`, `db`) should show status **Up**.
 
 ---
 
+### 5. Set Up Seeder (Optional)
+```bash
+docker compose exec app php artisan db:seed
+```
+
+
 # 📚 Documentation
 
 ## 🖥️ Backend (Laravel)

@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Services\Security\JwtService;
+use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -20,10 +21,18 @@ class AuthService
      */
     public function login(array $credentials, array $metadata): array
     {
+        Log::info('User authenticated successfully', ['credentials' => $credentials]);
         if (!JWTAuth::attempt($credentials)) {
             throw ValidationException::withMessages(['email' => ['Invalid credentials']]);
         }
-        $user = auth()->user();
+        Log::info('User authenticated successfully', ['credentials' => $credentials]);
+
+        $user  = auth()->user();
+        Log::info('User retrieved from session/guard', ['user' => $user]);
+        if (!$user) {
+            Log::error('Auth attempt succeeded, but user model could not be resolved from guard.');
+            throw ValidationException::withMessages(['email' => ['User account could not be found.']]);
+        }
         $refreshTokenArray = $this->jwtService->createRefreshToken($user->id, $metadata);
         $refreshToken = $refreshTokenArray['token'];
         $id = $refreshTokenArray['id'];

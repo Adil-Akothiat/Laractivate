@@ -50,11 +50,14 @@ export const billingApi = {
    * Fetch user subscription state lifecycle records
    */
   getSubscription: () => 
-    api.get<ActiveSubscriptionSchema>(`${BASE_ROUTE}/subscription`),
+    api.get<ApiResponseSchema<ActiveSubscriptionSchema>>(`${BASE_ROUTE}/subscription`),
   previewProration: (payload:CreateCheckoutPayload)=> 
     api.post<ApiResponseSchema<ProrationResponseSchema>>(`${BASE_ROUTE}/subscription/preview-proration`, payload),
   upgradeSubscription: (payload:CreateCheckoutPayload)=> 
     api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/upgrade`, payload),
   downgradeSubscription: (payload:CreateCheckoutPayload)=> 
-    api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/downgrade`, payload)
-};
+    api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/downgrade`, payload),
+  cancelSubscription: () => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/cancel`),
+  resumeSubscription: () => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/resume`),
+  cancelScheduledSubscription: ()=> api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/scheduled/cancel`),
+}

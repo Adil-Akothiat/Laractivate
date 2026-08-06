@@ -17,17 +17,6 @@
       0 => 'Laravel\\Cashier\\CashierServiceProvider',
     ),
   ),
-  'laravel/octane' => 
-  array (
-    'aliases' => 
-    array (
-      'Octane' => 'Laravel\\Octane\\Facades\\Octane',
-    ),
-    'providers' => 
-    array (
-      0 => 'Laravel\\Octane\\OctaneServiceProvider',
-    ),
-  ),
   'laravel/pail' => 
   array (
     'providers' => 

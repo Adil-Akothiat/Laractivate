@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Cashier\Billable;
-use App\Services\Billing\BillingService;
+use App\Services\Billing\SubscriptionService;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -141,7 +141,6 @@ class User extends Authenticatable implements JWTSubject
     // Validate Subscription status
     public function isSubscribed(): bool
     {
-        // Resolve the BillingService directly from Laravel's Service Container
-        return app(BillingService::class)->isSubscribed($this);
+        return app(SubscriptionService::class)->isSubscribed($this);
     }
 }

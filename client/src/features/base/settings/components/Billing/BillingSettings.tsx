@@ -1,8 +1,9 @@
 import { CreditCard, Receipt } from "lucide-react";
 import InvoiceHistory from "./InvoiceHistory";
-import SubscriptionOverview from "./SubscriptionOverview";
 import SettingsContainer from "../Shared/SettingsContainer";
 import { Tabs } from "@/components";
+import SubscriptionOverview from "@/features/base/billing/components/Subscription/Overview";
+import PaymentMethodCard from "@/features/base/billing/components/PaymentMethod/PaymentMethodCard";
 
 const tabs = [
   {
@@ -16,6 +17,12 @@ const tabs = [
     label: "Invoices",
     icon: <Receipt size={14} />,
     content: <InvoiceHistory />,
+  },
+  {
+    key: "payment-method",
+    label: "Payment Method",
+    icon: <Receipt size={14} />,
+    content: <PaymentMethodCard />,
   },
 ];
 

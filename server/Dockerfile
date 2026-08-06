@@ -1,10 +1,12 @@
-# استخدام الصورة الرسمية المستقرة (تأكد من رقم الإصدار المتوافق مع Laravel لديك)
-FROM dunglas/frankenphp:1.4-php8.4
+# Use the official PHP 8.4 FPM stable image
+FROM php:8.4-fpm
 
-# تثبيت ملحقات PHP الأساسية لـ Laravel باستخدام الأداة الذكية المدمجة في الصورة
-RUN install-php-extensions pdo_mysql mbstring zip exif pcntl bcmath gd
+# Install core PHP extensions required by Laravel using the smart installer
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_mysql mbstring zip exif pcntl bcmath gd opcache
 
-# تثبيت الأدوات المساعدة للنظام
+# Install essential system utilities
 RUN apt-get update && apt-get install -y \
     zip \
     unzip \
@@ -12,28 +14,25 @@ RUN apt-get update && apt-get install -y \
     curl \
     vim
 
-# تنظيف الـ Cache لتقليل حجم الحاوية
+# Clean apt cache to reduce container size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# إعداد الـ Entrypoint الخاص بك
+# Copy and set execution permissions for the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]
 
-# جلب الـ Composer داخل الحاوية
+# Bring Composer into the container
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# ضبط الصلاحيات للمستخدم الافتراضي لـ FrankenPHP/Apache
+# Set correct ownership for default web server user
 RUN chown -R www-data:www-data /var/www
 
-# فتح المنافذ اللازمة (FrankenPHP يدعم 80 و 443 مسبقاً، و8000 لـ Octane)
-EXPOSE 80 443 8000
+# Expose standard PHP-FPM port
+EXPOSE 9000
 
-# تشغيل Laravel Octane مع FrankenPHP كمحرك أساسي
-# CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
-
-# for test
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--workers=8", "--max-requests=1000"]
+# Start PHP-FPM by default
+CMD ["php-fpm"]

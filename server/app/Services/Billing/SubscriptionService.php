@@ -9,36 +9,53 @@ use Stripe\StripeClient;
 
 class SubscriptionService
 {
+    protected $stripe;
+
     public function __construct()
     {
-        $this->stripe = new StripeClient(config('cashier.secret') ?? env('STRIPE_SECRET'));
+        $this->stripe = new StripeClient(config('cashier.secret') ?? env('STRIPE_API_KEY'));
     }
 
     public function upgrade(string $planSlug) {
         $planService = app(PlanService::class);
         $user = auth()->user();
-        $activeSub = $this->getActiveSubscription($user);
-        $stripeSub = $activeSub->asStripeSubscription();
-        $subscriptionSchedule = $this->stripe->subscriptionSchedules->retrieve($stripeSub->schedule);
+        $currentSub = $this->getActiveSubscription($user);
+        $stripeSub = $currentSub->asStripeSubscription();
 
-        // Log::info('INFO', ['subscriptionSchedule'=> $subscriptionSchedule]);
-        if($subscriptionSchedule):
-            $this->stripe->subscriptionSchedules->release($stripeSub->schedule, [
-                'preserve_cancel_date'=> false
-            ]);
+        if(!empty($stripeSub->schedule)):
+            try {
+                $subscriptionSchedule = $this->stripe->subscriptionSchedules->retrieve($stripeSub->schedule);
+                if ($subscriptionSchedule && $subscriptionSchedule->status !== 'released') 
+                {
+                    $this->stripe->subscriptionSchedules->release($stripeSub->schedule, [
+                        'preserve_cancel_date' => false
+                    ]);
+                }
+            } catch (\Exception $e) {
+                throw new \Exception("Failed to release subscription schedule: " . $e->getMessage(), 500);
+            }
         endif;
-        
+
         $targetPlan = $planService->getPlan($planSlug ?? '');
         $newPriceId = $targetPlan['price_id'];
-        $this->upgradeSubscription($user, $newPriceId);
+        if(!$newPriceId) {
+            throw new \Exception("Invalid plan slug: " . $planSlug, 422);
+        }
+        
+        try {
+            $currentSub->swapAndInvoice($newPriceId);
+        } catch (IncompletePayment $exception) {
+            throw new \Exception("Extra authentication required to complete the upgrade payment.", 422);
+        } catch (\Exception $e) {
+            throw new \Exception("An error occurred during upgrade: " . $e->getMessage(), 500);
+        }
     }
 
     public function downgrade(string $planSlug) {
         $user = auth()->user();
-        $subscriptionService = app(SubscriptionService::class);
         $planService = app(PlanService::class);
         
-        $subscription = $subscriptionService->getActiveSubscription($user);
+        $subscription = $this->getActiveSubscription($user);
         $stripeSubscription = $subscription->asStripeSubscription();
         
         $scheduleId = $stripeSubscription->schedule;
@@ -102,10 +119,91 @@ class SubscriptionService
         ];
     }
 
-    public function cancel() {
+    public function cancel(): array
+    {
         $user = auth()->user();
-        $subscriptionService = app(SubscriptionService::class);
-        $subscription = $subscriptionService->getActiveSubscription($user);
+        $subscription = $this->getActiveSubscription($user, false);
+        if (!$subscription) {
+            return [
+                'response' => [],
+                'message' => "No active subscription found.",
+                'status_code' => 404
+            ];
+        }
+        
+        if ($subscription->onGracePeriod()) {
+            return [
+                'response' => [],
+                'message' => "Your subscription is already set to cancel at the end of the current billing period.",
+                'status_code' => 422
+            ];
+        }
+        
+
+        $stripeSub = $subscription->asStripeSubscription();
+        if(!empty($stripeSub->schedule)) {
+            $this->stripe->subscriptionSchedules->cancel($stripeSub->schedule);
+            $subscription->update([
+                'ends_at' => \Carbon\Carbon::createFromTimestamp($stripeSub->current_period_end),
+                'stripe_status' => 'active' // Keep status active until current_period_end passes
+            ]);
+
+            return [
+                'response' => [],
+                'message' => "Your scheduled changes were dropped, and your subscription has been canceled.",
+                'status_code' => 200
+            ];
+        }
+
+        $subscription->cancel();
+        return [
+            'response'=> [],
+            'message'=> "Your subscription has been canceled and will remain active until the end of the current billing period.",
+            'status_code'=> 200
+        ];
+    }
+
+    public function scheduledCancel() {
+        $user = auth()->user();
+        $subscription = $this->getActiveSubscription($user);
+
+        if(!$subscription) {
+            return [
+                'response'=> [],
+                'message'=> "You do not have an active subscription.",
+                'status_code'=> 404
+            ];
+        }
+
+        $stripeSubscription = $subscription->asStripeSubscription();
+        if(empty($stripeSubscription->schedule)) {
+            return [
+                'response'=> [],
+                'message'=> "You do not have a scheduled subscription.",
+                'status_code'=> 404
+            ];
+        }
+
+        $this->stripe->subscriptionSchedules->release($stripeSubscription->schedule);
+        return [
+            'response'=> [],
+            'message'=> "Your scheduled subscription has been canceled.",
+            'status_code'=> 200
+        ];
+        
+    }
+
+    public function hardCancel() {
+        $user = auth()->user();
+        $subscription = $this->getActiveSubscription($user);
+
+        if(!$subscription) {
+            return [
+                'response'=> [],
+                'message'=> "You do not have an active subscription.",
+                'status_code'=> 404
+            ];
+        }
         $stripeSubscription = $subscription->asStripeSubscription();
 
         if($stripeSubscription->cancel_at_period_end) {
@@ -115,12 +213,7 @@ class SubscriptionService
                 'status_code'=> 422
             ];
         }
-        
-        // Cancel the subscription at the end of the current billing period
-        $this->stripe->subscriptions->cancel($stripeSubscription->id, [
-            'cancel_at_period_end' => true,
-        ]);
-
+        $this->stripe->subscriptions->cancel($stripeSubscription->id);
         return [
             'response'=> [],
             'message'=> "Your subscription has been canceled and will remain active until the end of the current billing period.",
@@ -130,30 +223,15 @@ class SubscriptionService
 
     public function resume() {
         $user = auth()->user();
-        $subscriptionService = app(SubscriptionService::class);
-        $subscription = $subscriptionService->getActiveSubscription($user);
-        $stripeSubscription = $subscription->asStripeSubscription();
-
-        if($stripeSubscription->status !== 'active' && $stripeSubscription->status !== 'paused') {
+        $subscription = $this->getActiveSubscription($user, false);
+        if(!$subscription || !$subscription->onGracePeriod()) {
             return [
-                'response'=> [],
-                'message'=> "Your subscription is not in a state that can be resumed.",
-                'status_code'=> 422
+                'response' => [],
+                'message' => "This subscription cannot be resumed.",
+                'status_code' => 422
             ];
         }
-
-        // Resume the subscription by setting cancel_at_period_end to false
-        if($stripeSubscription->status === 'active' && $stripeSubscription->cancel_at_period_end):
-            $this->stripe->subscriptions->update($stripeSubscription->id, [
-                'cancel_at_period_end' => false,
-            ]);
-        endif;
-        if($stripeSubscription->status === 'paused' && $stripeSubscription->pause_collection):
-            $this->stripe->subscriptions->resume($stripeSubscription->id, [
-                'billing_cycle_anchor' => 'unchanged'
-            ]);
-        endif;
-
+        $subscription->resume();
         return [
             'response'=> [],
             'message'=> "Your subscription has been resumed and will continue to be active.",
@@ -164,79 +242,47 @@ class SubscriptionService
     /**
      * Handle immediate subscription terminations or full expirations.
     */
-    public function handleSubscriptionDeleted(object $stripeSubscription): void
-    {
-        $subscription = Subscription::where('stripe_id', $stripeSubscription->id)->first();
-
-        if ($subscription) {
-            $subscription->update([
-                'stripe_status' => 'canceled',
-                'ends_at'       => now(),
-            ]);
-            Log::info("🛑 Subscription permanently marked as canceled: {$stripeSubscription->id}");
-        }
-    }
 
     public function handleSubscriptionUpdated(object $subscriptionData): bool
     {
         $stripeSubscriptionId = $subscriptionData->id;
         $stripeCustomerId = $subscriptionData->customer;
-        $stripePriceId = $subscriptionData->items->data[0]->price->id ?? null;
-        $status = $subscriptionData->status;
-        $quantity = $subscriptionData->items->data[0]->quantity ?? 1;
-
-        // Log::info("🔄 Processing subscription update payload: ", ['payload'=> $subscriptionData]);
-        $user = User::where('stripe_id', $stripeCustomerId)->first();
+    
+        // 1. Locate the user safely
+        $user = User::where('stripe_id', $stripeCustomerId)->first() 
+            ?? User::find($subscriptionData->metadata->user_id ?? null);
+    
         if (!$user) {
-            $userId = $subscriptionData->metadata->user_id ?? null;
-            if($userId) {
-                $user = User::find($userId);
-                if ($user) {
-                    $user->update(['stripe_id' => $stripeCustomerId]);
-                }
-            }
-        }
-        if(!$user) {
             return false;
         }
-        $trialEndsAt = isset($subscriptionData->trial_end) ? Carbon::createFromTimestamp($subscriptionData->trial_end) : null;
-
-        // 2. 🟢 Professional Grace Period & Expiration Parsing
-        $endsAt = null;
-
-        if ($subscriptionData->cancel_at_period_end):
-            // The user canceled, but has prepaid access until the period finishes (Grace Period)
-            $endsAt = Carbon::createFromTimestamp($subscriptionData->cancel_at_period_end);
-        elseif ($subscriptionData->status === 'canceled'):
-            // The subscription has completely expired or was terminated immediately
-            $endsAt = now();
-        endif;
-        $currentPeriodEnd = isset($subscriptionData->current_period_end)
-            ? Carbon::createFromTimestamp($subscriptionData->current_period_end)
-            : now()->addMonth();
-
-        // Upsert localized relational subscription record mapping logic
-        $subscription = Subscription::updateOrCreate(
-            ['stripe_id' => $stripeSubscriptionId],
-            [
-                'user_id'       => $user->id,
-                'type'          => $subscriptionData->metadata->type ?? 'default',
-                'stripe_status' => $status,
-                'stripe_price'  => $stripePriceId,
-                'quantity'      => $quantity,
-                'trial_ends_at' => $trialEndsAt,
-                'ends_at'       => $endsAt,
-                'current_period_end'       => $currentPeriodEnd,
-            ]
-        );
-
-        // Synchronize nested subscription line items safely if passed
-        if (isset($subscriptionData->items->data)) {
+    
+        // Link stripe_id dynamically if it was missing
+        if (!$user->stripe_id) {
+            $user->update(['stripe_id' => $stripeCustomerId]);
+        }
+    
+        // 2. Fetch the core subscription row that Cashier already created/updated
+        $subscription = $user->subscriptions()->where('stripe_id', $stripeSubscriptionId)->first();
+    
+        if (!$subscription) {
+            return false;
+        }
+    
+        // 3. Keep the local row enriched with your premium boilerplate metadata
+        $subscription->update([
+            'type'               => $subscriptionData->metadata->type ?? $subscription->type ?? 'default',
+            'current_period_end' => isset($subscriptionData->current_period_end) 
+                ? Carbon::createFromTimestamp($subscriptionData->current_period_end) 
+                : $subscription->current_period_end,
+        ]);
+    
+        // 4. Synchronize nested relational subscription line items (Usage/Multi-price support)
+        if (!empty($subscriptionData->items->data)) {
             foreach ($subscriptionData->items->data as $item) {
                 SubscriptionItem::updateOrCreate(
                     ['stripe_id' => $item->id],
                     [
-                        'subscription_id'  => $subscription->id, // Clean normalized internal link line
+                        'subscription_id'  => $subscription->id,
                         'stripe_product'   => $item->price->product ?? '',
                         'stripe_price'     => $item->price->id ?? '',
                         'quantity'         => $item->quantity ?? 1,
@@ -246,8 +292,8 @@ class SubscriptionService
                 );
             }
         }
-
-        Log::info("🔄 Local database rows synced for user subscription ID: {$stripeSubscriptionId}. Status: {$status}");
+    
+        Log::info("🔄 Relational billing items synced for subscription ID: {$stripeSubscriptionId}");
         return true;
     }
 
@@ -299,19 +345,6 @@ class SubscriptionService
         // 3. Case B: Standard Active Lifecycle (Subscribed & Auto-renewing normally).
         // Verify current time is before 'current_period_end' + our 2-day safety bank buffer window.
         return $subscription->current_period_end->addDays(2)->isFuture();
-    }
-
-    public function upgradeSubscription(User $user, string $newPriceId)
-    {
-        $subscription = $this->getActiveSubscription($user); 
-        try {
-            $subscription->swapAndInvoice($newPriceId);
-        } catch (IncompletePayment $exception) {
-            throw new \Exception("Extra authentication required to complete the upgrade payment.", 422);
-        } catch (\Exception $e) {
-            throw new \Exception("An error occurred during upgrade: " . $e->getMessage(), 500);
-        }
-
     }
 
     public function getActiveSubscription(User $user, bool $withException = true)

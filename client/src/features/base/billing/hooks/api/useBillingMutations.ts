@@ -44,23 +44,61 @@ export const useBillingMutations = () => {
           return data;
         }
       }),
-      
-      useSubscriptionUpgrade: ()=> useMutation({
+
+    useSubscription: () => {
+      const upgrade = useMutation({
         mutationFn: async (payload: CreateCheckoutPayload) => {
-          const { data } = await  billingApi.upgradeSubscription(payload);
+          const { data } = await billingApi.upgradeSubscription(payload);
           return data;
         },
-        onSuccess: ()=> {
+        onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: billingKeys.pricing() });
         }
       
-      }),
+      });
       
-      useSubscriptionDowngrade: ()=> useMutation({
+      const downgrade = useMutation({
         mutationFn: async (payload: CreateCheckoutPayload) => {
-          const { data } = await  billingApi.downgradeSubscription(payload);
+          const { data } = await billingApi.downgradeSubscription(payload);
           return data;
-        }
-      })
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: billingKeys.pricing() });
+        },
+      });
+
+      const cancel = useMutation({
+        mutationFn: async () => {
+          const { data } = await billingApi.cancelSubscription();
+          return data;
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: billingKeys.subscription() });
+        },
+      });
+
+      const cancelScheduledSubscription = useMutation({
+        mutationFn: async () => {
+          const { data } = await billingApi.cancelScheduledSubscription();
+          return data;
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: billingKeys.subscription() });
+        },
+      });
+
+      const resume = useMutation({
+        mutationFn: async () => {
+          const { data } = await billingApi.resumeSubscription();
+          return data;
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: billingKeys.subscription() });
+        },
+      });
+
+      
+      return { upgrade, downgrade, cancel, resume, cancelScheduledSubscription };
+    }
   };
 };

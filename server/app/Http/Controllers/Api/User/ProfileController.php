@@ -10,7 +10,7 @@ use App\Http\Resources\Security\SessionCollection;
 use App\Http\Resources\Billing\{InvoiceCollection, SubscriptionResource};
 use App\Http\Resources\System\BaseResource;
 use App\Services\User\UserService;
-use App\Services\Billing\BillingService;
+use App\Services\Billing\{InvoiceService, SubscriptionService};
 use App\Services\System\SessionService;
 use App\Services\Security\JwtService;
 
@@ -20,7 +20,8 @@ class ProfileController extends Controller
         protected UserService $userService,
         protected SessionService $sessionService,
         protected JwtService $jwtService,
-        protected BillingService $billingService
+        protected InvoiceService $invoiceService,
+        protected SubscriptionService $subscriptionService
     ) {}
     public function show(Request $request)
     {
@@ -34,7 +35,7 @@ class ProfileController extends Controller
             'last_name'  => 'required|string|max:32',
             'email'      => 'sometimes|email|max:191|unique:users,email'
         ]);
-        
+
         $user = $request->user();
         $user->update($crendentials);
 
@@ -98,7 +99,7 @@ class ProfileController extends Controller
 
     public function revokeAllSessions(Request $request)
     {
-        
+
         $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
         $user = $request->user();
         $this->sessionService->revokeAllExceptCurrent($user, $currentTokenHash);
@@ -115,35 +116,15 @@ class ProfileController extends Controller
     }
 
     // billing
-    public function invoicesHistory(Request $request) 
+    public function invoicesHistory(Request $request)
     {
         $user = auth()->user();
-        
+
         // $request->query() safely captures all URL strings (?page=2&status=paid&query=inv_123) as an array
         $filters = $request->query();
-        
-        $invoices = $this->billingService->getUserInvoices($user, $filters);
-        
-        return new InvoiceCollection($invoices);   
-    }
-   
-    public function getSubscriptions(Request $request)
-    {
-        $user = auth()->user();
 
-        // Look for a live subscription row
-        $activeSubscription = $user->subscriptions()
-            ->whereIn('stripe_status', ['active', 'trialing', 'past_due'])
-            ->latest('updated_at')
-            ->first();
+        $invoices = $this->invoiceService->getUserInvoices($user, $filters);
 
-        // ⚪ If no live row exists, return an explicit structural fallback state
-        if (!$activeSubscription) {
-            return (new BaseResource(['data'=> null]))->response()->setStatusCode(200);
-            return response()->json(['data' => null], 200);
-        }
-
-        // 🟢 If an active row exists, the Resource dynamically marks 'subscribed' as true
-        return new SubscriptionResource($activeSubscription);
+        return new InvoiceCollection($invoices);
     }
 }

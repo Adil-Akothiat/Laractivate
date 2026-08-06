@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Billing;
 
 use App\Http\Controllers\Controller;
-use App\Services\Billing\BillingService;
+use App\Services\Billing\{ CheckoutService };
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Exception;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class BillingPortalController extends Controller
 {
     public function __construct(
-        protected BillingService $billingService
+        protected CheckoutService $checkoutService
     )
     {
         // 
@@ -21,7 +21,7 @@ class BillingPortalController extends Controller
     public function createSession(Request $request): JsonResponse
     {
         try {
-            $portalUrl = $this->billingService->createPortalSession($request->user());
+            $portalUrl = $this->checkoutService->createPortalSession($request->user());
             return response()->json(['url' => $portalUrl], 200);
         } catch (Exception $e) {
             $statusCode = $e->getCode() === 422 ? 422 : 500;

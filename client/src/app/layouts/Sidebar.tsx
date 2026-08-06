@@ -68,8 +68,8 @@ export default function Sidebar() {
               <Modal
                 isOpen={isLogoutModalOpen}
                 title="Confirm Logout"
-                onClose={() => setIsLogoutModalOpen(false)}
                 onConfirm={handleLogout}
+                onClose={() => setIsLogoutModalOpen(false)}
                 confirmText="Logout"
                 cancelText="Cancel"
                 isConfirming={logout.isPending}

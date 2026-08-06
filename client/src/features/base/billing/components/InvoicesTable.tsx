@@ -4,10 +4,10 @@ import { useInvoicesQuery } from '../hooks/api/useBillingQueries';
 
 export const InvoicesTable: React.FC<InvoicesTableProps> = () => {
   const { data:invoices, isLoading, isError } = useInvoicesQuery();
-  console.log(invoices);
   if (isLoading) return <div className="p-4 text-center text-sm text-base-content/60">Syncing transaction history records...</div>;
   if (isError || !invoices) return <div className="p-4 text-sm text-error">Failed to pull system billing logs securely.</div>;
 
+  
   return (
     <div className="overflow-x-auto w-full border border-base-200 rounded-xl bg-base-100">
       <table className="table table-zebra w-full text-sm">

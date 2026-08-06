@@ -26,6 +26,6 @@ Route::prefix('profile')->group(function() {
     // billing
     Route::prefix('/billing')->group(function() {
         Route::get('/invoices', [ProfileController::class, 'invoicesHistory']);
-        Route::get('/subscriptions', [ProfileController::class, 'getSubscriptions']);
+        // Route::get('/subscriptions', [ProfileController::class, 'getSubscriptions']);
     });
 });

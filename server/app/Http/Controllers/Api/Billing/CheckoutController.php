@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Billing;
 
 use App\Http\Controllers\Controller;
-use App\Services\Billing\BillingService;
+use App\Services\Billing\{ CheckoutService };
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Exception;
@@ -11,7 +11,7 @@ use Exception;
 class CheckoutController extends Controller
 {
     public function __construct(
-         protected BillingService $billingService
+         protected CheckoutService $checkoutService
     )
     {
         // 
@@ -22,18 +22,10 @@ class CheckoutController extends Controller
         $request->validate([
             'plan_slug' => 'required|string',
         ]);
-
-        try {
-            $checkoutUrl = $this->billingService->createCheckoutSession(
-                $request->user(), 
-                $request->plan_slug
-            );
-
-            return response()->json(['url' => $checkoutUrl], 200);
-
-        } catch (Exception $e) {
-            $statusCode = $e->getCode() === 422 ? 422 : 500;
-            return response()->json(['message' => $e->getMessage()], $statusCode);
-        }
+        $checkoutUrl = $this->checkoutService->createCheckoutSession(
+            $request->user(), 
+            $request->plan_slug
+        );
+        return response()->json(['url' => $checkoutUrl], 200);
     }
 }
