@@ -115,14 +115,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-        * Get all payment methods saved by the user.
-    */
-    public function paymentMethods(): HasMany
-    {
-        return $this->hasMany(PaymentMethod::class);
-    }
-
-    /**
      * Get all billing invoices for the user.
      */
     public function invoices(): HasMany

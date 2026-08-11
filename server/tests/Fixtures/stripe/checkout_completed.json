@@ -1,0 +1,12 @@
+{
+  "id": "cs_test_a1iaVxQvZBPvujGgcwj37TwezOCSx3zSLFPakMx4hJrDwZqiHNXxfEgIL2",
+  "object": "checkout.session",
+  "amount_total": 3000,
+  "client_reference_id": null,
+  "currency": "usd",
+  "customer": "cus_test_12345",
+  "payment_intent": "pi_3U28diAdMDFZJJUK0ipWelTO",
+  "payment_status": "paid",
+  "status": "complete",
+  "subscription": null
+}

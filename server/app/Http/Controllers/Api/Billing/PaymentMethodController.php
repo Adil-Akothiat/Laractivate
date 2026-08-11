@@ -16,33 +16,24 @@ class PaymentMethodController extends Controller
 
     public function show(Request $request): JsonResponse
     {
-        $data = $this->paymentMethodService->getPaymentMethodSummary($request->user());
-        return response()->json($data);
-    }
+        $user = $request->user();
 
-    public function update(Request $request): JsonResponse
-    {
-        $request->validate([
-            'stripe_payment_method_id' => 'required|string',
-        ]);
+        // جلب البطاقة الافتراضية والبطاقات المربوطة من Stripe عبر Cashier
+        $defaultPaymentMethod = $user->defaultPaymentMethod();
+        $paymentMethods = $user->paymentMethods();
 
-        $this->paymentMethodService->syncAndSetDefault(
-            $request->user(),
-            $request->stripe_payment_method_id
-        );
-
-        return response()->json(['message' => 'Payment method updated successfully.']);
-    }
-
-    public function destroy(Request $request): JsonResponse
-    {
-        try {
-            $this->paymentMethodService->removePaymentMethod($request->user());
-            return response()->json(['message' => 'Payment method removed successfully.']);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], $e->getCode() ?: 400);
-        }
+        // تحويل البيانات لتناسب الـ React Frontend
+        $formattedMethods = $paymentMethods->map(function ($method) use ($defaultPaymentMethod) {
+            return [
+                'id' => $method->id,
+                'brand' => $method->card->brand,          // visa, mastercard, etc.
+                'last4' => $method->card->last4,          // 4242
+                'exp_month' => $method->card->exp_month,
+                'exp_year' => $method->card->exp_year,
+                'is_default' => $defaultPaymentMethod && $method->id === $defaultPaymentMethod->id,
+                "default"=> $defaultPaymentMethod
+            ];
+        });
+        return response()->json($formattedMethods);
     }
 }

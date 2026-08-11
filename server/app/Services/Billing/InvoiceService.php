@@ -51,7 +51,7 @@ class InvoiceService
         }
         
         // FIX: Use optional() or null coalescing so it never throws a fatal error if $user is null
-        Log::info('INVOICES USER EXISTS', ['user_id' => $user->id ?? 'NOT FOUND']);
+        // Log::info('INVOICES USER EXISTS', ['user_id' => $user->id ?? 'NOT FOUND']);
         
         if (!$user) {
             Log::warning("⚠️ Invoice processing skipped: No local user found matching Customer ID {$stripeCustomerId} or Subscription ID {$stripeSubscriptionId}");
