@@ -41,7 +41,7 @@ export function usePlanSwitch() {
           setConfirmOpen(false);
           setPreview(null);
           setPlanSlug("");
-          console.log()
+          // console.log()
           toast.success(res.message || '');
         },
         onError: (error) => console.error("Upgrade failed:", error),

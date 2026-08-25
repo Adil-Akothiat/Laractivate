@@ -14,7 +14,7 @@ interface ManageProps {
 
 // type ConfirmKind = "cancel" | "resume" | "cancel_pending_downgrade" | null;
 
-export default function Manage({ sub }: ManageProps) {
+export default function ManageSubscription({ sub }: ManageProps) {
   const { useSubscription } = useBillingMutations();
   const { cancel, cancelScheduledSubscription } = useSubscription();
   const { toast } = useToastContext();

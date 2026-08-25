@@ -5,6 +5,7 @@ namespace App\Http\Resources\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\Security\RoleResource;
 use App\Http\Resources\System\BaseResource;
+use Illuminate\Support\Facades\Log;
 
 class UserResource extends BaseResource
 {
@@ -33,7 +34,7 @@ class UserResource extends BaseResource
             })->unique('id')->values(),
             'permissionsSet'=> $this->roles->flatMap(function($role) {
                 return $role->permissions->pluck('name');
-            })->unique('id')->values(), 
+            })->unique()->values(), 
         ];
     }
     protected function getRecoveryCodes(): ?array

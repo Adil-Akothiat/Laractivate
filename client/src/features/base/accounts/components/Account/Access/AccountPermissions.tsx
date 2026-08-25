@@ -15,7 +15,7 @@ export default function AccountPermissions({ permissions }: Props) {
     },
     {},
   );
-  console.log(grouped);
+  // console.log(grouped);
   return (
     <div className="card bg-base-100 border border-base-200">
       <div className="card-body">

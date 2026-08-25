@@ -8,7 +8,8 @@ import type {
   ActiveSubscriptionSchema,
   PlanSchema,
   UserPlanSchemaResponse,
-  ProrationResponseSchema
+  ProrationResponseSchema,
+  PaymentMethodSchema
 } from '../types';
 import type { ApiResponseSchema } from '@/app/types';
 
@@ -60,4 +61,7 @@ export const billingApi = {
   cancelSubscription: () => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/cancel`),
   resumeSubscription: () => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/resume`),
   cancelScheduledSubscription: ()=> api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/scheduled/cancel`),
+
+  // Payment Methods
+  getPaymentMethods: ()=> api.get<ApiResponseSchema<PaymentMethodSchema[]>>(`${BASE_ROUTE}/payment-method`)
 }

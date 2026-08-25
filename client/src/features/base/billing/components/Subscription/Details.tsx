@@ -1,6 +1,6 @@
 import { Card } from "@/components";
 import { ActiveSubscriptionSchema } from "../../types";
-import Manage from "./Manage";
+import ManageSubscription from "./Manage";
 import SubscriptionHeader from "./SubscriptionHeader";
 
 interface SubscriptionDetailsProps {
@@ -13,7 +13,7 @@ export default function SubscriptionDetails({ sub }: SubscriptionDetailsProps) {
       <Card>
         <div className="flex flex-wrap items-start justify-between border-b border-gray-200 pb-3 gap-y-2">
           <SubscriptionHeader sub={sub} />
-          <Manage sub={sub} />
+          <ManageSubscription sub={sub} />
         </div>
         <div className="text-center py-3">
           Content About Current Plan

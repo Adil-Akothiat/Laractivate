@@ -32,8 +32,8 @@ class InvoiceService
         Log::info("1🧾 [InvoiceService] INVOICESDATA", ['invoices' => $invoiceData]);
         
         // Safely extract subscription ID from Stripe's nested object structure
-        $stripeSubscriptionId = $invoiceData->subscription 
-            ?? $invoiceData->parent->subscription_details->subscription 
+        $stripeSubscriptionId = $invoiceData->subscription
+            ?? $invoiceData->parent->subscription_details->subscription
             ?? null;
 
         if (!$user && !empty($stripeSubscriptionId)) {

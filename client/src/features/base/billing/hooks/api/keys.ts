@@ -6,4 +6,5 @@ export const billingKeys = {
   invoices: () => [...billingKeys.all, 'invoices'] as const,
   invoiceLists: (filters: FilterInvoicesParams) => [...billingKeys.invoices(), { filters }] as const,
   subscription: () => [...billingKeys.all, 'current-subscription'] as const,
+  paymentMethods: ()=> [...billingKeys.all, 'payment-methods'] as const
 };

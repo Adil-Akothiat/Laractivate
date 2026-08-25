@@ -3,7 +3,7 @@ import InvoiceHistory from "./InvoiceHistory";
 import SettingsContainer from "../Shared/SettingsContainer";
 import { Tabs } from "@/components";
 import SubscriptionOverview from "@/features/base/billing/components/Subscription/Overview";
-import PaymentMethodCard from "@/features/base/billing/components/PaymentMethod/PaymentMethodCard";
+import ManagePaymentMethod from "@/features/base/billing/components/PaymentMethod/Manage";
 
 const tabs = [
   {
@@ -22,7 +22,7 @@ const tabs = [
     key: "payment-method",
     label: "Payment Method",
     icon: <Receipt size={14} />,
-    content: <PaymentMethodCard />,
+    content: <ManagePaymentMethod />,
   },
 ];
 

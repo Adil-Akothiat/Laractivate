@@ -2,7 +2,7 @@ import { useMe } from "../api/useAuthCoreQueries";
 
 export const useCan = () => {
   const { data:user } = useMe();
-
+  // console.log(user);
   const can = (permission: string): boolean => {
     const permissions = user?.permissionsSet;
     if (!permissions) return false;

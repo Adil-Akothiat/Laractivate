@@ -12,17 +12,17 @@ class PaymentMethodController extends Controller
 {
     public function __construct(
         protected PaymentMethodService $paymentMethodService
-    ) {}
+    ) {
+        // 
+    }
 
     public function show(Request $request): JsonResponse
     {
         $user = $request->user();
 
-        // جلب البطاقة الافتراضية والبطاقات المربوطة من Stripe عبر Cashier
         $defaultPaymentMethod = $user->defaultPaymentMethod();
         $paymentMethods = $user->paymentMethods();
 
-        // تحويل البيانات لتناسب الـ React Frontend
         $formattedMethods = $paymentMethods->map(function ($method) use ($defaultPaymentMethod) {
             return [
                 'id' => $method->id,
@@ -30,8 +30,7 @@ class PaymentMethodController extends Controller
                 'last4' => $method->card->last4,          // 4242
                 'exp_month' => $method->card->exp_month,
                 'exp_year' => $method->card->exp_year,
-                'is_default' => $defaultPaymentMethod && $method->id === $defaultPaymentMethod->id,
-                "default"=> $defaultPaymentMethod
+                'is_default' => $defaultPaymentMethod && $method->id === $defaultPaymentMethod->id
             ];
         });
         return response()->json($formattedMethods);

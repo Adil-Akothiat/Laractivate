@@ -85,6 +85,15 @@ export interface ProrationResponseSchema {
   downgradePrevent?: DownGradePreventSchema
 }
 
+export interface PaymentMethodSchema {
+  id: string,
+  brand: string,
+  last4: string,
+  exp_month: number,
+  exp_year: number,
+  is_default: boolean
+}
+
 // ==========================================
 // 3. Params
 // ==========================================
