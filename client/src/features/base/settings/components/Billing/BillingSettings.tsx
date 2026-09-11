@@ -29,7 +29,7 @@ const tabs = [
 export default function BillingSettings() {
   return (
     <SettingsContainer settingsType="billing">
-      <Tabs tabs={tabs} variant="bordered" size="sm" />
+      <Tabs tabs={tabs} variant="bordered" size="sm"/>
     </SettingsContainer>
   );
 }

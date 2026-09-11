@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollContainer } from "../ScrollContainer";
+import { useSearchParams } from "react-router-dom";
 
 export interface TabItem {
   key: string;
@@ -20,6 +21,7 @@ interface TabsProps {
   className?: string;
   vertical?: boolean;
   sidebarClassName?: string;
+  paramName?:string;
 }
 
 const variantMap = {
@@ -46,18 +48,25 @@ const Tabs: React.FC<TabsProps> = ({
   className = "",
   vertical = false,
   sidebarClassName = "",
+  paramName
 }) => {
-  const [internalActive, setInternalActive] = React.useState(
-    activeKey ?? tabs[0]?.key
-  );
+ const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentKey = onChange ? (activeKey ?? internalActive) : internalActive;
+// Read active tab from URL param -> prop activeKey -> fallback to first tab
+const urlTab = searchParams.get(paramName||'') ?? undefined;
+const isValidUrlTab = tabs.some((t) => t.key === urlTab);
+const currentKey = activeKey ?? (isValidUrlTab ? urlTab : tabs[0]?.key);
 
-  const handleChange = (key: string) => {
-    setInternalActive(key);
-    onChange?.(key);
-  };
+const handleChange = (key: string) => {
+  // Update URL param without losing other active search params
+  setSearchParams((prev) => {
+    prev.set(paramName||'', key);
+    return prev;
+  });
 
+  // Trigger optional consumer callback
+  onChange?.(key);
+};
   const activeTab = tabs.find((t) => t.key === currentKey);
 
   return (

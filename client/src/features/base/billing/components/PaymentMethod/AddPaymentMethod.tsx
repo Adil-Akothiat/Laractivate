@@ -24,7 +24,7 @@ export default function AddPaymentMethod({ onSuccess }: AddPaymentMethodProps) {
               stripe={stripePromise}
               options={{ clientSecret: data.client_secret }}
             >
-              <PaymentMethodForm onSuccess={onSuccess} />
+              <PaymentMethodForm onSuccess={onSuccess} clientSecret={data.client_secret} />
             </Elements>
           );
         }

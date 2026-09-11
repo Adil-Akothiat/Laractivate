@@ -55,7 +55,7 @@ export default function ManagePaymentMethod() {
       />
       {/* Card entry form goes here — e.g. Stripe PaymentElement mounted on open. */}
       <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} title="Add payment method" size="sm">
-        <AddPaymentMethod onSuccess={() => setAddOpen(false)} />
+        {addOpen && <AddPaymentMethod onSuccess={() => setAddOpen(false)} />}
       </Modal>
 
       <ConfirmModal

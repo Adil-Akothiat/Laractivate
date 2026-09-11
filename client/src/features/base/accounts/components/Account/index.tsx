@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAccount } from "@/features/base/accounts";
 import { Breadcrumb } from "@/components";
 import AccountProfile from "./Profile/AccountProfile";
@@ -22,23 +22,18 @@ import AccountAccess from "./Access/AccountAccess";
 import AccountActivityLogs from "./ActivityLog/AccountActivityLogs";
 import { DataLoader } from "@/components/Loaders/DataLoader";
 
-const VALID_TABS = [
-  "profile",
-  "security",
-  "access",
-  "danger",
-  "sessions",
-  "activity-logs",
-];
+// const VALID_TABS = [
+//   "profile",
+//   "security",
+//   "access",
+//   "danger",
+//   "sessions",
+//   "activity-logs",
+// ];
 
 export default function AccountDetails() {
   const { id } = useParams();
   const query = useAccount(id);
-
-  const [searchParams] = useSearchParams();
-  const tabParam = searchParams.get("tab");
-  const initialTab =
-    tabParam && VALID_TABS.includes(tabParam) ? tabParam : "profile";
 
   return (
     <Container>
@@ -107,7 +102,6 @@ export default function AccountDetails() {
                     content: <AccountActivityLogs userId={user?.id} />,
                   },
                 ]}
-                activeKey={initialTab}
                 variant="bordered"
                 size="sm"
                 className="mt-4"
