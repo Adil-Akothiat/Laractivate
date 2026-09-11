@@ -1,19 +1,13 @@
-import Card from "@/components/Card";
-import Badge from "@/components/Badge";
-import Button from "@/components/Button";
-import Dropdown, { type DropdownItem } from "@/components/Dropdown";
-import EmptyState from "@/components/EmptyState";
+import { Badge, Button, Dropdown, DropdownItem } from "@/components";
 import { PaymentMethodSchema } from "../../types";
+import { BRAND_LABEL } from "./PaymentMethodsList";
 
-export const BRAND_LABEL: Record<string, string> = {
-  visa: "Visa",
-  mastercard: "Mastercard",
-  amex: "American Express",
-  discover: "Discover",
-  jcb: "JCB",
-  diners: "Diners Club",
-  unionpay: "UnionPay",
-};
+type PaymentMethodCardProps = {
+  paymentMethod: PaymentMethodSchema;
+  pmLength: number;
+  onSetDefault: (id: string) => void;
+  onRemove: (pm: PaymentMethodSchema) => void;
+}
 
 function BrandIcon({ brand }: { brand: string }) {
   return (
@@ -32,114 +26,63 @@ function isExpiringSoon(month: number, year: number) {
   return diffMonths <= 2;
 }
 
-interface PaymentMethodCardProps {
-  paymentMethods: PaymentMethodSchema[];
-  onSetDefault: (id: string) => void;
-  onRemove: (pm: PaymentMethodSchema) => void;
-  onAdd: () => void;
-}
+export default function PaymentMethodCard({ paymentMethod, pmLength, onSetDefault, onRemove }: PaymentMethodCardProps) {
+  const onlyCard = pmLength <= 1;
+  const items: DropdownItem[] = [
+    {
+      key: "default",
+      label: "Set as default",
+      onClick: () => onSetDefault(paymentMethod.id),
+    },
+    {
+      key: "remove",
+      label: "Remove",
+      className: "text-error",
+      // Can't remove your only card — must add a replacement first.
+      disabled: paymentMethod.is_default && onlyCard,
+      onClick: () => onRemove(paymentMethod),
+    }
+  ];
 
-export default function PaymentMethodCard({
-  paymentMethods,
-  onSetDefault,
-  onRemove,
-  onAdd,
-}: PaymentMethodCardProps) {
+
+  const expiring = isExpiringSoon(paymentMethod.exp_month, paymentMethod.exp_year);
   return (
-    <Card>
-      <div className="flex items-start justify-between gap-4">
+    <li
+      className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
+    >
+      <div className="flex items-center gap-3">
+        <BrandIcon brand={paymentMethod.brand} />
         <div>
-          <h2 className="card-title">Payment methods</h2>
-          <p className="text-base-content/60 text-sm mt-0.5">
-            Charges use your default method. Add a backup so a declined card doesn&apos;t
-            interrupt billing.
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-medium">
+              {BRAND_LABEL[paymentMethod.brand] ?? paymentMethod.brand} •••• {paymentMethod.last4}
+            </span>
+            {paymentMethod.is_default && (
+              <Badge variant="primary" size="sm" outline>
+                Default
+              </Badge>
+            )}
+            {expiring && (
+              <Badge variant="warning" size="sm" outline>
+                Expiring soon
+              </Badge>
+            )}
+          </div>
+          <p className="text-xs text-base-content/50 mt-0.5">
+            Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}
           </p>
         </div>
-        <Button size="sm" variant="primary" onClick={onAdd}>
-          + Add method
-        </Button>
       </div>
 
-      <div className="mt-4">
-        {!paymentMethods?.length ? (
-          <EmptyState
-            title="No payment method on file"
-            description="Add a card to keep your subscription active."
-            action={
-              <Button size="sm" variant="primary" onClick={onAdd}>
-                Add payment method
-              </Button>
-            }
-          />
-        ) : (
-          <ul className="flex flex-col divide-y divide-base-200">
-            {[...paymentMethods]
-              .sort((a, b) => Number(b.is_default) - Number(a.is_default))
-              .map((pm) => {
-                const onlyCard = paymentMethods.length <= 1;
-
-                const items: DropdownItem[] = [];
-                if (!pm.is_default) {
-                  items.push({
-                    key: "default",
-                    label: "Set as default",
-                    onClick: () => onSetDefault(pm.id),
-                  });
-                }
-                items.push({
-                  key: "remove",
-                  label: "Remove",
-                  className: "text-error",
-                  // Can't remove your only card — must add a replacement first.
-                  disabled: pm.is_default && onlyCard,
-                  onClick: () => onRemove(pm),
-                });
-
-                const expiring = isExpiringSoon(pm.exp_month, pm.exp_year);
-
-                return (
-                  <li
-                    key={pm.id}
-                    className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <BrandIcon brand={pm.brand} />
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-medium">
-                            {BRAND_LABEL[pm.brand] ?? pm.brand} •••• {pm.last4}
-                          </span>
-                          {pm.is_default && (
-                            <Badge variant="primary" size="sm" outline>
-                              Default
-                            </Badge>
-                          )}
-                          {expiring && (
-                            <Badge variant="warning" size="sm" outline>
-                              Expiring soon
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-xs text-base-content/50 mt-0.5">
-                          Expires {String(pm.exp_month).padStart(2, "0")}/{pm.exp_year}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Dropdown
-                      trigger={
-                        <Button variant="ghost" size="sm" circle aria-label="Payment method actions">
-                          ⋮
-                        </Button>
-                      }
-                      items={items}
-                    />
-                  </li>
-                );
-              })}
-          </ul>
-        )}
-      </div>
-    </Card>
+      {paymentMethod.is_default ? null : <Dropdown
+        trigger={
+          <Button variant="ghost" size="sm" circle aria-label="Payment method actions">
+            ⋮
+          </Button>
+        }
+        items={items}
+      />
+      }
+    </li>
   );
 }

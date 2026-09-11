@@ -1,6 +1,11 @@
 // ==========================================
 // 2. Data Schemas
 // ==========================================
+
+export interface CheckoutUrlSchema {
+  url: string;
+}
+
 export interface PlanSchema {
   slug: string;
   name: string;
@@ -72,6 +77,10 @@ export interface ProrationPreviewSchema {
   currency: string
 }
 
+export interface PortalUrlSchema {
+  url: string;
+}
+
 export interface DownGradePreventSchema {
   message: string,
   amount_due_today: number,
@@ -92,6 +101,10 @@ export interface PaymentMethodSchema {
   exp_month: number,
   exp_year: number,
   is_default: boolean
+}
+
+export interface PaymentMethodIntentSchema {
+  client_secret: string
 }
 
 // ==========================================
@@ -135,10 +148,6 @@ export interface CreateCheckoutPayload {
   plan_slug: string;
 }
 
-export interface CheckoutUrlSchema {
-  url: string;
-}
-
-export interface PortalUrlSchema {
-  url: string;
+export interface AddPaymentMethodPayload {
+  payment_method_id: string;
 }

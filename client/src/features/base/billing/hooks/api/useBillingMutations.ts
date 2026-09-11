@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { CreateCheckoutPayload } from '../../types';
 import { billingApi } from '../../api';
+import type { AddPaymentMethodPayload, CreateCheckoutPayload } from '../../types';
 import { billingKeys } from './keys';
 
 export const useBillingMutations = () => {
@@ -9,7 +9,7 @@ export const useBillingMutations = () => {
     /**
      * Mutation handler for forwarding user out to Stripe hosted payment gateways
     */
-    useCheckoutMutation: () => 
+    useCheckoutMutation: () =>
       useMutation({
         mutationFn: async (payload: CreateCheckoutPayload) => {
           const { data } = await billingApi.createCheckout(payload);
@@ -25,7 +25,7 @@ export const useBillingMutations = () => {
     /**
      * Mutation handler for loading Stripe customer payment card overlay panel links
      */
-    usePortalMutation: () => 
+    usePortalMutation: () =>
       useMutation({
         mutationFn: async () => {
           const { data } = await billingApi.createPortal();
@@ -38,12 +38,12 @@ export const useBillingMutations = () => {
         },
       }),
 
-      usePreviewProration: ()=> useMutation({
-        mutationFn: async (payload:CreateCheckoutPayload) =>  {
-          const { data } = await billingApi.previewProration(payload);
-          return data;
-        }
-      }),
+    usePreviewProration: () => useMutation({
+      mutationFn: async (payload: CreateCheckoutPayload) => {
+        const { data } = await billingApi.previewProration(payload);
+        return data;
+      }
+    }),
 
     useSubscription: () => {
       const upgrade = useMutation({
@@ -54,9 +54,9 @@ export const useBillingMutations = () => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: billingKeys.pricing() });
         }
-      
+
       });
-      
+
       const downgrade = useMutation({
         mutationFn: async (payload: CreateCheckoutPayload) => {
           const { data } = await billingApi.downgradeSubscription(payload);
@@ -97,8 +97,38 @@ export const useBillingMutations = () => {
         },
       });
 
-      
       return { upgrade, downgrade, cancel, resume, cancelScheduledSubscription };
+    },
+
+    usePaymentMethod: ()=> {
+       const addPaymentMethod = useMutation({
+        mutationFn: async (payload:AddPaymentMethodPayload)=> {
+          const { data } =  await billingApi.addPaymentMethod(payload);
+          return data;
+        },
+        onSuccess: ()=> {
+          queryClient.invalidateQueries({ queryKey: billingKeys.paymentMethods() })
+        }
+      });
+      const deletedPaymentMethod = useMutation({
+        mutationFn: async (id:string)=> {
+          const { data } = await billingApi.deletePaymentMethod(id);
+          return data;
+        },
+        onSuccess: ()=> {
+          queryClient.invalidateQueries({ queryKey: billingKeys.paymentMethods() })
+        }
+      });
+      const setAsDefaultPaymentMethod = useMutation({
+        mutationFn: async (id:string)=> {
+          const { data } = await billingApi.setAsDefaultPaymentMethod(id);
+          return data;
+        },
+        onSuccess: ()=> {
+          queryClient.invalidateQueries({ queryKey: billingKeys.paymentMethods() });
+        }
+      });
+      return { addPaymentMethod, deletedPaymentMethod, setAsDefaultPaymentMethod };
     }
   };
 };

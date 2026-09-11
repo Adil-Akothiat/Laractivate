@@ -33,8 +33,10 @@ Route::prefix('/billing')->group(function () {
 
         Route::prefix('/payment-method')->group(function() {
             Route::get('/', [PaymentMethodController::class, 'show']);
-            Route::post('/', [PaymentMethodController::class, 'update']);
-            Route::delete('/', [PaymentMethodController::class, 'destroy']);
+            Route::post('/', [PaymentMethodController::class, 'store']);
+            Route::patch('/{id}', [PaymentMethodController::class, 'setAsDefaultPaymentMethod']);
+            Route::delete('/{id}', [PaymentMethodController::class, 'destroy']);
+            Route::get('/setup-intent', [PaymentMethodController::class, 'createSetupIntent']);
         });
     });
 });

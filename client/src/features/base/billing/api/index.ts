@@ -9,7 +9,9 @@ import type {
   PlanSchema,
   UserPlanSchemaResponse,
   ProrationResponseSchema,
-  PaymentMethodSchema
+  PaymentMethodSchema,
+  PaymentMethodIntentSchema,
+  AddPaymentMethodPayload
 } from '../types';
 import type { ApiResponseSchema } from '@/app/types';
 
@@ -63,5 +65,9 @@ export const billingApi = {
   cancelScheduledSubscription: ()=> api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/subscription/scheduled/cancel`),
 
   // Payment Methods
-  getPaymentMethods: ()=> api.get<ApiResponseSchema<PaymentMethodSchema[]>>(`${BASE_ROUTE}/payment-method`)
+  getPaymentMethods: ()=> api.get<ApiResponseSchema<PaymentMethodSchema[]>>(`${BASE_ROUTE}/payment-method`),
+  setupPaymentMethodIntent: ()=> api.get<ApiResponseSchema<PaymentMethodIntentSchema>>(`${BASE_ROUTE}/payment-method/setup-intent`),
+  addPaymentMethod: (payload:AddPaymentMethodPayload)=> api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}/payment-method`, payload),
+  deletePaymentMethod: (id:string) => api.delete<ApiResponseSchema<[]>>(`${BASE_ROUTE}/payment-method/${id}`),
+  setAsDefaultPaymentMethod: (id:string) => api.patch<ApiResponseSchema<[]>>(`${BASE_ROUTE}/payment-method/${id}`)
 }

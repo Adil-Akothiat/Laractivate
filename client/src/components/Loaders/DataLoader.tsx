@@ -17,7 +17,8 @@ export function DataLoader<T>({ query, children, fallback, fallbackVariant="erro
     if(fallback) return fallback;
     return <Alert variant={fallbackVariant} className='alert-outline' message={getErrorsMessagesStr(query.error)} />
   }
-  if (!query.data) return null;
+  
+  if (query.data === undefined || query.data === null) return null;
 
   return <>{children(query.data)}</>;
 }

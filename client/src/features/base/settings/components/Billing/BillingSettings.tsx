@@ -1,9 +1,9 @@
-import { CreditCard, Receipt } from "lucide-react";
-import InvoiceHistory from "./InvoiceHistory";
-import SettingsContainer from "../Shared/SettingsContainer";
 import { Tabs } from "@/components";
-import SubscriptionOverview from "@/features/base/billing/components/Subscription/Overview";
 import ManagePaymentMethod from "@/features/base/billing/components/PaymentMethod/Manage";
+import SubscriptionOverview from "@/features/base/billing/components/Subscription/Overview";
+import { CreditCard, Receipt } from "lucide-react";
+import SettingsContainer from "../Shared/SettingsContainer";
+import InvoiceHistory from "./InvoiceHistory";
 
 const tabs = [
   {
@@ -20,7 +20,7 @@ const tabs = [
   },
   {
     key: "payment-method",
-    label: "Payment Method",
+    label: "Payment Methods",
     icon: <Receipt size={14} />,
     content: <ManagePaymentMethod />,
   },

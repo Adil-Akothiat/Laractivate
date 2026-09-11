@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { billingKeys } from "./keys";
-import { PaymentMethodSchema, type FilterInvoicesParams } from "../../types";
+import { type FilterInvoicesParams } from "../../types";
 import { billingApi } from "../../api";
-import { ApiResponseSchema } from "@/app/types";
+// import { ApiResponseSchema } from "@/app/types";
 
 export const usePricingQuery = () =>
   useQuery({
@@ -35,8 +35,14 @@ export const useSubscriptionQuery = () =>
     select: data=> data?.data
   });
 
-export const usePaymentMethodsQuery = ()=> useQuery<ApiResponseSchema<PaymentMethodSchema[]>, Error, PaymentMethodSchema[]>({
+export const usePaymentMethodsQuery = ()=> useQuery({
   queryKey: billingKeys.paymentMethods(),
-  queryFn: ()=> billingApi.getPaymentMethods(),
-  select: (data)=> data?.data
+  queryFn: ()=>  billingApi.getPaymentMethods(),
+  select: (res)=> res.data.data ?? []
+});
+
+export const useSetupPaymentMethodIntent = ()=> useQuery({
+  queryKey: billingKeys.paymentMethodIntent(),
+  queryFn: ()=> billingApi.setupPaymentMethodIntent(),
+  select: (res)=> res.data.data
 })
