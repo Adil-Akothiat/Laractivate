@@ -33,7 +33,6 @@ export default function UserPricing() {
           />
         )}
       </DataLoader>
-
       <PlanSwitchModal
         isOpen={state.confirmOpen}
         preview={state.preview}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useToastContext } from "@/app/hooks";
 import { useBillingMutations } from "../api/useBillingMutations";
 import { ProrationResponseSchema } from "../../types";
+import { getErrorsMessagesStr } from "@/app/utils";
 
 export type DowngradeResult =
   | { status: "success"; message: string }
@@ -60,10 +61,7 @@ export function usePlanSwitch() {
           toast.success(res.message || "");
         },
         onError: (error) => {
-          const message =
-            error?.response?.data?.message ??
-            "A downgrade is already scheduled for your account.";
-          setDowngradeResult({ status: "already_scheduled", message });
+          setDowngradeResult({ status: "already_scheduled", message:getErrorsMessagesStr(error) || "A downgrade is already scheduled for your account." });
           setPlanSlug("");
           setPreview(null);
         },

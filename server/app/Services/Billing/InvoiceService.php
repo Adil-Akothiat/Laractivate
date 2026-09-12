@@ -140,13 +140,9 @@ class InvoiceService
             $params = [
                 'customer' => $stripeSubscription->customer,
             ];
-            
-            if(!empty($stripeSubscription->schedule)) {
-                $params['schedule'] = $stripeSubscription->schedule;
-            } else {
-                $params['subscription'] = $stripeSubscription->id;
-            }
+            Log::info('Sub', ['sub'=> $stripeSubscription]);
             if($withProration) {
+                $params['subscription'] = $stripeSubscription->id;
                 $params['subscription_details'] = [
                     'proration_behavior' => 'always_invoice',
                     'items' => [
@@ -156,7 +152,14 @@ class InvoiceService
                         ],
                     ],
                 ];
+            } else {     
+                if(!empty($stripeSubscription->schedule)) {
+                    $params['schedule'] = $stripeSubscription->schedule;
+                } else {
+                    $params['subscription'] = $stripeSubscription->id;
+                }
             }
+            
             $invoice = $this->stripe->invoices->createPreview($params);
             if ($invoice) {
                 return $withProration ? $invoice :
