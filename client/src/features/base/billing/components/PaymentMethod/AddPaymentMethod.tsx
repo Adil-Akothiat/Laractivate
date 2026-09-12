@@ -20,7 +20,6 @@ export default function AddPaymentMethod({ onSuccess }: AddPaymentMethodProps) {
         (data: PaymentMethodIntentSchema) => {
           return (
             <Elements
-              key={data.client_secret}
               stripe={stripePromise}
               options={{ clientSecret: data.client_secret }}
             >

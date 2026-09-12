@@ -54,7 +54,22 @@ class PlanService
         $subscriptionService = app(SubscriptionService::class);
         $user = auth()->user();
         $user->subscriptions->each(function ($subscription) {
-            $subscription->syncStripeStatus();
+            try {
+                $subscription->syncStripeStatus();
+            } 
+            catch (\Stripe\Exception\InvalidRequestException $e) {
+                // Catch 404s when the subscription no longer exists in Stripe
+                if ($e->getHttpStatus() === 404 || str_contains($e->getMessage(), 'No such subscription')):
+                    // Option A: Mark it as canceled locally
+                    $subscription->markAsCanceled();
+
+                    // Option B (Recommended if in test mode): Soft-delete/force-delete stale local record
+                    // $subscription->delete();
+                endif;
+            }
+            catch (\Throwable $e) {
+                Log::warning("Failed to sync subscription {$subscription->id}: " . $e->getMessage());
+            }
         });
 
         // Refresh your user model instance data & relationships

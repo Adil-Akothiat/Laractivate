@@ -44,5 +44,7 @@ export const usePaymentMethodsQuery = ()=> useQuery({
 export const useSetupPaymentMethodIntent = ()=> useQuery({
   queryKey: billingKeys.paymentMethodIntent(),
   queryFn: ()=> billingApi.setupPaymentMethodIntent(),
-  select: (res)=> res.data.data
+  select: (res)=> res.data.data,
+  refetchOnWindowFocus: false,
+  staleTime: 1000 * 60 * 10
 })

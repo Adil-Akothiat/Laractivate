@@ -2,6 +2,7 @@ import { Alert, Button } from "@/components";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import { useBillingMutations } from "../../hooks/api/useBillingMutations";
+import { getErrorsMessagesStr } from "@/app/utils";
 
 type PaymentMethodFormProps = {
     clientSecret:string;
@@ -68,12 +69,15 @@ export default function PaymentMethodForm({ clientSecret, onSuccess }: PaymentMe
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <CardElement />
-            {/* Error Message Display */}
-            {(stripeError || addPaymentMethod.isError) && (
-                <Alert message={"Failed to save payment method."} variant="error" />
-            )}
-
+            <div className="p-3 border rounded-lg bg-base-100">
+                <CardElement />
+            </div>
+            {
+                stripeError ? <Alert message={stripeError} /> : null
+            }
+            {
+                addPaymentMethod.isError ? <Alert message={getErrorsMessagesStr(addPaymentMethod.error)} /> : null
+            }
             <Button
                 type="submit"
                 variant="primary"
