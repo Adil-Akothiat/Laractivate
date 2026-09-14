@@ -244,7 +244,12 @@
         'currency' => 'usd',
         'interval' => 'month',
         'price_id' => 'price_1TZvINAdMDFZJJUKMOheoISV',
-        'features' => 
+        'entitlments' => 
+        array (
+          'advanced_analytics' => true,
+          'sso_auth' => false,
+        ),
+        'display_features' => 
         array (
           0 => 'Unlimited Projects',
           1 => 'Advanced Permissions System',
@@ -261,7 +266,12 @@
         'currency' => 'usd',
         'interval' => 'month',
         'price_id' => 'price_1TfJ0fAdMDFZJJUKYHrWC48r',
-        'features' => 
+        'entitlements' => 
+        array (
+          'advanced_analytics' => true,
+          'sso_auth' => true,
+        ),
+        'display_features' => 
         array (
           0 => 'Everything in Pro',
           1 => 'Custom SSO / SAML Authentication',

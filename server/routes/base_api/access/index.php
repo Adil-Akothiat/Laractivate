@@ -15,4 +15,12 @@ Route::prefix('access/rbac')->group(function() {
         Route::put('/roles/{id}', [RbacController::class, 'update']);
         Route::delete('/roles/{id}', [RbacController::class, 'destroy']);
     });
+
+    Route::middleware('feature:Everything in Pro')->group(function() {
+        Route::get('/premium', function() {
+            return response()->json([
+            'message' => 'Nice you access premium feature!'
+            ]);
+        });
+    });
 });

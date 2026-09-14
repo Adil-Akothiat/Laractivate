@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('status');                // e.g., "paid", "open", "void"
             
             // Relationships (Safely restricted or nullified to prevent cascade loss)
-            $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
+            // $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
             $table->foreignId('tax_rate_id')->nullable()->constrained('tax_rates')->onDelete('restrict');
             
             // Stripe receipt mapping and download URLs

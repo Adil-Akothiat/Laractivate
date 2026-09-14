@@ -135,4 +135,29 @@ class User extends Authenticatable implements JWTSubject
     {
         return app(SubscriptionService::class)->isSubscribed($this);
     }
+
+    // get current active plan
+    public function currentPlanSlug(): string
+    {
+        $activeSub = $this->subscription('default');
+        if(!$activeSub || !$activeSub->active()):
+            return 'free';
+        endif;
+
+        return $activeSub->type ?? 'free';
+    }
+
+    // check if user can have access a feature
+    public function canAccessFeature(string $feature): bool
+    {
+        $plan = $this->currentPlanSlug();
+        return config('billing.plans.{$plan}.features.{$feature}', false);
+    }
+
+    // get Quota limit of a feature
+    public function getFeatureQuota(string $quotaKey): int
+    {
+        $plan = $this->currentPlanSlug();
+        return config('billing.plans.{$plan}.quotas.{$quotaKey}', 0);
+    }
 }

@@ -23,7 +23,11 @@ return [
             'currency'    => 'usd',
             'interval'    => 'month',
             'price_id'    => env('STRIPE_PRICE_PRO'),
-            'features'    => [
+            'entitlments' => [
+                'advanced_analytics' => true,
+                'sso_auth'           => false
+            ],
+            'display_features'    => [
                 'Unlimited Projects',
                 'Advanced Permissions System',
                 '24/7 Priority Support',
@@ -40,7 +44,11 @@ return [
             'currency'    => 'usd',
             'interval'    => 'month',
             'price_id'    => env('STRIPE_PRICE_ENTERPRISE'), // Add this to your local .env file
-            'features'    => [
+            'entitlements' => [
+                'advanced_analytics' => true,
+                'sso_auth'           => true,
+            ],
+            'display_features'    => [
                 'Everything in Pro',
                 'Custom SSO / SAML Authentication',
                 'Dedicated Database Clusters',

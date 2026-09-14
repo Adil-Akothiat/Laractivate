@@ -31,13 +31,23 @@ until php artisan db:monitor --databases=mysql > /dev/null 2>&1; do
   sleep 2
 done
 
-# 6. Run database migrations and seeders
-echo "Running database migrations..."
-php artisan migrate --force
+# 6. Run database migrations
+if ! php artisan migrate --force; then
+    echo "WARNING: Migration failed! Attempting dynamic recovery..."
+    
+    # In local development, automatically re-sync schema if migrations fail
+    if [ "$APP_ENV" = "local" ] || [ -z "$APP_ENV" ]; then
+        echo "Local environment detected: Running migrate:fresh..."
+        php artisan migrate:fresh --force --seed
+    else
+        echo "Non-local environment: Suppressing crash to allow container startup..."
+    fi
+fi
 
-# 7. Clear configuration and application cache
-php artisan config:clear
-php artisan cache:clear
+# 7. Clear ALL framework caches (Config, Routes, Events, Views, Compiled Services)
+echo "Clearing application optimization caches..."
+php artisan optimize:clear
+php artisan optimize
 
 # 8. If no specific command (or a malformed command) was passed, fallback to starting PHP-FPM
 if [ -z "$1" ] || [ "$1" = "la" ] || [ "$1" = "la\r" ]; then

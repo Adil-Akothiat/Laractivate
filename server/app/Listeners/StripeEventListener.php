@@ -55,3 +55,8 @@ class StripeEventListener
         }
     }
 }
+
+
+
+
+# NEXT TASK ADD PROTECTED ROUTE FOR FEATURES USING ENTITLEMENT SYSTEM

@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed };
+use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess };
 use Illuminate\Auth\AuthenticationException;
 use App\Exceptions\ApiExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.revocation' => TokenRevocationMiddleware::class,
             '2fa.challenge' => Validate2FAPendingState::class,
             'check.subscription' => EnsureUserIsSubscribed::class,
+            'feature' => EnsureFeatureAccess::class
         ]);
         $middleware->encryptCookies(
             except:['refresh_token', 'access_token']
