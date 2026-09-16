@@ -2,12 +2,12 @@
 
 namespace App\Services\Security;
 
-use App\Models\{User,Role};
+use App\Models\User;
+use App\Services\Security\JwtService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Services\Security\JwtService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RegistrationService
 {
@@ -26,17 +26,14 @@ class RegistrationService
                 'is_active'  => true,
             ]);
 
-            $roleId = Role::where('name', 'Member')->value('id');
-            Log::info('Role',['id'=> $roleId]);
-            $user->roles()->attach($roleId);
-
+            event(new Registered($user));
             $token        = JWTAuth::fromUser($user);
             $refreshToken = $this->jwtService->createRefreshToken($user->id, $metadata)['token'];
 
             return [
                 'access_token'=> $token,
                 'refresh_token'=> $refreshToken,
-                'user'=> $user 
+                'user'=> $user
             ];
         });
     }

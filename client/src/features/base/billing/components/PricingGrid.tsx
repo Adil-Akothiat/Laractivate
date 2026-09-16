@@ -55,7 +55,7 @@ export const PricingGrid: React.FC<PricingGridProps> = ({
               <div className="divider my-2" />
 
               <ul className="space-y-3 my-4 flex-1">
-                {plan.features.map((feature, i) => (
+                {plan.display_features.map((feature, i) => (
                   <li
                     key={i}
                     className="flex items-start gap-3 text-sm text-base-content/90"

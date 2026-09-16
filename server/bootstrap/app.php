@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess };
+use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
 use Illuminate\Auth\AuthenticationException;
 use App\Exceptions\ApiExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
@@ -22,16 +22,31 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'permission' => PermissionMiddleware::class,
-            'jwtFromCookie' => JwtFromCookie::class,
             'check.revocation' => TokenRevocationMiddleware::class,
             '2fa.challenge' => Validate2FAPendingState::class,
             'check.subscription' => EnsureUserIsSubscribed::class,
-            'feature' => EnsureFeatureAccess::class
+            'feature' => EnsureFeatureAccess::class,
+            'client.context' => SetCurrentClientContext::class
         ]);
+
         $middleware->encryptCookies(
             except:['refresh_token', 'access_token']
         );
-        $middleware->prependToGroup('api', 'jwtFromCookie');
+        
+        $middleware->api(
+            prepend:
+                [JwtFromCookie::class],
+            append:
+                [SetCurrentClientContext::class]
+        );
+        $middleware->priority([
+            JwtFromCookie::class,
+            \Illuminate\Auth\Middleware\Authenticate::class,
+            TokenRevocationMiddleware::class,
+            SetCurrentClientContext::class,
+            EnsureFeatureAccess::class,
+            PermissionMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // 1. Handle Validation Errors (from Service/Request)

@@ -12,6 +12,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Cashier\Billable;
 use App\Services\Billing\SubscriptionService;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -139,25 +140,29 @@ class User extends Authenticatable implements JWTSubject
     // get current active plan
     public function currentPlanSlug(): string
     {
-        $activeSub = $this->subscription('default');
-        if(!$activeSub || !$activeSub->active()):
+        $activeSub = app(SubscriptionService::class)->getActiveSubscription($this);
+        if(!$activeSub):
             return 'free';
         endif;
-
         return $activeSub->type ?? 'free';
     }
 
     // check if user can have access a feature
-    public function canAccessFeature(string $feature): bool
+    public function canAccessFeature(string $featureKey): bool
     {
         $plan = $this->currentPlanSlug();
-        return config('billing.plans.{$plan}.features.{$feature}', false);
+        return config("billing.plans.{$plan}.entitlements.{$featureKey}", false);
     }
 
     // get Quota limit of a feature
     public function getFeatureQuota(string $quotaKey): int
     {
         $plan = $this->currentPlanSlug();
-        return config('billing.plans.{$plan}.quotas.{$quotaKey}', 0);
+        return config("billing.plans.{$plan}.quotas.{$quotaKey}", 0);
+    }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class, 'client_user');
     }
 }

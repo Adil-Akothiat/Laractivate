@@ -24,7 +24,6 @@ class EnsureFeatureAccess
         if (!$user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
-
         if (!$user->canAccessFeature($feature)) {
             return response()->json([
                 'code'    => 'FEATURE_NOT_INCLUDED',

@@ -12,12 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name', 191);
-            $table->string('client_id', 191)->unique();
-            $table->string('client_secret', 255);
-            $table->string('redirect_uri', 255);
-            $table->enum('type', ['public', 'confidential']);
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->uuid('owner_id');
+            $table->timestamps();
+
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
+        });
+
+        Schema::create('client_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+            $table->string('role')->default('member');
             $table->timestamps();
         });
     }

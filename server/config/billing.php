@@ -23,7 +23,7 @@ return [
             'currency'    => 'usd',
             'interval'    => 'month',
             'price_id'    => env('STRIPE_PRICE_PRO'),
-            'entitlments' => [
+            'entitlements' => [
                 'advanced_analytics' => true,
                 'sso_auth'           => false
             ],

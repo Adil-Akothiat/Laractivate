@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToClient;
 
 class Invoice extends Model
 {
     use HasFactory;
+    use BelongsToClient;
 
     protected $fillable = [
+        'client_id',
         'user_id',
         'subtotal',
         'tax_amount',
@@ -52,5 +55,10 @@ class Invoice extends Model
     public function taxRate(): BelongsTo
     {
         return $this->belongsTo(TaxRate::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 }

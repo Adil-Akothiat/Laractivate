@@ -13,7 +13,7 @@ export interface PlanSchema {
   price: number;
   currency: string;
   interval?: 'month' | 'year' | string; // 🟢 Added this line to fix ts(2339)
-  features: string[];
+  display_features: string[];
 }
 
 export interface UserPlanSchema extends PlanSchema {

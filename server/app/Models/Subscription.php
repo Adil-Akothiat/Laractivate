@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Subscription as CashierSubscription;
+use App\Traits\BelongsToClient;
 
 class Subscription extends CashierSubscription
 {
     use HasFactory;
+    use BelongsToClient;
 
     protected $fillable = [
+        'client_id',
         'user_id',
         'type',
         'stripe_id',
@@ -47,5 +50,10 @@ class Subscription extends CashierSubscription
     public function customer(): BelongsTo
     {
         return $this->user();
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 }

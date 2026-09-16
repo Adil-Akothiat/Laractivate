@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use App\Listeners\RegisterNewClient;
 use App\Models\User;
 use App\Services\System\SystemSupportService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Event;
 
 class UserObserver
 {
@@ -21,6 +24,10 @@ class UserObserver
             'user.created',
             [],
             $user->id
+        );
+        Event::listen(
+            Registered::class,
+            RegisterNewClient::class
         );
     }
 

@@ -244,7 +244,7 @@
         'currency' => 'usd',
         'interval' => 'month',
         'price_id' => 'price_1TZvINAdMDFZJJUKMOheoISV',
-        'entitlments' => 
+        'entitlements' => 
         array (
           'advanced_analytics' => true,
           'sso_auth' => false,

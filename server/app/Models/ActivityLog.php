@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToClient;
 
 class ActivityLog extends Model
 {
+    use BelongsToClient;
     protected $fillable = [
+        'client_id',
         'user_id',
         'description',
         'event',
@@ -24,5 +27,10 @@ class ActivityLog extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 }

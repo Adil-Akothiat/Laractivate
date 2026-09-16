@@ -26,7 +26,7 @@ class PlanService
                 'price'       => $plan['price'] ?? 0,
                 'currency'    => $plan['currency'] ?? 'usd',
                 'interval'    => $plan['interval'] ?? 'month',
-                'features'    => $plan['features'] ?? [],
+                'display_features'    => $plan['display_features'] ?? [],
             ];
         })->values();
         return $collection->toArray();
@@ -91,7 +91,7 @@ class PlanService
                 'price'       => $plan['price'] ?? 0,
                 'currency'    => $plan['currency'] ?? 'usd',
                 'interval'    => $plan['interval'] ?? 'month',
-                'features'    => $plan['features'] ?? [],
+                'display_features'    => $plan['display_features'] ?? [],
                 // 3. Match against the unique Price ID instead of the type column
                 'is_current'  => ($currentStripePrice === $plan['price_id']),
             ];

@@ -5,4 +5,5 @@ Route::prefix('user')->group(function(){
     require __DIR__ . '/accounts.php';
     require __DIR__ . '/profile.php';
     require __DIR__ . '/security.php';
+    require __DIR__ . '/clients.php';
 });
