@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { authCoreApi } from "../../api/authCoreApi"; // Adjust to point to your authCoreApi path
+import { authCoreApi } from "../../api/authCoreApi";
 import { authCoreKeys } from "./keys";
 
 export const useMe = () =>
@@ -7,7 +7,7 @@ export const useMe = () =>
     queryKey: authCoreKeys.session(),
     queryFn: () => authCoreApi.getMe(),
     retry: false,
-    select: (res)=> res.data
+    select: (res) => res.data
   });
 
 export const useValidateResetToken = (email: string | null, token: string | null) =>
@@ -18,5 +18,5 @@ export const useValidateResetToken = (email: string | null, token: string | null
     retry: false,               // Do not retry on a terminal validation failure
     staleTime: 0,               // Always run validation fresh
     refetchOnWindowFocus: false,
-    select: res=> res.data 
+    select: res => res.data
   });

@@ -37,6 +37,7 @@ class UserResource extends BaseResource
             })->unique()->values(), 
         ];
     }
+    
     protected function getRecoveryCodes(): ?array
     {
         if (!$this->two_factor_recovery_codes) {

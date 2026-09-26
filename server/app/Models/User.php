@@ -12,7 +12,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Cashier\Billable;
 use App\Services\Billing\SubscriptionService;
-use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable implements JWTSubject
 {

@@ -59,6 +59,15 @@ const Modal: React.FC<ModalProps> = ({
     return () => dialog.removeEventListener("close", handleClose);
   }, [onClose]);
 
+  useEffect(()=>{
+    if(isOpen && dialogRef.current) {
+      const firstInput = dialogRef.current.querySelector('input, textarea, [contenteditable="true"]') as HTMLElement;
+      if(firstInput) {
+        firstInput.focus();
+      }
+    }
+  },[isOpen])
+
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     if (closeOnBackdrop && e.target === dialogRef.current) {
       onClose();

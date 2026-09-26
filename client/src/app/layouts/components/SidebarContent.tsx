@@ -1,60 +1,10 @@
-import { Bell, LayoutDashboard, LifeBuoy, LogOut, Settings, ShieldIcon, UserKey, Users } from "lucide-react";
+import { ShieldIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useCan } from "../../hooks/ui/useCan";
-import { APP_PERMISSIONS } from "../../constants/appPermissions";
+import { useNavLinks } from "@/app/hooks/ui/useNavLinks";
+import { WorkspacesManager } from "@/features/base/workspaces/components/Manage";
 
 export default function SidebarContent() {
-    const { canAny } = useCan();
-    const navLinks = [
-        {
-            section: "Overview",
-            show: canAny(APP_PERMISSIONS.dashboard),
-            items: [
-                {
-                    label: "Dashboard",
-                    href: "/dashboard",
-                    icon: <LayoutDashboard size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard),
-                },
-                {
-                    label: "Notifications",
-                    href: "/notifications",
-                    icon: <Bell size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard)
-                },
-            ],
-        },
-        {
-            section: "System",
-            show: canAny([...APP_PERMISSIONS.accounts, ...APP_PERMISSIONS.roles]),
-            items: [
-                { 
-                    label: "Accounts", 
-                    href: "/accounts", 
-                    icon: <Users size={16} />,
-                    show: canAny(APP_PERMISSIONS.accounts) 
-                },
-                { 
-                    label: "Roles & Permissions", 
-                    href: "/roles-permissions", 
-                    icon: <UserKey size={16} />,
-                    show: canAny(APP_PERMISSIONS.roles)
-                },
-            ],
-        },
-        {
-            section: "General",
-            show: true,
-            items: [
-                {
-                    label: "Settings",
-                    href: "/settings",
-                    icon: <Settings size={16} />,
-                    show: true,
-                }
-            ],
-        },
-    ];
+    const navLinks = useNavLinks();
 
     return (
         <>
@@ -71,9 +21,9 @@ export default function SidebarContent() {
                     </span>
                 </div>
             </div>
-
             {/* Nav Links */}
             <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+                <WorkspacesManager />
                 {navLinks
                     .filter((group) => group.show === true || group.show)
                     .map((group) => (

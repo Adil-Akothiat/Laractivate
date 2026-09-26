@@ -102,6 +102,9 @@ export default function baseRoutes() {
                         <Route path="activity-logs" element={<ActivityLogs />} />
                         <Route path="billing" element={<BillingSettings />} />
                     </Route>
+
+                    <Route path="/members" element={<h1>members</h1>} />
+                    <Route path="/workspaces" element={<h1>workspaces</h1>} />
                 </Route>
                 {/* Pricing */}
             </Route>

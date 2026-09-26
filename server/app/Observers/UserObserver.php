@@ -2,11 +2,12 @@
 
 namespace App\Observers;
 
-use App\Listeners\RegisterNewClient;
+use App\Models\Client;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\System\SystemSupportService;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserObserver
 {
@@ -25,10 +26,21 @@ class UserObserver
             [],
             $user->id
         );
-        Event::listen(
-            Registered::class,
-            RegisterNewClient::class
-        );
+
+        DB::transaction(function() use ($user) {
+            $name = $user->first_name .'-'. $user->last_name;
+            $client = Client::create([
+                'name'=> $name . "'s Workspace",
+                'slug'=> Str::slug($name . '-' . Str::random(5)),
+                'owner_id' => $user->id
+            ]);
+    
+            $user->clients()->attach($client->id);
+            $memberRole = Role::where('name', 'ADMINISTRATOR')->first();
+            if($memberRole):
+                $user->roles()->syncWithoutDetaching([$memberRole->id]);
+            endif;
+        });
     }
 
     /**

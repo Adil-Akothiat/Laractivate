@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 191)->unique();
             $table->string('group')->nullable();
             $table->boolean('is_locked')->default(false);
+            $table->enum('scope', ['system', 'client'])->defaul('client');
             $table->timestamps();
         });
     }

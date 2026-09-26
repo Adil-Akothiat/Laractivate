@@ -891,6 +891,118 @@
       'table' => 'failed_jobs',
     ),
   ),
+  'rbac' => 
+  array (
+    'permissions' => 
+    array (
+      0 => 
+      array (
+        'name' => 'all',
+        'group' => 'System',
+        'scope' => 'system',
+        'is_locked' => true,
+      ),
+      1 => 
+      array (
+        'name' => 'dashboard.view',
+        'group' => 'System',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      2 => 
+      array (
+        'name' => 'accounts.view',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      3 => 
+      array (
+        'name' => 'accounts.manage',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      4 => 
+      array (
+        'name' => 'logs.view',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      5 => 
+      array (
+        'name' => 'roles.view',
+        'group' => 'Security',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      6 => 
+      array (
+        'name' => 'roles.manage',
+        'group' => 'Security',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      7 => 
+      array (
+        'name' => 'system.configure',
+        'group' => 'Configuration',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+    ),
+    'roles' => 
+    array (
+      0 => 
+      array (
+        'name' => 'SUPER_ADMIN',
+        'scope' => 'system',
+        'is_locked' => true,
+        'permissions' => 
+        array (
+          0 => 'all',
+        ),
+      ),
+      1 => 
+      array (
+        'name' => 'ADMINISTRATOR',
+        'scope' => 'client',
+        'is_locked' => false,
+        'permissions' => 
+        array (
+          0 => 'dashboard.view',
+          1 => 'accounts.view',
+          2 => 'accounts.manage',
+          3 => 'roles.view',
+          4 => 'roles.manage',
+          5 => 'logs.view',
+        ),
+      ),
+      2 => 
+      array (
+        'name' => 'MANAGER',
+        'scope' => 'client',
+        'is_locked' => false,
+        'permissions' => 
+        array (
+          0 => 'dashboard.view',
+          1 => 'accounts.view',
+          2 => 'logs.view',
+        ),
+      ),
+      3 => 
+      array (
+        'name' => 'MEMBER',
+        'scope' => 'client',
+        'is_locked' => false,
+        'permissions' => 
+        array (
+          0 => 'dashboard.view',
+        ),
+      ),
+    ),
+  ),
   'sanctum' => 
   array (
     'stateful' => 

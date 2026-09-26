@@ -18,17 +18,18 @@ class SetCurrentClientContext
         $user = $request->user();
 
         if ($user) {
-            $clientId = $request->header('X-Client-ID') 
-                ?? session('current_client_id') 
-                ?? $user->clients()->first()?->id;
-
-            if ($clientId) {
-                $request->attributes->set('current_client_id', (int) $clientId);
-
-                session(['current_client_id' => (int) $clientId]);
-            }
+            $clientId = session('current_client_id');
+            if(!$clientId):
+                $firstClient = $user->clients()->first();
+                $clientId = $firstClient?->id;
+                
+                if ($clientId) {
+                    session(['current_client_id' => $clientId]);
+                    session()->save();
+                }
+            endif;
+            $request->attributes->set('current_client_id', $clientId);
         }
-
         return $next($request);
     }
 }

@@ -2,8 +2,9 @@ import axios from 'axios';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
-  withCredentials: true, // MUST be here for cookies
+  withCredentials: true
 });
+
 // Variables to manage the "Refresh Queue"
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -25,7 +26,7 @@ use(
   async (error) => {
     const originalRequest = error.config;
     const code = error.response?.data?.code;
-    const status = error.response?.status === 401;
+    const status = error.response?.status;
     const url = originalRequest.url?.toLowerCase() || '';
    
     const publicRoutes = [
@@ -38,11 +39,18 @@ use(
     const isPublicRoute = publicRoutes.some(route => url.includes(route));
 
     if (isPublicRoute) {
-      return Promise.reject(error); // Just return the error for the UI to handle (e.g., "Wrong Email")
+      return Promise.reject(error);
     }
-    // 1. Check if it's an expired token and we haven't retried yet
+
+    // Tenant Access Denied
+    if(status === 403 && code === 'UNAUTHORIZED_TENANT_ACCESS'){
+      window.location.href = '/workspaces';
+      return Promise.reject(error);
+    }
+
+    // Refresh Token Mechanism
     const shouldRefresh = code === "TOKEN_MISSING" || code === "EXPIRED_TOKEN";
-    if (status && shouldRefresh && !originalRequest._retry) {
+    if (status === 401 && shouldRefresh && !originalRequest._retry) {
       // If we are already refreshing, push this request to the queue
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -58,17 +66,12 @@ use(
       return new Promise((resolve, reject) => {
         api.post('/auth/refresh-token')
           .then(() => {
-            processQueue(null); // Resolve all pending requests in queue
-            resolve(api(originalRequest)); // Retry the original request
+            processQueue(null);
+            resolve(api(originalRequest));
           })
           .catch((err) => {
-            processQueue(err, null); // Reject all pending requests
-            // Force Logout logic
+            processQueue(err, null);
             triggerLogoutToast();
-            // setTimeout(() => {
-            //   alert('test')
-            //     window.location.href = '/login';
-            // }, 4000);
             reject(err);
           })
           .finally(() => {
@@ -77,12 +80,8 @@ use(
       });
     }
 
-    // 2. Handle INVALID_TOKEN or other critical auth failures
-    if (code === "INVALID_TOKEN") {
+    if (code === "INVALID_TOKEN" && status === 401) {
       triggerLogoutToast();
-      setTimeout(() => {
-          window.location.href = '/login';
-      }, 4000);
     }
 
     return Promise.reject(error);

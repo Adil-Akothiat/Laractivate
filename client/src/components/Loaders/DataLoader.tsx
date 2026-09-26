@@ -5,7 +5,7 @@ import { Alert, type AlertVariant } from '../Alert';
 import { getErrorsMessagesStr } from '@/app/utils';
 
 interface DataLoaderProps<T> {
-  query: UseQueryResult<T>; // <T> automatically detects the type from the hook
+  query: UseQueryResult<T>;
   children: (data: T) => ReactNode;
   fallback?: ReactNode;
   fallbackVariant?: AlertVariant;

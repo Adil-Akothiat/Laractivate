@@ -1,6 +1,6 @@
 import { api } from '@/app/services/api';
 import type { ApiResponseSchema, ResourceSchema } from '@/app/types';
-import type { UserSchema } from '@/features/base/shared'; // Adjust path if your shared types live elsewhere
+import type { UserSchema } from '@/features/base/shared';
 
 const BASE_ROUTE = '/auth';
 
@@ -19,5 +19,5 @@ export const authCoreApi = {
   checkResetToken: (email: string | null, token: string | null) =>
     api.get<ApiResponseSchema<null>>(`${BASE_ROUTE}/reset-password/validate-token`, {
       params: { email, token },
-    }),
+  })
 };

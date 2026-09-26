@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name', 191)->unique();
             $table->boolean('is_locked')->default(false);
+            $table->enum('scope', ['system', 'client'])->default('client');
             $table->timestamps();
         });
     }

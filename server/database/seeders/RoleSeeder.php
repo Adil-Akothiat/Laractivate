@@ -3,26 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Role;
 use Illuminate\Support\Str;
+use App\Models\Role;
 
 class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = [
-            ['name' => 'SUPER_ADMIN', 'is_locked' => true],
-            ['name' => 'ADMINISTRATOR', 'is_locked' => false],
-            ['name' => 'MANAGER', 'is_locked' => false],
-            ['name' => 'MEMBER', 'is_locked' => false],
-        ];
+        $roles = config('rbac.roles', []);
 
         foreach ($roles as $role) {
-            Role::firstOrCreate(
-                ['name' => $role['name']], 
+            Role::updateOrCreate(
+                ['name' => $role['name']],
                 [
-                    'id' => (string) Str::uuid(),
-                    'is_locked' => $role['is_locked']
+                    'id'        => (string) Str::uuid(),
+                    'scope'     => $role['scope'],
+                    'is_locked' => $role['is_locked'],
                 ]
             );
         }

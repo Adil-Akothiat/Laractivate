@@ -1,15 +1,16 @@
 <?php
 
+use App\Exceptions\ApiExceptionHandler;
+use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
-use Illuminate\Auth\AuthenticationException;
-use App\Exceptions\ApiExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\Request;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -35,12 +36,16 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->api(
             prepend:
-                [JwtFromCookie::class],
+                [
+                    JwtFromCookie::class,
+                    StartSession::class
+                ],
             append:
                 [SetCurrentClientContext::class]
         );
         $middleware->priority([
             JwtFromCookie::class,
+            StartSession::class,
             \Illuminate\Auth\Middleware\Authenticate::class,
             TokenRevocationMiddleware::class,
             SetCurrentClientContext::class,

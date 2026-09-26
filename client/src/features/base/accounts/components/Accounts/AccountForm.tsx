@@ -117,7 +117,6 @@ export default function AccountForm({
           type="submit"
           variant="primary"
           size="sm"
-          disabled={isPending}
           loading={isPending}
         >
           Create User
