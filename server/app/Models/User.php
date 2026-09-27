@@ -164,4 +164,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Client::class, 'client_user');
     }
+
+    public function clientInvitations(): HasMany
+    {
+        return $this->hasMany(ClientInvitation::class, 'invited_by');
+    }
 }

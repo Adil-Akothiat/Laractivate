@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -41,13 +40,27 @@ class GeneralAppNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->subject('Reset Your Password - ' . config('app.name'))
-            ->greeting('Hello!')
-            ->line($this->details['message'] ?? 'You requested a password reset.')
-            ->action('Reset Password', $this->details['url'])
-            ->line('If you did not request this, no further action is required.')
-            ->line('This link will expire in 60 minutes.');
+        $mail = (new MailMessage)
+            ->subject($this->details['subject'] ?? ($this->details['title'] ?? config('app.name')))
+            ->greeting($this->details['greeting'] ?? 'Hello!');
+
+        if (!empty($this->details['lines']) && is_array($this->details['lines'])) {
+            foreach ($this->details['lines'] as $line) {
+                $mail->line($line);
+            }
+        } else {
+            $mail->line($this->details['message'] ?? 'You have a new update.');
+        }
+
+        if (!empty($this->details['url'])) {
+            $mail->action($this->details['btn_text'] ?? 'View Details', $this->details['url']);
+        }
+
+        if (!empty($this->details['footer'])) {
+            $mail->line($this->details['footer']);
+        }
+
+        return $mail;
     }
 
     /**
