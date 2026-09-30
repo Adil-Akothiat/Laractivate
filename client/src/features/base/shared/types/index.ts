@@ -25,13 +25,19 @@ export interface RoleSchema {
   updated_at?: string
 }
 
-export interface UserSchema {
+export interface UserBaseSchema {
   id: string;
   first_name: string;
   last_name: string;
   full_name?: string;
   email: string;
   avatar?: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface UserSchema extends UserBaseSchema {
   roles?:RoleSchema[];
   rolesSet:string[];
   permissionsSet: string[];
@@ -41,8 +47,6 @@ export interface UserSchema {
   two_factor_secret: string|null;
   two_factor_enabled: boolean;
   two_factor_recovery_codes: string[]|[];
-  created_at?: string;
-  updated_at?: string;
 }
 
 

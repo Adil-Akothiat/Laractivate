@@ -32,6 +32,6 @@ class Client extends Model
 
     public function clientInvitations(): HasMany
     {
-        return $this->hasMany(ClientInvitation::class):
+        return $this->hasMany(ClientInvitation::class);
     }
 }

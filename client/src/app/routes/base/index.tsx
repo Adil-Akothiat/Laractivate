@@ -28,6 +28,8 @@ import BillingSettings from "@/features/base/settings/components/Billing/Billing
 import Home from "@/app/pages/base/home";
 import PricingPage from "@/app/pages/base/billing/PricingPage";
 import UserPricingPage from "@/app/pages/base/billing/UserPricingPage";
+import MembersPage from "@/app/pages/base/members/MembersPage";
+import WorkspacesPage from "@/app/pages/base/workspaces/WorkspacesPage";
 
 export default function baseRoutes() {
     return (
@@ -103,8 +105,8 @@ export default function baseRoutes() {
                         <Route path="billing" element={<BillingSettings />} />
                     </Route>
 
-                    <Route path="/members" element={<h1>members</h1>} />
-                    <Route path="/workspaces" element={<h1>workspaces</h1>} />
+                    <Route path="/members" element={<MembersPage />} />
+                    <Route path="/workspaces" element={<WorkspacesPage />} />
                 </Route>
                 {/* Pricing */}
             </Route>

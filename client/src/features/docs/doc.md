@@ -124,7 +124,7 @@ rbac/
 │  ├─ CreateRole.tsx
 │  ├─ UpdateRole.tsx
 │  ├─ RoleDeleteModal.tsx
-│  ├─ RolesList.tsx
+│  ├─ RolesTable.tsx
 │  ├─ PermissionsGrid.tsx   ← toggle permissions per role
 │  ├─ PermissionsCheckBox.tsx
 │  └─ SearchAndFilterRoles.tsx

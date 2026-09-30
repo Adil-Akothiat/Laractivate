@@ -1,5 +1,5 @@
-import { RolesList } from "@/features/base/rbac/components/RolesList";
+import { RolesTable } from "@/features/base/rbac/components/RolesTable";
 
-export default function AccessControlPage () {
-  return <RolesList />;
+export default function AccessControlPage() {
+  return <RolesTable />;
 }

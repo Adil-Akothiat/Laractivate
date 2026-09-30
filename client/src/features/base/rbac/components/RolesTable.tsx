@@ -37,7 +37,7 @@ const columns = (): Column<RoleSchema>[] => [
     },
 ];
 
-export function RolesList() {
+export function RolesTable() {
     const { page, search, group, permission, setFilters } = useRolesFilter();
     const debouncedSearch                                 = useDebounce(search, 400);
 

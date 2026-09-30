@@ -1,5 +1,5 @@
 // Main page component
-export { RolesList } from './components/RolesList'
+export { RolesTable } from './components/RolesTable'
 
 // Sub-components (if you need them individually)
 export { RoleDeleteModal } from './components/RoleDeleteModal'
@@ -12,5 +12,5 @@ export {
 // Types
 export type {
   StoreRolePayload,
-  UpdateRolePayload,
+  UpdateRolePayload
 } from './types'
