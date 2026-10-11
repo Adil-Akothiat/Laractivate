@@ -13,6 +13,7 @@ const PermissionGuard = ({ permission, children }:Props) => {
     const { data, isPending, isError } = useMe();
     const { can, canAny } = useCan();
     const location = useLocation();
+    
     if (isPending) return <GlobalPageLoader isLoading={isPending} />;
     if(isError || !data) return <Navigate to="/login" replace />;
     

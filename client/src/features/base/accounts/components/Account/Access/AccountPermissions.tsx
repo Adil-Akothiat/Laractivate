@@ -1,20 +1,20 @@
-import { Lock, ShieldOff } from "lucide-react";
+import { ShieldOff } from "lucide-react";
 import { EmptyState } from "@/components";
-import type { PermissionSchema } from "@/features/base/shared";
+// import type { PermissionSchema } from "@/features/base/shared";
 
 interface Props {
-  permissions: PermissionSchema[];
+  permissions: string[];
 }
 
 export default function AccountPermissions({ permissions }: Props) {
-  const grouped = permissions.reduce(
-    (acc: Record<string, PermissionSchema[]>, p) => {
-      if (!acc[p.group]) acc[p.group] = [];
-      acc[p.group].push(p);
-      return acc;
-    },
-    {},
-  );
+  // const grouped = permissions.reduce(
+  //   (acc: Record<string, PermissionSchema[]>, p) => {
+  //     if (!acc[p.group]) acc[p.group] = [];
+  //     acc[p.group].push(p);
+  //     return acc;
+  //   },
+  //   {},
+  // );
   // console.log(grouped);
   return (
     <div className="card bg-base-100 border border-base-200">
@@ -30,7 +30,7 @@ export default function AccountPermissions({ permissions }: Props) {
           />
         ) : (
           <div className="space-y-4">
-            {Object.entries(grouped).map(([group, perms]) => (
+            {/* {Object.entries(grouped).map(([group, perms]) => (
               <div key={group}>
                 <p className="text-xs font-medium text-base-content/40 mb-2">
                   {group}
@@ -49,7 +49,8 @@ export default function AccountPermissions({ permissions }: Props) {
                   ))}
                 </div>
               </div>
-            ))}
+            ))} */}
+            fix later
           </div>
         )}
       </div>

@@ -72,7 +72,7 @@ export const memberColumns: Column<MemberSchema>[] = [
   },
   {
     key:"joined_at",
-    header: 'Joined',
-    render: (row: MemberSchema)=> row?.joined_at ? row.joined_at : 'Pending'
+    header: 'Joined/Created',
+    render: (row: MemberSchema)=> row.joined_at
   }
 ];

@@ -16,11 +16,5 @@ Route::prefix('access/rbac')->group(function() {
         Route::delete('/roles/{id}', [RbacController::class, 'destroy']);
     });
 
-    Route::middleware('feature:advanced_analytics')->group(function() {
-        Route::get('/premium', function() {
-            return response()->json([
-            'message' => 'Nice you access premium feature!'
-            ]);
-        });
-    });
+   
 });

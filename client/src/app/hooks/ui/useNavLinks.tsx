@@ -39,11 +39,17 @@ export const useNavLinks = ()=> {
                     icon: <Folder size={16} />,
                     show: canAny(APP_PERMISSIONS.dashboard)
                 },
+                {
+                    label: "Roles & Permissions",
+                    href: "/roles-permissions",
+                    icon: <Folder size={16} />,
+                    show: canAny(APP_PERMISSIONS.dashboard)
+                },
             ],
         },
         {
             section: "System",
-            show: canAny([...APP_PERMISSIONS.accounts, ...APP_PERMISSIONS.roles]),
+            show: canAny(['all']),
             items: [
                 { 
                     label: "Accounts", 
@@ -52,7 +58,7 @@ export const useNavLinks = ()=> {
                     show: canAny(APP_PERMISSIONS.accounts) 
                 },
                 { 
-                    label: "Roles & Permissions", 
+                    label: "System Roles", 
                     href: "/roles-permissions", 
                     icon: <UserKey size={16} />,
                     show: canAny(APP_PERMISSIONS.roles)

@@ -7,7 +7,7 @@ The blueprint. Represents the data structure and relationships of the applicatio
 - **Mass Assignment Protection** — Defining `$fillable` or `$guarded` attributes on every model.
 - **Casts** — Ensuring data types like booleans, dates, and JSON are handled correctly.
 - **Relationships** — Defining how models connect (e.g., `User` has many `RefreshTokens`).
-- **State Helpers** — Lightweight methods that answer questions about the model's state (e.g., `hasPermission()`).
+- **State Helpers** — Lightweight methods that answer questions about the model's state (e.g., `hasSystemPermission()`).
 
 ## Do NOT Include
 - **Validation** — Keep all validation rules inside Request classes.

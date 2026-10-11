@@ -48,9 +48,9 @@ export const columns: Column<UserSchema>[] = [
     render: (row:UserSchema) => (
       <div className="flex flex-wrap gap-1">
         {
-          row.roles?.length ?
+          row.rbac.system_roles?.length ?
           (
-            row.rolesSet.map((role, index)=> <Badge key={index} size="xs" variant='info' outline={true}>{role}</Badge>)
+            row.rbac.system_roles.map((role, index)=> <Badge key={index} size="xs" variant='info' outline={true}>{role.name}</Badge>)
           )
           :
           <span className="text-xs text-base-content/30">No roles</span>

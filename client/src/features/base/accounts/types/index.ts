@@ -29,6 +29,10 @@ export type AccountFormValues = {
 
 
 // Request Payload
-export type UserCreatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'avatar'|'rolesSet'>&PasswordSchema;
+export type UserCreatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'avatar'>&PasswordSchema& {
+    rolesSet: string[];
+};
 
-export type UserUpdatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'rolesSet'|'avatar'>&PasswordSchema;
+export type UserUpdatePayload = Pick<UserSchema, 'first_name'|'last_name'|'email'|'is_active'|'avatar'>&PasswordSchema& {
+    rolesSet:string[]
+};

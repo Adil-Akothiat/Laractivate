@@ -2,12 +2,11 @@
 
 namespace App\Services\Security;
 
-use App\Models\{Role, Permission, User};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Role};
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Http\Resources\Security\PermissionCollection;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RbacService
 {
@@ -25,6 +24,9 @@ class RbacService
             })
             ->when($filters['permission'] ?? null, function ($q, $permission) {
                 $q->whereHas('permissions', fn($q) => $q->where('id', $permission));
+            })
+            ->when($filters['scope'] ?? null, function ($q, $scope) {
+                    $q->where('scope', $scope);
             })
             ->orderByRaw("name = 'Super Admin' DESC")
             ->orderBy('created_at', 'desc')
@@ -95,5 +97,27 @@ class RbacService
     {
         $role = Role::findOrFail($id);
         return $role;
+    }
+
+    
+    public function permissionResolver(User $user, ?int $clientId): array
+    {
+        $systemRoles = $user->roles;
+        $systemPermissions = $systemRoles->flatMap->permissions->pluck('name');
+
+        $clientRole = null;
+        $clientPermissions = collect();
+
+        if ($clientId) {
+            $roleId = $user->clients()->find($clientId)?->pivot?->role_id;
+            $clientRole = $roleId ? Role::with('permissions')->find($roleId) : null;
+            $clientPermissions = $clientRole ? $clientRole->permissions->pluck('name') : collect();
+        }
+
+        return [
+            'system_roles' => $systemRoles,
+            'client_role' => $clientRole,
+            'permissions' => $systemPermissions->merge($clientPermissions)->unique()->values(),
+        ];
     }
 }

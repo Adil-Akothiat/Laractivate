@@ -134,5 +134,5 @@ export const Radio: React.FC<RadioProps> = ({
 
 
 export const FormControl = ({children, className}:{children: React.ReactNode; className?: string}) => (
-  <div className={`form-control ${className}`}>{children}</div>
+  <div className={`form-control ${className} my-3`}>{children}</div>
 )

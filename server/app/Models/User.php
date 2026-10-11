@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Services\Billing\SubscriptionService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Billable;
-use App\Services\Billing\SubscriptionService;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -106,13 +107,6 @@ class User extends Authenticatable implements JWTSubject
             'roles' => $this->roles->pluck('name')->toArray(),
         ];
     }
-    // check for permission
-    public function hasPermission(string $permission):bool
-    {
-        return $this->roles()->whereHas('permissions', function(Builder $query) use ($permission) {
-            $query->where('name', $permission);
-        })->exists();
-    }
 
     /**
      * Get all billing invoices for the user.
@@ -162,11 +156,36 @@ class User extends Authenticatable implements JWTSubject
 
     public function clients(): BelongsToMany
     {
-        return $this->belongsToMany(Client::class, 'client_user');
+        return $this->belongsToMany(Client::class, 'client_user')->withPivot('role_id');
     }
 
     public function clientInvitations(): HasMany
     {
         return $this->hasMany(ClientInvitation::class, 'invited_by');
     }
+
+    // check for system permission
+    public function hasSystemPermission(string $permission):bool
+    {
+        return $this->roles()->whereHas('permissions', function(Builder $query) use ($permission) {
+            $query->where('name', $permission);
+        })->exists();
+    }
+
+
+    // check for client permission
+    public function hasClientPermission(string $permission, int $clientId): bool
+    {
+        $membership = $this->clients()
+            ->where('clients.id', $clientId)
+            ->first();
+
+        if (!$membership || !$membership->pivot->role_id) {
+            return false;
+        }
+        Log::info('members pivot table', [ 'role_id'=> $membership->pivot->role_id ]);
+        return Role::where('id', $membership->pivot->role_id)
+            ->whereHas('permissions', fn($q) => $q->where('name', $permission))
+            ->exists();
+}
 }

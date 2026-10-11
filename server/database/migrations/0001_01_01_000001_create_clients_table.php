@@ -25,7 +25,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->string('role')->default('member');
             $table->timestamps();
         });
     }

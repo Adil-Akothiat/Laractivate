@@ -10,6 +10,7 @@ export type FilterRolesParams = {
   group?:      string;
   permission?: string;
   all?:        boolean;
+  scope?: string
 };
 
 // UI Components

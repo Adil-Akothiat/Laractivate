@@ -34,11 +34,16 @@ class UserObserver
                 'slug'=> Str::slug($name . '-' . Str::random(5)),
                 'owner_id' => $user->id
             ]);
-    
-            $user->clients()->attach($client->id);
-            $memberRole = Role::where('name', 'ADMINISTRATOR')->first();
-            if($memberRole):
-                $user->roles()->syncWithoutDetaching([$memberRole->id]);
+
+            // Role scope must be "client" not "system"
+            $ownerRole = Role::where('name', 'ADMINISTRATOR')
+                ->where('scope', 'client')
+                ->first();
+
+            if($ownerRole):
+                $user->clients()->attach($client->id, [
+                    'role_id'=> $ownerRole->id
+                ]);
             endif;
         });
     }

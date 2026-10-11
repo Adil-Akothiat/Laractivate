@@ -7,19 +7,26 @@ import { memberColumns } from "./MemberColumns";
 import { useState } from "react";
 import { Pagination } from "@/components";
 import { useMembersFilter } from "../hooks/ui/useMembersFilter";
+import InviteMember from "./InviteMember";
 
 export default function MembersTable() {
+    const [open, setOpen] = useState<boolean>(false);
     const [page, setPage] = useState(1);
     const { search, status } = useMembersFilter();
     const { data, isPending } = useMembersQueries.list({ page:1, search, status });
     const response = data?.data;
     const members = response?.data || [];
     const meta = response?.meta;
-
+    console.log(members);
     return (
         <ScrollContainer>
             <MembersHeader 
-            searchResult={meta?.total}
+                searchResult={meta?.total}
+                inviteMemberHandler={()=> setOpen(true)}
+            />
+            <InviteMember 
+                open={open}
+                onClose={()=> setOpen(false)}
             />
             <DataTable<MemberSchema>
                 pinRows

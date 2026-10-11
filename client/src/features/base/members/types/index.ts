@@ -18,3 +18,8 @@ export interface MembersFilterParams {
     status: string;
     joined: string;
 }
+
+export interface InviteMemberPayload {
+    email:string;
+    role_id:string;
+}

@@ -4,6 +4,7 @@ use App\Exceptions\ApiExceptionHandler;
 use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -39,14 +40,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 [
                     JwtFromCookie::class,
                     StartSession::class
-                ],
-            append:
-                [SetCurrentClientContext::class]
+                ]
         );
         $middleware->priority([
             JwtFromCookie::class,
             StartSession::class,
-            \Illuminate\Auth\Middleware\Authenticate::class,
+            Authenticate::class,
             TokenRevocationMiddleware::class,
             SetCurrentClientContext::class,
             EnsureFeatureAccess::class,

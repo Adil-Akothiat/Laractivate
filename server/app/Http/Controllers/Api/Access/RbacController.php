@@ -17,10 +17,13 @@ class RbacController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        if($request->has('all')):
+        if($request->has('all') && !$request->has('scope')):
             $roles = Role::all();
             $roles->load('permissions');
             return (new RoleResource($roles))->response();
+        endif;
+        if($request->has('scope')):
+
         endif;
         $roles = $this->rbacService->rolesList($request->all());
         $roles->load('permissions');

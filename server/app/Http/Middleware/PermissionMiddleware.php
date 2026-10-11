@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Client;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionMiddleware
@@ -19,13 +21,32 @@ class PermissionMiddleware
         if (!$user) {
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
-        if($user->hasPermission('all')):
+
+        Log::info('test');
+        $clientId = $request->attributes->get('current_client_id');
+        Log::info('client id', ['client_id'=> $clientId]);
+
+        // Super admin — platform-wide bypass
+        if($user->hasSystemPermission('all')):
             return $next($request);
         endif;
-        foreach($permissions as $permission):
-            if($user->hasPermission($permission)):
+
+        // $clientId = $request->attributes->get('current_client_id');
+        // Log::inf('client id', ['client_id'=> $clientId]);
+        if($clientId):
+            $client = Client::find($clientId);
+            if($client && $client->owner_id === $user->id):
                 return $next($request);
             endif;
+        endif;
+
+        foreach($permissions as $permission):
+            $hasAccess = $clientId ? $user->hasClientPermission($permission, $clientId) : $user->hasSystemPermission($permission);
+
+            if($hasAccess):
+                return $next($request);
+            endif;
+
         endforeach;
         return response()->json(['error' => 'Forbidden'], 403);
     }

@@ -20,6 +20,8 @@ export default function AccountProfileCard({ user, onEdit }: Props) {
         );
     };
 
+    const rolesSet = user.rbac.system_roles.map(role=> role.id);
+
     return (
     <Card>
         <div className="flex justify-between gap-4">
@@ -44,7 +46,7 @@ export default function AccountProfileCard({ user, onEdit }: Props) {
                         {user.email}
                     </div>
                     <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        {user.rolesSet.map((role: string, index: number) => (
+                        {rolesSet.map((role: string, index: number) => (
                             <Badge key={index} variant="default" size="sm" outline>
                                 {role}
                             </Badge>

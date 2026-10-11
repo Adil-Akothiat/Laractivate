@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->string('token', 64)->unique();
             $table->timestamp('expires_at');
-            $table->timestamp('accepted_at');
+            $table->timestamp('accepted_at')->nullable();
             $table->uuid('invited_by');
             $table->timestamps();
 

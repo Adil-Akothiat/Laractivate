@@ -10,7 +10,7 @@ export default function AccountAccess({ user }: Props) {
     return (
         <div className="flex flex-col gap-4">
             <AccountRoles      user={user} />
-            <AccountPermissions permissions={user.permissions} />
+            <AccountPermissions permissions={user.rbac.permissions} />
         </div>
     );
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources\User;
 
-use Illuminate\Http\Request;
-use App\Http\Resources\Security\RoleResource;
 use App\Http\Resources\System\BaseResource;
-use Illuminate\Support\Facades\Log;
+use App\Services\Security\RbacService;
+use Illuminate\Http\Request;
 
 class UserResource extends BaseResource
 {
@@ -15,6 +14,10 @@ class UserResource extends BaseResource
     */
     public function toArray(Request $request): array
     {
+        $rbacService = new RbacService();
+        $clientId = $request->attributes->get('current_client_id');
+        $permissionsResovler = $rbacService->permissionResolver($request->user(), $clientId);
+
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -26,15 +29,11 @@ class UserResource extends BaseResource
             'two_factor_enabled' => $this->two_factor_enabled,
             'two_factor_recovery_codes' => $this->getRecoveryCodes(),
             'two_factor_secret' => $this->two_factor_secret,
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'rolesSet' => $this->roles->pluck('name'),
-            'owner' => $this->id === auth()->user()->id,
-            'permissions' => $this->roles->flatMap(function($role) {
-                return $role->permissions;
-            })->unique('id')->values(),
-            'permissionsSet'=> $this->roles->flatMap(function($role) {
-                return $role->permissions->pluck('name');
-            })->unique()->values(), 
+            'rbac' => [
+                'system_roles' => $permissionsResovler['system_roles'],
+                'client_role' => $permissionsResovler['client_role'],
+                'permissions' => $permissionsResovler['permissions']
+            ]
         ];
     }
     

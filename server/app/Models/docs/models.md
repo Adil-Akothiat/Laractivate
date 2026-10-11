@@ -6,13 +6,13 @@ The `User` model in AuthPanel is an extension of Laravel’s `Authenticatable` a
 ### Key Features
 1. **UUID Support**: Uses non-incrementing string keys for IDs to improve security and prevent ID enumeration.
 2. **JWT Custom Claims**: Automatically injects a user's roles into the JWT payload, allowing the frontend to read roles without extra API calls.
-3. **RBAC Integration**: Provides a `hasPermission()` method that checks through relationships to see if any of the user's roles contain a specific permission.
+3. **RBAC Integration**: Provides a `hasSystemPermission()` method that checks through relationships to see if any of the user's roles contain a specific permission.
 
 ## Implementation Example: Permission Check
-The `hasPermission` method is a clean way to check access anywhere in the application:
+The `hasSystemPermission` method is a clean way to check access anywhere in the application:
 
 ```php
-public function hasPermission(string $permission): bool
+public function hasSystemPermission(string $permission): bool
 {
     return $this->roles()->whereHas('permissions', function(Builder $query) use ($permission) {
         $query->where('name', $permission);

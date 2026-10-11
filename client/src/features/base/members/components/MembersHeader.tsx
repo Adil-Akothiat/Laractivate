@@ -3,10 +3,11 @@ import { LayoutDashboard, UserGroup, UserPlus } from "lucide-react";
 import FilterAndSearchMembers from "./FilterAndSearchMembers";
 
 type MembersHeaderProps = {
-    searchResult?:number
+    searchResult?:number;
+    inviteMemberHandler: ()=> void;
 }
 
-export default function MembersHeader({ searchResult=0 }:MembersHeaderProps) {
+export default function MembersHeader({ searchResult=0, inviteMemberHandler }:MembersHeaderProps) {
     return (
         <div>
             <Breadcrumb 
@@ -31,7 +32,7 @@ export default function MembersHeader({ searchResult=0 }:MembersHeaderProps) {
                 <Button
                     leftIcon={<UserPlus size={16} />}
                     size="sm"
-                    onClick={()=> alert('invite new user')}
+                    onClick={inviteMemberHandler}
                 >
                     Invite
                 </Button>

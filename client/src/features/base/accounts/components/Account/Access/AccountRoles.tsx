@@ -22,7 +22,7 @@ export default function AccountRoles({ user }: Props) {
     const { assignRole, unAssignRole }        = useAccountMutations();
 
     const allRoles       = data?.data    ?? [];
-    const assignedIds    = user?.roles?.map((r: RoleSchema) => r.id) ?? [];
+    const assignedIds    = user?.rbac.system_roles?.map((r: RoleSchema) => r.id) ?? [];
     const availableRoles = allRoles.filter((r: RoleSchema) => !assignedIds.includes(r.id));
 
     function handleAssign(roleId: string) {
@@ -74,7 +74,7 @@ export default function AccountRoles({ user }: Props) {
                     </Button>
                 </div>
 
-                {!user?.roles?.length ? (
+                {!user?.rbac.system_roles?.length ? (
                     <EmptyState
                         icon={<Shield size={28} />}
                         title="No roles assigned"
@@ -82,7 +82,7 @@ export default function AccountRoles({ user }: Props) {
                     />
                 ) : (
                     <div className="flex flex-col divide-y divide-base-200">
-                        {user.roles.map((role: RoleSchema) => (
+                        {user.rbac.system_roles.map((role: RoleSchema) => (
                             <RoleListItem
                                 key={role.id}
                                 role={role}

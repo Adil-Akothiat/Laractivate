@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\{Request, JsonResponse};
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\{LoginRequest, RegisterRequest, ForgotPasswordRequest};
-use App\Services\System\SessionService;
-use App\Services\Security\{AuthService, JwtService};
-use App\Http\Resources\User\UserResource;
+use App\Http\Requests\{LoginRequest};
 use App\Http\Resources\System\BaseResource;
-use Illuminate\Support\Facades\Log;
+use App\Http\Resources\User\UserResource;
+use App\Services\Security\{AuthService, JwtService};
+use App\Services\Security\RbacService;
+use App\Services\System\SessionService;
+use Illuminate\Http\{Request, JsonResponse};
 
 class AuthController extends Controller
 {
@@ -55,8 +54,6 @@ class AuthController extends Controller
     {
         $refreshToken = $request->cookie($this->jwtService->refresh_token_key);
         
-        Log::info('refresh_token', ['refresh_token'=> $refreshToken]);
-        
         $result = $this->jwtService->refresh($refreshToken);
         return $this->respondWithToken(
             $result['access_token'],
@@ -67,6 +64,8 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
+        $clientId = $request->attributes->get('current_client_id');
+        new RbacService()->permissionResolver($request->user(), $clientId);
         return (new UserResource($request->user()))->response()->setStatusCode(200);
     }
 
