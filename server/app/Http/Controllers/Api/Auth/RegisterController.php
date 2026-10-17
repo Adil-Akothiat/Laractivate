@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\Security\RegistrationService;
-use App\Services\System\SessionService;
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\RegisterRequest;
+use App\Services\Auth\RegistrationService;
+use App\Support\DeviceDetector;
+use Illuminate\Http\JsonResponse;
 
 
 class RegisterController extends Controller
@@ -14,12 +14,12 @@ class RegisterController extends Controller
     public function __construct(
         protected RegistrationService $registerService,
         protected AuthController $auth,
-        protected SessionService $sessionService
+        protected DeviceDetector $deviceDetector
     ) {}
 
     public function store(RegisterRequest $request): JsonResponse
     {
-        $metadata = $this->sessionService->buildMetadata(
+        $metadata = $this->deviceDetector->buildMetadata(
             $request->header('User-Agent'),
             $request->ip(),
             $request->header('Sec-CH-UA', '')

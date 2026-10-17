@@ -2,6 +2,7 @@
 
 use App\Exceptions\ApiExceptionHandler;
 use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
+use App\Http\Middleware\CheckScope;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -28,7 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
             '2fa.challenge' => Validate2FAPendingState::class,
             'check.subscription' => EnsureUserIsSubscribed::class,
             'feature' => EnsureFeatureAccess::class,
-            'client.context' => SetCurrentClientContext::class
+            'client.context' => SetCurrentClientContext::class,
+            'scope' => CheckScope::class
         ]);
 
         $middleware->encryptCookies(
@@ -48,6 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
             Authenticate::class,
             TokenRevocationMiddleware::class,
             SetCurrentClientContext::class,
+            CheckScope::class,
             EnsureFeatureAccess::class,
             PermissionMiddleware::class,
         ]);

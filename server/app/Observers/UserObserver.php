@@ -5,22 +5,26 @@ namespace App\Observers;
 use App\Models\Client;
 use App\Models\Role;
 use App\Models\User;
-use App\Services\System\SystemSupportService;
+use App\Services\System\SystemActivityLogService;
+use App\Services\System\SystemNotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class UserObserver
 {
-    public function __construct()
+    public function __construct(
+        protected SystemActivityLogService $logService,
+        protected SystemNotificationService $notificationService
+    )
     {
-        $this->systemSupport = new SystemSupportService();
+        // 
     }
     /**
      * Handle the User "created" event.
     */
     public function created(User $user): void
     {
-        SystemSupportService::log(
+        $this->logService->log(
             'Account created', 
             'user.created',
             [],
@@ -55,14 +59,14 @@ class UserObserver
     {
         // 1. Password Change
         if ($user->wasChanged('password')) {
-            SystemSupportService::log(
+            $this->logService->log(
                 'Changed account password', 
                 'auth.password_update',
                 [],
                 $user->id
             );
             // notify
-            $this->systemSupport->security(
+            $notificationService->security(
                 $user,
                 'Password changed!',
                 'Your password was successfully updated. If this wasn’t you, please secure your account immediately.'
@@ -71,7 +75,7 @@ class UserObserver
 
         // 2. Profile Info Change (Name or Email)
         if ($user->wasChanged(['first_name', 'last_name', 'avatar'])) {
-            SystemSupportService::log(
+            $this->logService->log(
                 'Updated profile information', 
                 'profile.update',
                 [
@@ -81,7 +85,7 @@ class UserObserver
                 $user->id
             );
             // notify
-            $this->systemSupport->success(
+            $notificationService->success(
                 $user,
                 'Account Information Changed',
                 "We noticed a change to your account details. If this wasn't you, please review your security settings.",
@@ -93,14 +97,14 @@ class UserObserver
         if ($user->wasChanged('two_factor_enabled')) {
             $enableOrDisable = $user->two_factor_enabled ? 'enabled' : 'disabled';
             $status = $enableOrDisable;
-            SystemSupportService::log(
+            $this->logService->log(
                 "{$status} Two-Factor Authentication", 
                 'auth.2fa_toggle',
                 [],
                 $user->id
             );
             // notify
-            $this->systemSupport->security(
+            $notificationService->security(
                 $user,
                 'Security Alert: Two-Factor Authentication '.ucfirst($enableOrDisable),
                 'Two-factor authentication has been successfully '. $enableOrDisable .' on your account. If this wasn’t you, please secure your account immediately.'

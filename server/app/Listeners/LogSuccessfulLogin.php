@@ -2,13 +2,15 @@
 
 namespace App\Listeners;
 
-use App\Services\System\SystemSupportService;
-use Illuminate\Auth\Events\Login;
 use App\Models\ActivityLog;
+use App\Services\System\SystemActivityLogService;
+use Illuminate\Auth\Events\Login;
 
 class LogSuccessfulLogin
 {
-    public function __construct()
+    public function __construct(
+        protected SystemActivityLogService $logService
+    )
     {
         // 
     }
@@ -21,7 +23,8 @@ class LogSuccessfulLogin
         ->exists();
 
         if (!$alreadyLogged) {
-            SystemSupportService::log(
+            
+            $this->logService->log(
                 'Logged into the system', 
                 'auth.login',
                 [],

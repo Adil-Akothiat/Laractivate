@@ -37,7 +37,7 @@ restart:
 	@$(COMPOSE) down && $(COMPOSE) up -d
 
 rebuild:
-	@$(COMPOSE) up -d --build
+	@$(COMPOSE) up --build
 
 logs:
 	@$(COMPOSE) logs -f $(c)

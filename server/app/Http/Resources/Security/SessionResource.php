@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Security;
 
 use Illuminate\Http\Request;
-use App\Services\Security\JwtService;
+use App\Services\Auth\JwtService;
 use App\Http\Resources\System\BaseResource;
 
 class SessionResource extends BaseResource

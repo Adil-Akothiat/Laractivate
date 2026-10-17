@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\System;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\{Request, JsonResponse};
+use Illuminate\Http\JsonResponse;
 use App\Http\Resources\System\{NotificationCollection, BaseResource};
 
 
@@ -21,7 +21,7 @@ class NotificationsController extends Controller
     }
     public function markAsRead($id):JsonResponse
     {
-        auth()->user()->notifications()->findOrFail($id)->markAsRead();
+        auth()->user()->unreadNotifications()->update(['read_at' => now()]);
         return (new BaseResource([]))->withMessage('Notifications viewed!')->response()->setStatusCode(200);
     }
 

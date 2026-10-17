@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\Security\SessionCollection;
-use App\Http\Resources\Billing\{InvoiceCollection, SubscriptionResource};
-use App\Http\Resources\System\BaseResource;
+use App\Http\Resources\Billing\{ InvoiceCollection };
 use App\Services\User\UserService;
 use App\Services\Billing\{InvoiceService, SubscriptionService};
 use App\Services\System\SessionService;
-use App\Services\Security\JwtService;
+use App\Services\Auth\JwtService;
 
 class ProfileController extends Controller
 {
@@ -126,5 +124,9 @@ class ProfileController extends Controller
         $invoices = $this->invoiceService->getUserInvoices($user, $filters);
 
         return new InvoiceCollection($invoices);
+    }
+
+    public function auditLogs() {
+
     }
 }

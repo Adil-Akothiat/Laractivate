@@ -1,15 +1,14 @@
 <?php
 namespace App\Exceptions;
 
-use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Auth\AuthenticationException;
-use Tymon\JWTAuth\Exceptions\{TokenExpiredException, TokenInvalidException};
-use Illuminate\Http\Exceptions\ThrottleRequestsException;
-use Illuminate\Validation\ValidationException;
-// use Illuminate\Support\Facades\Log;
 use App\Models\User;
-use App\Services\System\SystemSupportService;
+use App\Services\System\SystemActivityLogService;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Exceptions\{TokenExpiredException, TokenInvalidException};
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApiExceptionHandler
 {
@@ -51,7 +50,7 @@ class ApiExceptionHandler
         $user = User::where('email', $request->input('email'))->first();
         
         if($user) {
-            SystemSupportService::log(
+            (new SystemActivityLogService())->log(
                 'Account temporarily locked (Too many failed attempts)', 
                 'auth.lockout',
                 ['ip' => $request->ip()],

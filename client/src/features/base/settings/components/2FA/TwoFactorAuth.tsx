@@ -1,4 +1,4 @@
-import { FingerprintPattern } from "lucide-react";
+// import { FingerprintPattern } from "lucide-react";
 import { useProfile } from "../../hooks";
 import TwoFactorStepper from "./TwoFactorStepper";
 import { DataLoader } from "@/components/Loaders/DataLoader";

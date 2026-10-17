@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{ForgotPasswordRequest, ResetPasswordRequest};
-use App\Services\Security\PasswordService;
+use App\Services\Auth\PasswordService;
 use Illuminate\Http\{Request, JsonResponse};
-use Illuminate\Facades\Support\DB;
 use App\Http\Resources\System\BaseResource;
 
 class PasswordController extends Controller

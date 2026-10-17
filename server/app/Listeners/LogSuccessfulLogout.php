@@ -2,19 +2,18 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Auth\Events\Logout;
-// use Illuminate\Support\Facades\Log;
 use App\Models\ActivityLog;
-use App\Services\System\SystemSupportService;
+use App\Services\System\SystemActivityLogService;
+use Illuminate\Auth\Events\Logout;
 
 class LogSuccessfulLogout
 {
     /**
      * Create the event listener.
      */
-    public function __construct()
+    public function __construct(
+        protected SystemActivityLogService $logService
+    )
     {
         // 
     }
@@ -34,7 +33,7 @@ class LogSuccessfulLogout
             ->where('created_at', '>=', now()->subSeconds(5))
             ->exists();
         if (!$alreadyLoggedOut) {
-            SystemSupportService::log(
+            $this->logService->log(
                 'Logged out of the system', 
                 'auth.logout',
                 [],

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Services\Security\JwtService;
-use App\Services\Security\TwoFactorAuthService;
+use App\Services\Auth\{ JwtService, TwoFactorAuthService };
 use App\Services\User\UserService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\Validation\Rules\Password;

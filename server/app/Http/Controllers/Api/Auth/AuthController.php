@@ -6,22 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\{LoginRequest};
 use App\Http\Resources\System\BaseResource;
 use App\Http\Resources\User\UserResource;
-use App\Services\Security\{AuthService, JwtService};
+use App\Services\Auth\{AuthService, JwtService};
 use App\Services\Security\RbacService;
-use App\Services\System\SessionService;
+use App\Support\DeviceDetector;
 use Illuminate\Http\{Request, JsonResponse};
 
 class AuthController extends Controller
 {
     public function __construct(
-        protected SessionService $sessionService,
+        protected DeviceDetector $deviceDetector,
         protected JwtService $jwtService,
         protected AuthService $auth
     ) {}
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $metadata = $this->sessionService->buildMetadata(
+        $metadata = $this->deviceDetector->buildMetadata(
             $request->header('User-Agent'),
             $request->ip(),
             $request->header('Sec-CH-UA', '')

@@ -2,11 +2,9 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use App\Services\System\SystemSupportService;
+
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Log;
+use App\Services\System\SystemActivityLogService;
 
 class LogResetPassword
 {
@@ -27,7 +25,7 @@ class LogResetPassword
             $user = $event->user;
             // Log::info('USER', ['user'=>$user]);
         if ($user) {
-            SystemSupportService::log(
+            (new SystemActivityLogService())->log(
                 'Password successfully reset via email link', 
                 'auth.password_reset_completed',
                 [],

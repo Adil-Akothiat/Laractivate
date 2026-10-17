@@ -2,15 +2,15 @@
 namespace App\Http\Controllers\Api\System;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Services\System\ActivityLogService;
 use App\Http\Resources\System\ActivityLogCollection;
 use App\Models\User;
+use App\Services\System\SystemActivityLogService;
+use Illuminate\Http\Request;
 
 class ActivityLogController extends Controller
 {
     public function __construct(
-        protected ActivityLogService $activityLogService
+        protected SystemActivityLogService $activityLogService
     ) {}
 
     public function index(Request $request): ActivityLogCollection

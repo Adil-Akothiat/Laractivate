@@ -17,16 +17,22 @@ RUN apt-get update && apt-get install -y \
 # Clean apt cache to reduce container size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Bring Composer into the container
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www
+
+RUN mkdir -p /var/www/storage/framework/views \
+    && mkdir -p /var/www/storage/framework/cache \
+    && mkdir -p /var/www/storage/framework/sessions \
+    && mkdir -p /var/www/storage/logs \
+    && chown -R www-data:www-data /var/www/storage
+
 # Copy and set execution permissions for the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]
-
-# Bring Composer into the container
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www
 
 # Set correct ownership for default web server user
 RUN chown -R www-data:www-data /var/www

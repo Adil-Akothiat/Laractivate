@@ -3,28 +3,20 @@
 namespace App\Http\Controllers\Api\System;
 
 use App\Http\Controllers\Controller;
-use App\Services\System\DashboardService;
-use Illuminate\Http\Request;
+use App\Services\System\SystemDashboardService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function __construct(
-        protected DashboardService $service
+        protected SystemDashboardService $service
     ) {}
 
     /**
      * Handle the dashboard data request.
      */
-    public function index(Request $request)
-    {
-        return response()->json(
-            $this->service->getUserDashboardData($request->user()),
-            200
-        );
-    }
-
-    public function superAdminIndex(Request $request)
+    public function index(Request $request): JsonResponse
     {
         return response()->json(
             $this->service->getSuperAdminDashboardData($request->user()),
