@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\System\BaseResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Services\Billing\InvoiceService;
+use App\Services\Workspace\Billing\InvoiceService;
 
 
 class SubscriptionResource extends BaseResource

@@ -15,7 +15,7 @@ import type {
 } from '../types';
 import type { ApiResponseSchema } from '@/app/types';
 
-const BASE_ROUTE = '/billing';
+const BASE_ROUTE = '/workspace/billing';
 
 export const billingApi = {
   // --- Core Methods ---
@@ -24,10 +24,10 @@ export const billingApi = {
    * Fetch public config-driven plans configuration listing matrix
    */
   listPricing: () => 
-    api.get<ApiResponseSchema<PlanSchema[]>>(`${BASE_ROUTE}/pricing`),
+    api.get<ApiResponseSchema<PlanSchema[]>>('/pricing'),
   
   listUserPricing: () => 
-    api.get<ApiResponseSchema<UserPlanSchemaResponse>>(`${BASE_ROUTE}/user-pricing`),
+    api.get<ApiResponseSchema<UserPlanSchemaResponse>>(`${BASE_ROUTE}/pricing`),
 
   /**
    * Fetch secure transaction and invoice payment logs history

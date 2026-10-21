@@ -3,7 +3,7 @@
 namespace App\Http\Resources\User;
 
 use App\Http\Resources\System\BaseResource;
-use App\Services\Security\RbacService;
+use App\Services\System\SystemRoleService;
 use Illuminate\Http\Request;
 
 class UserResource extends BaseResource
@@ -14,8 +14,13 @@ class UserResource extends BaseResource
     */
     public function toArray(Request $request): array
     {
-        $rbacService = new RbacService();
+        $user = $request->user();
         $clientId = $request->attributes->get('current_client_id');
+        if(!$clientId):
+            $clientId = $user->clients()->first()?->id;
+        endif;
+
+        $rbacService = new SystemRoleService();
         $permissionsResovler = $rbacService->permissionResolver($request->user(), $clientId);
 
         return [

@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Resources\User\UserResource;
-use App\Http\Resources\Security\SessionCollection;
 use App\Http\Resources\Billing\{ InvoiceCollection };
-use App\Services\User\UserService;
-use App\Services\Billing\{InvoiceService, SubscriptionService};
-use App\Services\System\SessionService;
+use App\Http\Resources\Security\SessionCollection;
+use App\Http\Resources\User\UserResource;
 use App\Services\Auth\JwtService;
+use App\Services\Workspace\Billing\{InvoiceService, SubscriptionService};
+use App\Services\User\{UserService, UserSessionService};
+use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     public function __construct(
         protected UserService $userService,
-        protected SessionService $sessionService,
+        protected UserSessionService $userSession,
         protected JwtService $jwtService,
         protected InvoiceService $invoiceService,
         protected SubscriptionService $subscriptionService
@@ -84,14 +83,14 @@ class ProfileController extends Controller
     // sessions management
     public function getSessions(Request $request)
     {
-        $sessions = $this->sessionService->getSessions($request->user());
+        $sessions = $this->uerSession->getSessions($request->user());
         return new SessionCollection($sessions);
     }
 
     public function revokeSession(Request $request, string $id)
     {
         $user = $request->user();
-        $this->sessionService->revokeSession($user, $id);
+        $this->uerSession->revokeSession($user, $id);
         return response()->json(['message' => 'Session revoked successfully.']);
     }
 
@@ -100,7 +99,7 @@ class ProfileController extends Controller
 
         $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
         $user = $request->user();
-        $this->sessionService->revokeAllExceptCurrent($user, $currentTokenHash);
+        $this->uerSession->revokeAllExceptCurrent($user, $currentTokenHash);
 
         return response()->json(['message' => 'Other sessions revoked successfully!']);
     }
@@ -108,7 +107,7 @@ class ProfileController extends Controller
     public function clearHistory(Request $request)
     {
         $user = $request->user();
-        $this->sessionService->clearHistory($user);
+        $this->uerSession->clearHistory($user);
 
         return response()->json(['message' => 'History cleared successfully!']);
     }

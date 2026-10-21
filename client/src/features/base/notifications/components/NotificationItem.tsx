@@ -10,6 +10,7 @@ type Props = {
 export function NotificationItem({ notification }: Props) {
   const isUnread = notification.readAt === null;
   const cfg = typeConfig[notification.details.type] ?? typeConfig.info;
+  
   const { markAsRead } = useNotificationMutations();
   const markReadHandler = ()=> {
     if(isUnread) {

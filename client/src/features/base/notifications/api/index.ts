@@ -2,7 +2,7 @@ import { api } from "@/app/services/api";
 import type { ApiResponseSchema } from "@/app/types";
 import type { NotificationResponseSchema } from "../types";
 
-const BASE_ROUTE = "/system/notifications";
+const BASE_ROUTE = "/user/notifications";
 
 export const notificationApi = {
   /**
@@ -16,7 +16,6 @@ export const notificationApi = {
    */
   markAsRead: (id: string) => 
     api.patch<ApiResponseSchema<null>>(`${BASE_ROUTE}/${id}`).then((res) => res.data),
-
   /**
    * Marks all incoming notification streams as read.
    */

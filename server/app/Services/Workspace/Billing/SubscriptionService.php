@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Services\Billing;
+namespace App\Services\Workspace\Billing;
 
-use App\Models\{User, Subscription, SubscriptionItem};
-use Illuminate\Support\Facades\Log;
+use App\Models\SubscriptionItem;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Laravel\Cashier\Exceptions\IncompletePayment;
 use Stripe\StripeClient;
 
 class SubscriptionService

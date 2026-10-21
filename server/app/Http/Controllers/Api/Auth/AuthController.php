@@ -7,13 +7,14 @@ use App\Http\Requests\{LoginRequest};
 use App\Http\Resources\System\BaseResource;
 use App\Http\Resources\User\UserResource;
 use App\Services\Auth\{AuthService, JwtService};
-use App\Services\Security\RbacService;
+use App\Services\System\SystemRoleService;
 use App\Support\DeviceDetector;
 use Illuminate\Http\{Request, JsonResponse};
 
 class AuthController extends Controller
 {
     public function __construct(
+        protected SystemRoleService $systemRole,
         protected DeviceDetector $deviceDetector,
         protected JwtService $jwtService,
         protected AuthService $auth
@@ -64,8 +65,12 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        $clientId = $request->attributes->get('current_client_id');
-        new RbacService()->permissionResolver($request->user(), $clientId);
+        // $clientId = $request->attributes->get('current_client_id');
+        // if($clientId):
+        //     $activeClient = $user->clients()->first();
+        //     $clientId = $activeClient?->id;
+        // endif;
+        // $this->systemRole->permissionResolver($request->user());
         return (new UserResource($request->user()))->response()->setStatusCode(200);
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Workspace\Billing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\System\BaseResource;
-use App\Services\Billing\{SubscriptionService, PlanService};
+use App\Services\Workspace\Billing\{SubscriptionService, PlanService};
 
 class PlanController extends Controller
 {

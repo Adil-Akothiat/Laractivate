@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Security;
+namespace App\Services\System;
 
 use App\Models\{Role};
 use App\Models\User;

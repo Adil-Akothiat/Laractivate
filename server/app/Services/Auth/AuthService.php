@@ -3,16 +3,13 @@ namespace App\Services\Auth;
 
 use App\Models\RefreshToken;
 use App\Services\Auth\JwtService;
-use App\Services\System\SystemNotificationService;
 use Illuminate\Auth\Events\{Login, Logout};
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
     public function __construct(
-        protected SystemNotificationService $notification,
         protected JwtService $jwtService,
     ) {}
      /**
@@ -21,16 +18,12 @@ class AuthService
      */
     public function login(array $credentials, array $metadata): array
     {
-        Log::info('User authenticated successfully', ['credentials' => $credentials]);
         if (!JWTAuth::attempt($credentials)) {
             throw ValidationException::withMessages(['email' => ['Invalid credentials']]);
         }
-        Log::info('User authenticated successfully', ['credentials' => $credentials]);
 
         $user  = auth()->user();
-        Log::info('User retrieved from session/guard', ['user' => $user]);
         if (!$user) {
-            Log::error('Auth attempt succeeded, but user model could not be resolved from guard.');
             throw ValidationException::withMessages(['email' => ['User account could not be found.']]);
         }
         $refreshTokenArray = $this->jwtService->createRefreshToken($user->id, $metadata);
@@ -59,9 +52,6 @@ class AuthService
         }
         // Fire Business Events for log tracker
         event(new Login('api', $user, false));
-        // Send Business Notifications
-        $this->notification->welcome($user, "Welcome {$user->full_name}!", 'Check out your dashboard');
-        $this->notification->emailVerification($user, 'Email verification', 'Please verify your mail address!');
         return [
             'requires_2fa' => false,
             'access_token' => $token,

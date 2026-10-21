@@ -59,4 +59,8 @@ class InvitationController extends Controller
         ]))->withMessage('You have successfully joined the workspace.')
           ->response()->setStatusCode(200);
     }
+
+    public function decline() {
+        //
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Workspace\Billing;
 
 use App\Http\Controllers\Controller;
-use App\Services\Billing\{PlanService, InvoiceService, SubscriptionService};
+use App\Services\Workspace\Billing\{PlanService, InvoiceService, SubscriptionService};
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\System\BaseResource;
 use App\Http\Resources\Billing\SubscriptionResource;

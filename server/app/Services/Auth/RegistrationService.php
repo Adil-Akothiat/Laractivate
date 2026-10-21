@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\Security;
+namespace App\Services\Auth;
 
 use App\Models\User;
 use App\Services\Auth\JwtService;
+use App\Services\System\SystemNotificationService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,6 +13,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class RegistrationService
 {
     public function __construct(
+        protected SystemNotificationService $notification,
         protected JwtService $jwtService
     ){}
     public function register(array $credentials, $metadata): array
@@ -26,9 +28,11 @@ class RegistrationService
                 'is_active'  => true,
             ]);
 
-            event(new Registered($user));
             $token        = JWTAuth::fromUser($user);
             $refreshToken = $this->jwtService->createRefreshToken($user->id, $metadata)['token'];
+            event(new Registered($user));
+            $this->notification->welcome($user, "Welcome {$user->full_name}!", 'Check out your dashboard');
+            $this->notification->emailVerification($user, 'Email verification', 'Please verify your mail address!');
 
             return [
                 'access_token'=> $token,

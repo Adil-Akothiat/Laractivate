@@ -904,51 +904,107 @@
       ),
       1 => 
       array (
-        'name' => 'dashboard.view',
-        'group' => 'System',
-        'scope' => 'client',
-        'is_locked' => false,
+        'name' => 'system.dashboard.view',
+        'group' => 'System Administration',
+        'scope' => 'system',
+        'is_locked' => true,
       ),
       2 => 
-      array (
-        'name' => 'accounts.view',
-        'group' => 'User Management',
-        'scope' => 'client',
-        'is_locked' => false,
-      ),
-      3 => 
-      array (
-        'name' => 'accounts.manage',
-        'group' => 'User Management',
-        'scope' => 'client',
-        'is_locked' => false,
-      ),
-      4 => 
-      array (
-        'name' => 'logs.view',
-        'group' => 'User Management',
-        'scope' => 'client',
-        'is_locked' => false,
-      ),
-      5 => 
-      array (
-        'name' => 'roles.view',
-        'group' => 'Security',
-        'scope' => 'client',
-        'is_locked' => false,
-      ),
-      6 => 
-      array (
-        'name' => 'roles.manage',
-        'group' => 'Security',
-        'scope' => 'client',
-        'is_locked' => false,
-      ),
-      7 => 
       array (
         'name' => 'system.configure',
         'group' => 'Configuration',
         'scope' => 'system',
+        'is_locked' => false,
+      ),
+      3 => 
+      array (
+        'name' => 'system.accounts.view',
+        'group' => 'System User Management',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+      4 => 
+      array (
+        'name' => 'system.accounts.manage',
+        'group' => 'System User Management',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+      5 => 
+      array (
+        'name' => 'system.roles.view',
+        'group' => 'System Security',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+      6 => 
+      array (
+        'name' => 'system.roles.manage',
+        'group' => 'System Security',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+      7 => 
+      array (
+        'name' => 'system.notifications.manage',
+        'group' => 'System Communications',
+        'scope' => 'system',
+        'is_locked' => false,
+      ),
+      8 => 
+      array (
+        'name' => 'client.dashboard.view',
+        'group' => 'Workspace',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      9 => 
+      array (
+        'name' => 'client.accounts.view',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      10 => 
+      array (
+        'name' => 'client.accounts.manage',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      11 => 
+      array (
+        'name' => 'client.logs.view',
+        'group' => 'User Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      12 => 
+      array (
+        'name' => 'client.roles.view',
+        'group' => 'Security',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      13 => 
+      array (
+        'name' => 'client.roles.manage',
+        'group' => 'Security',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      14 => 
+      array (
+        'name' => 'client.billing.view',
+        'group' => 'Billing',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      15 => 
+      array (
+        'name' => 'client.billing.manage',
+        'group' => 'Billing',
+        'scope' => 'client',
         'is_locked' => false,
       ),
     ),
@@ -971,12 +1027,14 @@
         'is_locked' => false,
         'permissions' => 
         array (
-          0 => 'dashboard.view',
-          1 => 'accounts.view',
-          2 => 'accounts.manage',
-          3 => 'roles.view',
-          4 => 'roles.manage',
-          5 => 'logs.view',
+          0 => 'client.dashboard.view',
+          1 => 'client.accounts.view',
+          2 => 'client.accounts.manage',
+          3 => 'client.roles.view',
+          4 => 'client.roles.manage',
+          5 => 'client.logs.view',
+          6 => 'client.billing.view',
+          7 => 'client.billing.manage',
         ),
       ),
       2 => 
@@ -986,9 +1044,10 @@
         'is_locked' => false,
         'permissions' => 
         array (
-          0 => 'dashboard.view',
-          1 => 'accounts.view',
-          2 => 'logs.view',
+          0 => 'client.dashboard.view',
+          1 => 'client.accounts.view',
+          2 => 'client.logs.view',
+          3 => 'client.billing.view',
         ),
       ),
       3 => 
@@ -998,7 +1057,7 @@
         'is_locked' => false,
         'permissions' => 
         array (
-          0 => 'dashboard.view',
+          0 => 'client.dashboard.view',
         ),
       ),
     ),

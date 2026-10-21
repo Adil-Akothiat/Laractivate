@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Workspace\Billing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Services\Billing\PaymentMethodService;
+use App\Services\Workspace\Billing\PaymentMethodService;
 use App\Http\Resources\Billing\PaymentMethodCollection;
 use App\Http\Resources\System\BaseResource;
 

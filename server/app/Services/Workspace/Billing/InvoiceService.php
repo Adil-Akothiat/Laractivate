@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Billing;
+namespace App\Services\Workspace\Billing;
 
 use App\Models\{User, PaymentMethod, TaxRate, Invoice, Subscription};
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use Laravel\Cashier\Cashier;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Laravel\Cashier\Cashier;
 
 
 class InvoiceService

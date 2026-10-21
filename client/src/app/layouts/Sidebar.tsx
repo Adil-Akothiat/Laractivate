@@ -6,9 +6,9 @@ import PageHeader from "./components/PageHeader";
 import SidebarContent from "./components/SidebarContent";
 import { useToastContext } from "../hooks/common";
 import { getErrorsMessagesStr } from "../utils/errorsHandling";
-import { useAuthMutations } from "@/features/base/auth/hooks";
 import { useMe } from "../hooks";
 import { DataLoader } from "@/components/Loaders/DataLoader";
+import { useAuthMutations } from "@/features/public/hooks/api/usePublicMutations";
 
 const ISDEVELOPMENT = import.meta.env.DEV;
 const BACKENDURL = import.meta.env.VITE_PUBLIC_API || 'http://localhost:8000';
@@ -16,13 +16,13 @@ const BACKENDURL = import.meta.env.VITE_PUBLIC_API || 'http://localhost:8000';
 export default function Sidebar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const query = useMe();
-  const { logout } = useAuthMutations();
+  const { mutate, isPending } = useAuthMutations.logout();
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const { toast } = useToastContext();
 
   const handleLogout = () => {
-    logout.mutate(undefined, {
+    mutate(undefined, {
       onSuccess: () => navigate("/login"),
       onError: (err: any) => {
         toast.error(getErrorsMessagesStr(err));
@@ -72,7 +72,7 @@ export default function Sidebar() {
                 onClose={() => setIsLogoutModalOpen(false)}
                 confirmText="Logout"
                 cancelText="Cancel"
-                isConfirming={logout.isPending}
+                isConfirming={isPending}
               >
                 <p>Are you sure you want to log out?</p>
               </Modal>

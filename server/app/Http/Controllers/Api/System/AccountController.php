@@ -3,23 +3,22 @@
 namespace App\Http\Controllers\Api\System;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Http\Resources\User\{UserCollection, UserResource};
+use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
 use App\Http\Resources\Security\SessionCollection;
 use App\Http\Resources\System\BaseResource;
-use App\Services\User\UserService;
+use App\Http\Resources\User\{UserCollection, UserResource};
+use App\Models\User;
 use App\Services\Auth\JwtService;
-use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
+use App\Services\User\{ UserService, UserSessionService };
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
-use App\Services\System\SessionService;
 
 class AccountController extends Controller
 {
     public function __construct(
         protected UserService $userService,
         protected JwtService $jwtService,
-        protected SessionService $sessionService,
+        protected UserSessionService $userSession,
     ){}
     public function index(Request $request)
     {
@@ -116,27 +115,27 @@ class AccountController extends Controller
     // sessions management for admin
     public function getSessions(Request $request, User $user) 
     {
-        $sessions = $this->sessionService->getSessions($user);
+        $sessions = $this->uerSession->getSessions($user);
         return new SessionCollection($sessions);
     }
 
     public function revokeSession(Request $request, User $user, string $sessionId)
     {
-        $this->sessionService->revokeSession($user, $sessionId);
+        $this->uerSession->revokeSession($user, $sessionId);
         return response()->json(['message' => 'Session revoked successfully.']);
     }
 
     public function revokeAllSessions(Request $request, User $user)
     {
         $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
-        $this->sessionService->revokeAllExceptCurrent($user, $currentTokenHash);
+        $this->uerSession->revokeAllExceptCurrent($user, $currentTokenHash);
 
         return response()->json(['message' => 'Other sessions revoked successfully!']);
     }
 
     public function clearHistory(Request $request, User $user)
     {
-        $this->sessionService->clearHistory($user);
+        $this->uerSession->clearHistory($user);
         return response()->json(['message' => 'History cleared successfully!']);
     }
 

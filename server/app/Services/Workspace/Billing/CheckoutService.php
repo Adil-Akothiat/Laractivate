@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services\Billing;
+namespace App\Services\Workspace\Billing;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Stripe\Checkout\Session as StripeSession;
 use Stripe\Stripe;
 use Stripe\StripeClient;
 

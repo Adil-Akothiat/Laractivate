@@ -2,10 +2,8 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Laravel\Cashier\Events\WebhookReceived;
-use App\Services\Billing\{ CheckoutService, SubscriptionService, InvoiceService };
+use App\Services\Workspace\Billing\{ CheckoutService, SubscriptionService, InvoiceService };
 use Illuminate\Support\Facades\Log;
 
 

@@ -43,12 +43,13 @@ class UserObserver
             $ownerRole = Role::where('name', 'ADMINISTRATOR')
                 ->where('scope', 'client')
                 ->first();
-
-            if($ownerRole):
-                $user->clients()->attach($client->id, [
-                    'role_id'=> $ownerRole->id
-                ]);
-            endif;
+            
+            if (!$ownerRole) {
+                throw new \Exception("Default workspace 'ADMINISTRATOR' role not found. Please run seeders.");
+            }
+            $user->clients()->attach($client->id, [
+                'role_id'=> $ownerRole->id
+            ]);
         });
     }
 

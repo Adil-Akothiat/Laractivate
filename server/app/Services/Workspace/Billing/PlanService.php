@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Services\Billing;
+namespace App\Services\Workspace\Billing;
 
 use App\Models\User;
-use Stripe\Event;
 use Illuminate\Support\Facades\Log;
 
 class PlanService

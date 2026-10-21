@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Workspace\Billing;
 
 use App\Http\Controllers\Controller;
-use App\Services\Billing\{ CheckoutService };
+use App\Services\Workspace\Billing\{ CheckoutService };
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Exception;

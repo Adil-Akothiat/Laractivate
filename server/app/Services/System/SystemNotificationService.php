@@ -61,7 +61,7 @@ class SystemNotificationService
         $this->send($user, [
             'title'   => $title,
             'message' => $message,
-            'url'     => '/dashboard',
+            'url'     => '/workspace/dashboard',
             'type'    => 'success',
             'icon'    => 'user-plus' // Matches your React iconMap
         ]);

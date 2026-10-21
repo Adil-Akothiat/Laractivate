@@ -3,9 +3,8 @@
 use App\Http\Controllers\Api\User\InvitationController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('workspace/invitations')->group(function () {
+Route::prefix('invitations')->group(function () {
     Route::get('/', [InvitationController::class, 'index']);
-    Route::delete('/{invitation}', [InvitationController::class, 'cancel']);
+    Route::post('/{id}/accept', [InvitationController::class, 'accept']);
+    Route::delete('/{id}/decline', [InvitationController::class, 'decline']);
 });
-
-Route::post('invitations/accept', [InvitationController::class, 'accept']);

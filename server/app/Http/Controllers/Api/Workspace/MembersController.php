@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\User;
+namespace App\Http\Controllers\Api\Workspace;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\System\BaseResource;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
-class WorkspaceMemberController extends Controller
+class MembersController extends Controller
 {
     public function index(Request $request)
     {
@@ -118,5 +118,13 @@ class WorkspaceMemberController extends Controller
         return (new BaseResource($invitation))
             ->withMessage('Invitation sent successfully.')
             ->response()->setStatusCode(201);
+    }
+
+    public function detach() {
+        
+    }
+
+    public function updateRole() {
+        
     }
 }

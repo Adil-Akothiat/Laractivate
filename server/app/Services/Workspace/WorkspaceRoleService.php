@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Security;
+namespace App\Services\Workspace;
 
 use App\Models\{Role};
 use App\Models\User;
@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class RbacService
+class WorkspaceRoleService
 {
     /**
      * List roles with filtering and user counts.

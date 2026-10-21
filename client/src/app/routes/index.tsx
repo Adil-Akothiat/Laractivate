@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes } from "react-router-dom";
 import { useEffect } from "react";
-import baseRoutes from "./base";
-import appRoutes from "./app";
 import { useToastContext } from "../hooks/common";
+import PublicRoutes from "./public";
+import SystemRoutes from "./system";
+import UserRoutes from "./user";
+import WorkspaceRoutes from "./workspace";
 
 function App() {
     const { toast } = useToastContext();
@@ -30,8 +32,10 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {baseRoutes()}
-                {appRoutes()}
+                {PublicRoutes()}
+                {UserRoutes()}
+                {SystemRoutes()}
+                {WorkspaceRoutes()}
             </Routes>
         </BrowserRouter>
     );

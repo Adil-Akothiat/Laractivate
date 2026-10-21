@@ -23,7 +23,7 @@ class CheckScope
         endif;
         
         // Client id is required because we are dealing with system scope
-        if($scope === "workspace" && !$clientId):
+        if($scope === "client" && !$clientId):
             return response()->json(['error' => 'Forbidden. Workspace scope required.'], 403);
         endif;
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Billing\InvoiceCollection;
 use App\Models\User;
-use App\Services\Billing\{ InvoiceService };
+use App\Services\Workspace\Billing\{ InvoiceService };
 
 class InvoiceController extends Controller
 {

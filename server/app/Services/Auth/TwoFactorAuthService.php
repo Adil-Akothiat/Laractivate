@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Security;
+namespace App\Services\Auth;
 
 use PragmaRX\Google2FA\Google2FA;
 use App\Models\User;
