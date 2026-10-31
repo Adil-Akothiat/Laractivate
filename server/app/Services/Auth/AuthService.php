@@ -3,6 +3,7 @@ namespace App\Services\Auth;
 
 use App\Models\RefreshToken;
 use App\Services\Auth\JwtService;
+use Exception;
 use Illuminate\Auth\Events\{Login, Logout};
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -63,15 +64,19 @@ class AuthService
     public function logout(?string $accessToken, ?string $refreshTokenString): void
     {
         $user = auth()->user();
+        if(!$user):
+            throw new Exception('User is unauthenticated!');
+        endif;
+        if(session()->has('current_client_id')):
+            $user->last_active_client_id = session('current_client_id');
+            $user->save();
+        endif;
         if($accessToken):
             JWTAuth::setToken($accessToken)->invalidate();
         endif;
         if($refreshTokenString):
             RefreshToken::where('token_hash', hash('sha256', $refreshTokenString))->delete();
         endif;
-        if ($user):
-            // 3. Fire Logout Event
-            event(new Logout('api', $user, false));
-        endif;
+        event(new Logout('api', $user, false));
     }
 }

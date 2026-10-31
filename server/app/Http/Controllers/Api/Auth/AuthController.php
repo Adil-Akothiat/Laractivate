@@ -10,6 +10,7 @@ use App\Services\Auth\{AuthService, JwtService};
 use App\Services\System\SystemRoleService;
 use App\Support\DeviceDetector;
 use Illuminate\Http\{Request, JsonResponse};
+// use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -35,10 +36,20 @@ class AuthController extends Controller
                 'id'=> $result['id'],
             ],200);
         endif;
+
+        $accessToken = $result['access_token'];
+        $refreshToken = $result['refresh_token'];
+        $user = $result['user'];
+        
+        $currentClientId = $user->last_active_client_id;
+        $slug = $user->getActiveClient($currentClientId)->slug;
+        // Log::info('Testing', ['T'=> $user->getActiveClient($currentClientId)]);
+        $user['redirect'] = "/$slug/dashboard";
+
         return $this->respondWithToken(
-            $result['access_token'],
-            $result['refresh_token'],
-            $result['user']
+            $accessToken,
+            $refreshToken,
+            $user
         );
     }
 

@@ -1,5 +1,3 @@
-import Sidebar from "@/app/layouts/Sidebar";
-import AuthGuard from "@/app/middlewares/AuthGuard";
 import NotificationsPage from "@/app/pages/base/notifications/NotificationsPage";
 import ChangePasswordPage from "@/app/pages/base/settings/ChangePasswordPage";
 import ProfilePage from "@/app/pages/base/settings/ProfilePage";
@@ -11,9 +9,7 @@ import { Navigate, Route } from "react-router-dom";
 
 export default function UserRoutes() {
     return (
-        <Route element={<AuthGuard />}>
-            <Route element={<Sidebar />}>
-
+        <>
                 <Route path="/notifications" element={<NotificationsPage />} />
                 {/* Settings */}
                 <Route path="/settings" element={<MiniSidebar />}>
@@ -24,7 +20,6 @@ export default function UserRoutes() {
                     <Route path="sessions" element={<SessionsPage />} />
                     <Route path="activity-logs" element={<ActivityLogs />} />
                 </Route>
-            </Route>
-        </Route>
+        </>
     );
 }

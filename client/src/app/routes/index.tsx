@@ -1,9 +1,11 @@
-import { BrowserRouter, Routes } from "react-router-dom";
 import { useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useToastContext } from "../hooks/common";
 import PublicRoutes from "./public";
-import SystemRoutes from "./system";
+import AuthGuard from "../middlewares/AuthGuard";
+import Sidebar from "../layouts/Sidebar";
 import UserRoutes from "./user";
+import SystemRoutes from "./system";
 import WorkspaceRoutes from "./workspace";
 
 function App() {
@@ -33,9 +35,13 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {PublicRoutes()}
-                {UserRoutes()}
-                {SystemRoutes()}
-                {WorkspaceRoutes()}
+                <Route element={<AuthGuard />}>
+                    <Route element={<Sidebar />}>
+                        {UserRoutes()}
+                        {SystemRoutes()}
+                        {WorkspaceRoutes()}
+                    </Route>
+                </Route>
             </Routes>
         </BrowserRouter>
     );

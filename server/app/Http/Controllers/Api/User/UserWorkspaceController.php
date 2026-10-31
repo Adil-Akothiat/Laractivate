@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\System\BaseResource;
-use App\Models\Client;
+use App\Models\{ Client, Role };
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +17,8 @@ class UserWorkspaceController extends Controller
         ->clients()
         ->select('clients.id', 'name', 'slug')
         ->get();
+
         $currentClientId = $request->attributes->get('current_client_id');
-        
         return (new BaseResource([
             'workspaces' => $userWorkspaces,
             'current_client_id' => $currentClientId
@@ -64,8 +64,15 @@ class UserWorkspaceController extends Controller
                 'owner_id'=> $user->id
             ]);
 
+             $ownerRole = Role::where('name', 'ADMINISTRATOR')
+                ->where('scope', 'client')
+                ->first();
+            
+            if (!$ownerRole) {
+                throw new \Exception("Default workspace 'ADMINISTRATOR' role not found. Please run seeders.");
+            }
             $user->clients()->attach($client->id, [
-                'role'=> 'owner'
+                'role_id'=> $ownerRole->id
             ]);
         });
 
@@ -73,5 +80,5 @@ class UserWorkspaceController extends Controller
             ->response()
             ->setStatusCode(201)
         ;
-    }  
+    }
 }

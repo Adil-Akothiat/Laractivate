@@ -35,9 +35,10 @@ class User extends Authenticatable implements JWTSubject
         'avatar',
         'password',
         'is_active',
+        'last_active_client_id',
         'two_factor_enabled',
         'two_factor_secret',
-        'two_factor_recovery_codes'
+        'two_factor_recovery_codes',
     ];
     protected $casts = [
         'password'=> 'hashed'
@@ -157,6 +158,11 @@ class User extends Authenticatable implements JWTSubject
     public function clients(): BelongsToMany
     {
         return $this->belongsToMany(Client::class, 'client_user')->withPivot('role_id');
+    }
+
+    public function getActiveClient($clientId)
+    {
+        return $this->clients()->where('clients.id', $clientId)->firstOrFail();
     }
 
     public function clientInvitations(): HasMany

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('first_name', 32);
             $table->string('last_name', 32);
             $table->string('avatar')->nullable();
+            $table->unsignedBigInteger('last_active_client_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('two_factor_enabled')->default(false);

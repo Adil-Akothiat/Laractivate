@@ -25,14 +25,4 @@ Route::prefix('auth')->group(function () {
     
     Route::post('/two-factor/verify', [TwoFactorAuthController::class, 'verifyAuthentication'])
          ->middleware('2fa.challenge');
-
-    
-    // ----------------------------------------------------
-    // 2. Protected Routes (Require Authentication & Valid Token)
-    // ----------------------------------------------------
-    Route::middleware(['auth:api', 'check.revocation'])->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
-    
 });
