@@ -43,16 +43,13 @@ class AuthService
             $challengeToken = $this->jwtService->createJwtToken($user, ['pending_2fa' => true], 5);
             return [
                 'requires_2fa' => true,
-                'challenge_token' => $challengeToken, // Replacing the encrypted ID with a JWT
-                'id' => encrypt($user->id) // Optional: keep if your frontend logic requires it
-            ];
-            return [
-                'requires_2fa' => true,
+                'challenge_token' => $challengeToken,
                 'id' => encrypt($user->id)
             ];
         }
         // Fire Business Events for log tracker
         event(new Login('api', $user, false));
+
         return [
             'requires_2fa' => false,
             'access_token' => $token,
@@ -79,4 +76,6 @@ class AuthService
         endif;
         event(new Logout('api', $user, false));
     }
+
+    
 }

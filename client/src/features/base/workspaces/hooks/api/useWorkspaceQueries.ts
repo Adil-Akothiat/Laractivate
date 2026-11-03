@@ -6,6 +6,11 @@ export const useWorkspacesQueries = {
   list: () => useQuery({
     queryKey: clientKeys.workspaces,
     queryFn: workspaceApi.list
+  }),
+  verifySlug: (slug: string)=> useQuery({
+    queryKey: clientKeys.slug(slug),
+    queryFn: ()=> workspaceApi.verifySlug.call(this, slug),
+    select: (res)=> res?.data?.data 
   })
 
 }

@@ -25,22 +25,24 @@ export default function LoginForm() {
             { email: form.email, password: form.password },
             {
                 onSuccess: (res) => {
-                    if (res?.data?.next === "2FA_VERIFICATION") {
-                        const { id, challenge_token } = res.data;
-                        setForm((prev) => ({ ...prev, show2FA: true, userId: id, token:challenge_token }));
+                    const {data} = res.data;
+                    if('tfa' in data) {
+                        const { challenge_token, id } = data.tfa;
+                        setForm((prev) => ({ ...prev, show2FA: true, userId: id, token: challenge_token }));
                         return;
                     }
-                    setTimeout(() => { window.location.href = "/workspace/dashboard"; }, 0);
+                    window.location.href = data.redirect_path;
                 },
             },
         );
     };
+    
     return (
         <div className="w-full max-w-sm mx-auto px-6 py-8">
             {form.show2FA && (
                 <TwoFactorDialog
                     token={form.token}
-                    onSuccess={() => (window.location.href = "/workspace/dashboard")}
+                    onSuccess={(redirectPath) => (window.location.href = redirectPath)}
                     onCancel={() => setValue("show2FA", false)}
                 />
             )}

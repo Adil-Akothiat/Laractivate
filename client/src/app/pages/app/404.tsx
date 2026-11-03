@@ -12,8 +12,8 @@ export default function ErrorPage({
   code = 404,
   title = "Page Not Found",
   message = "The page you're looking for doesn't exist.",
-  redirectTo = "/dashboard",
-  redirectLabel = "Back to Dashboard",
+  redirectTo = "/",
+  redirectLabel = "Back to Homepage",
 }: ErrorPageProps) {
   return (
     <div className="flex h-screen items-center justify-center bg-base-200">

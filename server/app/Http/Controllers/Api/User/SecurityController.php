@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Security\SessionCollection;
+use App\Http\Resources\System\BaseResource;
 use App\Services\Auth\{ JwtService, TwoFactorAuthService };
 use App\Services\User\UserService;
+use App\Services\User\UserSessionService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\Validation\Rules\Password;
-use App\Http\Resources\System\BaseResource;
 
 class SecurityController extends Controller
 {
@@ -15,6 +17,7 @@ class SecurityController extends Controller
         protected JwtService $jwtService,
         protected UserService $userService,
         protected TwoFactorAuthService $tfaService,
+        protected UserSessionService $userSession
     ) {}
 
     public function changePassword(Request $request):JsonResponse
@@ -66,4 +69,73 @@ class SecurityController extends Controller
         $codes = $this->tfaService->generateRecoveryCodes(auth()->user());
         return (new BaseResource(['recoveryCodes' => $codes]))->withMessage('Recovery codes generated successfully.')->response()->setStatusCode(200);
     }
+
+
+    public function deactivate(Request $request)
+    {
+        $request->validate(['password' => 'required|string']);
+
+        $this->userService->deactivate(
+            $request->user(),
+            $request->password
+        );
+
+        return response()->json(['message' => 'Account deactivated successfully.'], 200);
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate(['password' => 'required|string']);
+
+        $this->userService->delete(
+            $request->user(),
+            $request->password
+        );
+        return response()->json(['message' => 'Account deleted permanently.'], 200);
+    }
+
+    // sessions management
+    public function getSessions(Request $request)
+    {
+        $sessions = $this->userSession->getSessions($request->user());
+        return new SessionCollection($sessions);
+    }
+
+    public function revokeSession(Request $request, string $id)
+    {
+        $user = $request->user();
+        $this->userSession->revokeSession($user, $id);
+        return response()->json(['message' => 'Session revoked successfully.']);
+    }
+
+    public function revokeAllSessions(Request $request)
+    {
+
+        $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
+        $user = $request->user();
+        $this->userSession->revokeAllExceptCurrent($user, $currentTokenHash);
+
+        return response()->json(['message' => 'Other sessions revoked successfully!']);
+    }
+
+    public function clearHistory(Request $request)
+    {
+        $user = $request->user();
+        $this->userSession->clearHistory($user);
+
+        return response()->json(['message' => 'History cleared successfully!']);
+    }
+
+    // billing
+    // public function invoicesHistory(Request $request)
+    // {
+    //     $user = auth()->user();
+
+    //     // $request->query() safely captures all URL strings (?page=2&status=paid&query=inv_123) as an array
+    //     $filters = $request->query();
+
+    //     $invoices = $this->invoiceService->getUserInvoices($user, $filters);
+
+    //     return new InvoiceCollection($invoices);
+    // }
 }

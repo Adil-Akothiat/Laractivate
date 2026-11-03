@@ -6,7 +6,7 @@ import AuthGuard from "../middlewares/AuthGuard";
 import Sidebar from "../layouts/Sidebar";
 import UserRoutes from "./user";
 import SystemRoutes from "./system";
-import WorkspaceRoutes from "./workspace";
+import WorkspacesRoutes from "./workspaces";
 
 function App() {
     const { toast } = useToastContext();
@@ -39,7 +39,7 @@ function App() {
                     <Route element={<Sidebar />}>
                         {UserRoutes()}
                         {SystemRoutes()}
-                        {WorkspaceRoutes()}
+                        {WorkspacesRoutes()}
                     </Route>
                 </Route>
             </Routes>

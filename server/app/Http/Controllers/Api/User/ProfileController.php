@@ -3,23 +3,31 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Billing\{ InvoiceCollection };
-use App\Http\Resources\Security\SessionCollection;
 use App\Http\Resources\User\UserResource;
-use App\Services\Auth\JwtService;
-use App\Services\Workspace\Billing\{InvoiceService, SubscriptionService};
-use App\Services\User\{UserService, UserSessionService};
+use App\Services\User\{UserService};
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     public function __construct(
         protected UserService $userService,
-        protected UserSessionService $userSession,
-        protected JwtService $jwtService,
-        protected InvoiceService $invoiceService,
-        protected SubscriptionService $subscriptionService
+        // protected UserSessionService $userSession,
+        // protected JwtService $jwtService,
+        // protected InvoiceService $invoiceService,
+        // protected SubscriptionService $subscriptionService
     ) {}
+
+     public function me(Request $request): JsonResponse
+    {
+        // $clientId = $request->attributes->get('current_client_id');
+        // if($clientId):
+        //     $activeClient = $user->clients()->first();
+        //     $clientId = $activeClient?->id;
+        // endif;
+        // $this->systemRole->permissionResolver($request->user());
+        return (new UserResource($request->user()))->response()->setStatusCode(200);
+    }
     public function show(Request $request)
     {
         return new UserResource($request->user());
@@ -57,6 +65,7 @@ class ProfileController extends Controller
         ], 200);
     }
 
+
     public function deactivate(Request $request)
     {
         $request->validate(['password' => 'required|string']);
@@ -81,51 +90,47 @@ class ProfileController extends Controller
     }
 
     // sessions management
-    public function getSessions(Request $request)
-    {
-        $sessions = $this->uerSession->getSessions($request->user());
-        return new SessionCollection($sessions);
-    }
+    // public function getSessions(Request $request)
+    // {
+    //     $sessions = $this->uerSession->getSessions($request->user());
+    //     return new SessionCollection($sessions);
+    // }
 
-    public function revokeSession(Request $request, string $id)
-    {
-        $user = $request->user();
-        $this->uerSession->revokeSession($user, $id);
-        return response()->json(['message' => 'Session revoked successfully.']);
-    }
+    // public function revokeSession(Request $request, string $id)
+    // {
+    //     $user = $request->user();
+    //     $this->uerSession->revokeSession($user, $id);
+    //     return response()->json(['message' => 'Session revoked successfully.']);
+    // }
 
-    public function revokeAllSessions(Request $request)
-    {
+    // public function revokeAllSessions(Request $request)
+    // {
 
-        $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
-        $user = $request->user();
-        $this->uerSession->revokeAllExceptCurrent($user, $currentTokenHash);
+    //     $currentTokenHash = hash('sha256', $request->cookie($this->jwtService->refresh_token_key));
+    //     $user = $request->user();
+    //     $this->uerSession->revokeAllExceptCurrent($user, $currentTokenHash);
 
-        return response()->json(['message' => 'Other sessions revoked successfully!']);
-    }
+    //     return response()->json(['message' => 'Other sessions revoked successfully!']);
+    // }
 
-    public function clearHistory(Request $request)
-    {
-        $user = $request->user();
-        $this->uerSession->clearHistory($user);
+    // public function clearHistory(Request $request)
+    // {
+    //     $user = $request->user();
+    //     $this->uerSession->clearHistory($user);
 
-        return response()->json(['message' => 'History cleared successfully!']);
-    }
+    //     return response()->json(['message' => 'History cleared successfully!']);
+    // }
 
-    // billing
-    public function invoicesHistory(Request $request)
-    {
-        $user = auth()->user();
+    // // billing
+    // public function invoicesHistory(Request $request)
+    // {
+    //     $user = auth()->user();
 
-        // $request->query() safely captures all URL strings (?page=2&status=paid&query=inv_123) as an array
-        $filters = $request->query();
+    //     // $request->query() safely captures all URL strings (?page=2&status=paid&query=inv_123) as an array
+    //     $filters = $request->query();
 
-        $invoices = $this->invoiceService->getUserInvoices($user, $filters);
+    //     $invoices = $this->invoiceService->getUserInvoices($user, $filters);
 
-        return new InvoiceCollection($invoices);
-    }
-
-    public function auditLogs() {
-
-    }
+    //     return new InvoiceCollection($invoices);
+    // }
 }

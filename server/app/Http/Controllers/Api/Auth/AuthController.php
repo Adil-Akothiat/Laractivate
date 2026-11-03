@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{LoginRequest};
+use App\Http\Resources\Auth\AuthSuccessResource;
 use App\Http\Resources\System\BaseResource;
-use App\Http\Resources\User\UserResource;
+use App\Models\User;
 use App\Services\Auth\{AuthService, JwtService};
 use App\Services\System\SystemRoleService;
 use App\Support\DeviceDetector;
@@ -30,21 +31,17 @@ class AuthController extends Controller
         );
         $result = $this->auth->login($request->validated(), $metadata);
         if($result['requires_2fa']):
-            return response()->json([
+            $tfa = [
                 'next'=> '2FA_VERIFICATION', 
                 'challenge_token'=> $result['challenge_token'],
-                'id'=> $result['id'],
-            ],200);
+                'id'=> $result['id']
+            ];
+            return (new BaseResource(['tfa'=> $tfa]))->response()->setStatusCode(200);
         endif;
 
         $accessToken = $result['access_token'];
         $refreshToken = $result['refresh_token'];
         $user = $result['user'];
-        
-        $currentClientId = $user->last_active_client_id;
-        $slug = $user->getActiveClient($currentClientId)->slug;
-        // Log::info('Testing', ['T'=> $user->getActiveClient($currentClientId)]);
-        $user['redirect'] = "/$slug/dashboard";
 
         return $this->respondWithToken(
             $accessToken,
@@ -74,18 +71,7 @@ class AuthController extends Controller
         );
     }
 
-    public function me(Request $request): JsonResponse
-    {
-        // $clientId = $request->attributes->get('current_client_id');
-        // if($clientId):
-        //     $activeClient = $user->clients()->first();
-        //     $clientId = $activeClient?->id;
-        // endif;
-        // $this->systemRole->permissionResolver($request->user());
-        return (new UserResource($request->user()))->response()->setStatusCode(200);
-    }
-
-    public function respondWithToken(string $accessToken, string $refreshToken, $data = null): JsonResponse
+    public function respondWithToken(string $accessToken, string $refreshToken, User $user): JsonResponse
     {
         $refreshTokenCookie = cookie(
             $this->jwtService->refresh_token_key,
@@ -109,6 +95,6 @@ class AuthController extends Controller
             false, 
             'Strict'
         );
-        return (new BaseResource($data))->response()->setStatusCode(200)->withCookie($refreshTokenCookie)->withCookie($accessTokenCookie);
+        return (new AuthSuccessResource($user))->response()->setStatusCode(200)->withCookie($refreshTokenCookie)->withCookie($accessTokenCookie);
     }
 }

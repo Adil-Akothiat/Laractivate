@@ -13,7 +13,11 @@ export const WorkspacesList = ({ workspaces, currentClientId }: WorkspacesListPr
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedId = Number(e.target.value);
         if (selectedId !== currentClient?.id) {
-            mutate(selectedId);
+            mutate(selectedId, {
+                onSuccess: (res)=> {
+                    window.location.href = res.redirect_path;
+                }
+            });
         }
     };
     const options = workspaces.map(c => ({ value: c.id, label: c.slug }));

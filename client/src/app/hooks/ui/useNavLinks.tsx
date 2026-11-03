@@ -7,43 +7,43 @@ export const useNavLinks = ()=> {
     return [
         {
             section: "Overview",
-            show: canAny(APP_PERMISSIONS.dashboard),
+            show: canAny(APP_PERMISSIONS.clientDashboard),
             items: [
                 {
                     label: "Dashboard",
                     href: "/dashboard",
                     icon: <LayoutDashboard size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard),
+                    show: canAny(['all', 'client.dashboard.view']),
                 },
                 {
                     label: "Notifications",
                     href: "/notifications",
                     icon: <Bell size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard)
+                    show: canAny(APP_PERMISSIONS.clientDashboard)
                 },
             ],
         },
         {
             section: "Workspace",
-            show: canAny(APP_PERMISSIONS.dashboard),
+            show: canAny(APP_PERMISSIONS.clientDashboard),
             items: [
                 {
                     label: "Members",
                     href: "/members",
                     icon: <UserGroup size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard),
+                    show: canAny(APP_PERMISSIONS.clientDashboard),
                 },
                 {
                     label: "Workspaces",
                     href: "/workspaces",
                     icon: <Folder size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard)
+                    show: canAny(APP_PERMISSIONS.clientDashboard)
                 },
                 {
                     label: "Roles & Permissions",
                     href: "/roles-permissions",
                     icon: <Folder size={16} />,
-                    show: canAny(APP_PERMISSIONS.dashboard)
+                    show: canAny(APP_PERMISSIONS.clientDashboard)
                 },
             ],
         },

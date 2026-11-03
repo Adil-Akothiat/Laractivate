@@ -1,16 +1,16 @@
 import { api } from "@/app/services/api";
 import type { ApiResponseSchema } from "@/app/types";
-import { RegisterPayload } from "../types";
+import { LoginResponseSchema, LoginSuccessResponseSchema, RegisterPayload } from "../types";
 
 const BASE_ROUTE = "/auth";
 
 export const authApi = {
   // --- Core Authentication ---
   login: (email: string, password: string) =>
-    api.post(`${BASE_ROUTE}/login`, { email, password }),
+    api.post<ApiResponseSchema<LoginResponseSchema>>(`${BASE_ROUTE}/login`, { email, password }),
 
   register: (data: RegisterPayload) =>
-    api.post(`${BASE_ROUTE}/register`, data),
+    api.post<ApiResponseSchema<LoginSuccessResponseSchema>>(`${BASE_ROUTE}/register`, data),
 
   logout: () =>
     api.post(`${BASE_ROUTE}/logout`),
@@ -32,7 +32,7 @@ export const authApi = {
   // --- Multi-Factor Authentication ---
   twoFactor: {
     verify: (data: { code: string; token: string }) =>
-      api.post<ApiResponseSchema<null>>(
+      api.post<ApiResponseSchema<LoginSuccessResponseSchema>>(
         `${BASE_ROUTE}/two-factor/verify`,
         { code: data.code },
         {

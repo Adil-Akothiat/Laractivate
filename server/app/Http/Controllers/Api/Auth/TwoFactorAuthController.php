@@ -28,7 +28,6 @@ class TwoFactorAuthController extends Controller
         );
 
         // verifyAndAuthenticate(User $user, string $code, array $metadata)
-
         $result = $this->tfaService->verifyAndAuthenticate(
             $user, 
             $request->input('code'),
@@ -38,7 +37,7 @@ class TwoFactorAuthController extends Controller
         return $this->authController->respondWithToken(
             $result['access_token'],
             $result['refresh_token'],
-            $result['user']
+            $user
         );
     }
 }

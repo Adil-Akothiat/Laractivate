@@ -58,7 +58,7 @@ Route::middleware(['client.context', 'scope:client'])->prefix('workspace')->grou
     });
 
     // Roles
-
-    // Settings
     
+    // Settings
+
 });

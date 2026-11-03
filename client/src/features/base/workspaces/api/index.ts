@@ -10,5 +10,6 @@ export const workspaceApi = {
     const { data } = await api.get<ApiResponseSchema<[]>>(`${BASE_ROUTE}`);
     return data.data;
   },
-  create: async (name: string) => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}`, { name })
+  create: async (name: string) => api.post<ApiResponseSchema<[]>>(`${BASE_ROUTE}`, { name }),
+  verifySlug: async (slug: string)=> api.get<ApiResponseSchema<{verified:boolean}>>(`${BASE_ROUTE}/verify/${slug}`)
 }

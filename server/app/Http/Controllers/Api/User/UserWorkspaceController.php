@@ -47,7 +47,7 @@ class UserWorkspaceController extends Controller
             session(['current_client_id'=> $client->id]);
             session()->save();
             
-            return (new BaseResource([]))->withMessage('Switched active client successfully.')->response()->setStatusCode(201);
+            return (new BaseResource(['redirect_path'=> "/workspaces/$client->slug"]))->withMessage('Switched active client successfully.')->response()->setStatusCode(201);
     }
 
     public function store(Request $request): JsonResponse
@@ -80,5 +80,11 @@ class UserWorkspaceController extends Controller
             ->response()
             ->setStatusCode(201)
         ;
+    }
+
+    public function verifySlug(Request $request, string $slug): JsonResponse
+    {
+        $user = $request->user();
+        return (new BaseResource(['verified'=> $user->clients()->where('slug', $slug)->exists()]))->response()->setStatusCode(200);
     }
 }

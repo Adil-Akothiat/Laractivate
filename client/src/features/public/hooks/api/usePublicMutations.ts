@@ -6,7 +6,7 @@ export const useAuthMutations = {
     // --- Core Authentication ---
     login: ()=> useMutation({
       mutationFn: ({ email, password }: LoginPayload) =>
-        authApi.login(email, password),
+        authApi.login(email, password)
     }),
 
     register: ()=> useMutation({

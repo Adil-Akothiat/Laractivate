@@ -5,5 +5,6 @@ export interface WorkspaceSchema {
 }
 
 export interface SwitchWorkspaceResponseSchema {
-  active_workspace: WorkspaceSchema
+  active_workspace: WorkspaceSchema,
+  redirect_path: string;
 }

@@ -24,6 +24,7 @@ class RegisterController extends Controller
             $request->ip(),
             $request->header('Sec-CH-UA', '')
         );
+        
         $result = $this->registerService->register($request->validated(), $metadata);
         return $this->auth->respondWithToken(
             $result['access_token'],

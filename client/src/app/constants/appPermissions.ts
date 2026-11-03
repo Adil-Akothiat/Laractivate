@@ -1,5 +1,5 @@
 export const APP_PERMISSIONS = {
-    dashboard: ["all", "dashboard.view"],
+    clientDashboard: ["all", "client.dashboard.view"],
     accounts: [
         "all",
         "accounts.manage",

@@ -17,7 +17,7 @@ class PlanController extends Controller
     /**
      * Public Route: Fetch plans for marketing/landing pages before authentication.
      */
-    public function index(): JsonResponse
+    public function publicIndex(): JsonResponse
     {
         // Return clean, public-facing data structures
         try {
@@ -31,7 +31,7 @@ class PlanController extends Controller
     /**
      * Protected Route: Fetch billing plans inside the workspace dashboard context.
      */
-    public function userPricing(): JsonResponse
+    public function index(): JsonResponse
     {
         $userPlans = $this->planService->getUserPlans();
         return (new BaseResource($userPlans))->response()->setStatusCode(200);

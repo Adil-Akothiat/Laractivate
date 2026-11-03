@@ -133,8 +133,7 @@ class TwoFactorAuthService
 
         return [
             'access_token' => $token,
-            'refresh_token' => $refreshTokenArray['token'],
-            'user' => $user
+            'refresh_token' => $refreshTokenArray['token']
         ];
     }
 }

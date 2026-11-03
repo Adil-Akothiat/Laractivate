@@ -33,11 +33,10 @@ class RegistrationService
             event(new Registered($user));
             $this->notification->welcome($user, "Welcome {$user->full_name}!", 'Check out your dashboard');
             $this->notification->emailVerification($user, 'Email verification', 'Please verify your mail address!');
-
             return [
                 'access_token'=> $token,
                 'refresh_token'=> $refreshToken,
-                'user'=> $user
+                'user' => $user
             ];
         });
     }

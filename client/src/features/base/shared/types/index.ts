@@ -47,6 +47,7 @@ export interface UserSchema extends UserBaseSchema {
   two_factor_secret: string | null;
   two_factor_enabled: boolean;
   two_factor_recovery_codes: string[] | [];
+  last_active_client_id?: string | null;
   rbac: {
     system_roles: RoleSchema[],
     client_role: RoleSchema,

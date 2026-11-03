@@ -7,7 +7,7 @@ import OtpInput from '@/features/base/shared/components/2FA/OtpInput';
 
 interface Props {
     token: string;
-    onSuccess: () => void;
+    onSuccess: (redirectPath:string) => void;
     onCancel: () => void;
 }
 
@@ -47,9 +47,9 @@ const TwoFactorDialog = ({ onSuccess, onCancel, token }: Props) => {
                 token: token // This token will map cleanly to the HTTP Bearer Authorization header
             }, 
             { 
-                onSuccess: () => {
+                onSuccess: (res) => {
                     toast.success('Successfully authenticated!');
-                    onSuccess();
+                    onSuccess(res?.data.data.redirect_path);
                 },
                 onError: (err: any) => {
                     // Pulls backend error validation payload or defaults to global message
