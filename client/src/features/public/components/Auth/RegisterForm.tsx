@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
 import { useAuthMutations } from "../../hooks/api/usePublicMutations";
 
 export default function RegisterForm() {
+    const navigate = useNavigate();
     const { mutate, isPending, isError, error } = useAuthMutations.register();
     const [form, setForm] = useState({
         firstName:                 "",
@@ -30,7 +31,7 @@ export default function RegisterForm() {
             },
             {
                 onSuccess: (res) => {
-                    window.location.href = res.data.data.redirect_path
+                    navigate(res.data.data.redirect_path);
                 },
             },
         );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
 import { FormControl } from "@/components/FormControls";
@@ -8,6 +8,7 @@ import { useAuthMutations } from "../../hooks/api/usePublicMutations";
 
 export default function LoginForm() {
     const { mutate, isPending, isError, error } = useAuthMutations.login();
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -31,7 +32,7 @@ export default function LoginForm() {
                         setForm((prev) => ({ ...prev, show2FA: true, userId: id, token: challenge_token }));
                         return;
                     }
-                    window.location.href = data.redirect_path;
+                    navigate(data.redirect_path);
                 },
             },
         );
@@ -42,7 +43,9 @@ export default function LoginForm() {
             {form.show2FA && (
                 <TwoFactorDialog
                     token={form.token}
-                    onSuccess={(redirectPath) => (window.location.href = redirectPath)}
+                    onSuccess={(redirectPath) => {
+                        navigate(redirectPath);
+                    }}
                     onCancel={() => setValue("show2FA", false)}
                 />
             )}

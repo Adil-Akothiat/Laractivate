@@ -1,67 +1,56 @@
-import { APP_PERMISSIONS } from "@/app/constants/appPermissions";
 import { useCan } from "./useCan";
 import { Bell, Folder, LayoutDashboard, Settings, UserGroup, UserKey, Users } from "lucide-react";
+import { system, client } from "@/app/config/permissions.json";
 
 export const useNavLinks = ()=> {
-    const { canAny } = useCan();
+    const { canAny, can } = useCan();
+    const workspaceSlug = window.localStorage.getItem('workspace_slug') ?? 'any';
     return [
         {
-            section: "Overview",
-            show: canAny(APP_PERMISSIONS.clientDashboard),
+            section: "Workspace",
+            show: canAny(client.all),
             items: [
                 {
                     label: "Dashboard",
-                    href: "/dashboard",
+                    href: `/${workspaceSlug}/dashboard`,
                     icon: <LayoutDashboard size={16} />,
-                    show: canAny(['all', 'client.dashboard.view']),
+                    show: can(client.dashboard.view),
                 },
-                {
-                    label: "Notifications",
-                    href: "/notifications",
-                    icon: <Bell size={16} />,
-                    show: canAny(APP_PERMISSIONS.clientDashboard)
-                },
-            ],
-        },
-        {
-            section: "Workspace",
-            show: canAny(APP_PERMISSIONS.clientDashboard),
-            items: [
                 {
                     label: "Members",
-                    href: "/members",
+                    href: `/${workspaceSlug}/members`,
                     icon: <UserGroup size={16} />,
-                    show: canAny(APP_PERMISSIONS.clientDashboard),
+                    show: canAny([client.members.view, client.members.manage]),
                 },
                 {
                     label: "Workspaces",
                     href: "/workspaces",
                     icon: <Folder size={16} />,
-                    show: canAny(APP_PERMISSIONS.clientDashboard)
+                    show: canAny([client.workspaces.view, client.workspaces.manage])
                 },
                 {
                     label: "Roles & Permissions",
-                    href: "/roles-permissions",
+                    href: `${workspaceSlug}/roles-permissions`,
                     icon: <Folder size={16} />,
-                    show: canAny(APP_PERMISSIONS.clientDashboard)
+                    show: canAny([client.roles.view, client.roles.manage])
                 },
             ],
         },
         {
             section: "System",
-            show: canAny(['all']),
+            show: canAny(system.all),
             items: [
                 { 
                     label: "Accounts", 
                     href: "/accounts", 
                     icon: <Users size={16} />,
-                    show: canAny(APP_PERMISSIONS.accounts) 
+                    show: canAny([system.accounts.view, system.accounts.manage]) 
                 },
                 { 
                     label: "System Roles", 
                     href: "/roles-permissions", 
                     icon: <UserKey size={16} />,
-                    show: canAny(APP_PERMISSIONS.roles)
+                    show: canAny([system.roles.view, system.roles.manage])
                 },
             ],
         },
@@ -74,8 +63,14 @@ export const useNavLinks = ()=> {
                     href: "/settings",
                     icon: <Settings size={16} />,
                     show: true,
-                }
-            ],
+                },
+                {
+                    label: "Notifications",
+                    href: "/notifications",
+                    icon: <Bell size={16} />,
+                    show: true
+                },
+            ]
         },
     ];
 }

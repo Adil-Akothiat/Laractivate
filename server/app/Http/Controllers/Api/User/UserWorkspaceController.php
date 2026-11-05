@@ -47,7 +47,7 @@ class UserWorkspaceController extends Controller
             session(['current_client_id'=> $client->id]);
             session()->save();
             
-            return (new BaseResource(['redirect_path'=> "/workspaces/$client->slug"]))->withMessage('Switched active client successfully.')->response()->setStatusCode(201);
+            return (new BaseResource(['redirect_path'=> "/$client->slug/dashboard"]))->withMessage('Switched active client successfully.')->response()->setStatusCode(201);
     }
 
     public function store(Request $request): JsonResponse

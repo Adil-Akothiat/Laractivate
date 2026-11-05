@@ -2,7 +2,7 @@ import { api } from '@/app/services/api';
 import { ApiResponseSchema, PaginatedResponseSchema } from '@/app/types';
 import { FilterMembersParams, InviteMemberPayload, MemberSchema } from '../types';
 
-const BASE_ROUTE = '/user/workspace/members';
+const BASE_ROUTE = '/workspace/members';
 
 export const memberApi = {
   // --- Core CRUD ---

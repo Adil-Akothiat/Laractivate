@@ -1,0 +1,67 @@
+{
+    "global": {
+        "all": "all"
+    },
+    "system": {
+        "all":[
+            "system.dashboard.view",
+            "system.accounts.view",
+            "system.accounts.manage",
+            "system.roles.view",
+            "system.roles.manage",
+            "system.configure",
+            "system.notifications.manage"
+        ],
+        "dashboard": {
+            "view": "system.dashboard.view"
+        },
+        "accounts": {
+            "view": "system.accounts.view",
+            "manage": "system.accounts.manage"
+        },
+        "roles": {
+            "view": "system.roles.view",
+            "manage": "system.roles.manage"
+        },
+        "configure": "system.configure",
+        "notifications": {
+            "manage": "system.notifications.manage"
+        }
+    },
+    "client": {
+        "all": [
+            "client.dashboard.view",
+            "client.workspaces.view",
+            "client.workspaces.manage",
+            "client.members.view",
+            "client.members.manage",
+            "client.roles.view",
+            "client.roles.manage",
+            "client.billing.view",
+            "client.billing.manage",
+            "client.logs.view"
+        ],
+        "dashboard": {
+            "view": "client.dashboard.view"
+        },
+        "workspaces": {
+            "view": "client.workspaces.view",
+            "manage": "client.workspaces.manage"
+        },
+        "members": {
+            "view": "client.members.view",
+            "manage": "client.members.manage"
+        },
+        "roles": {
+            "view": "client.roles.view",
+            "manage": "client.roles.manage"
+        },
+        "billing": {
+            "view": "client.billing.view",
+            "manage": "client.billing.manage"
+        },
+        "logs": {
+            "view": "client.logs.view"
+        }
+    }
+}

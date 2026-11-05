@@ -24,7 +24,7 @@ export const billingApi = {
    * Fetch public config-driven plans configuration listing matrix
    */
   listPricing: () => 
-    api.get<ApiResponseSchema<PlanSchema[]>>('/pricing'),
+    api.get<ApiResponseSchema<PlanSchema[]>>('/public/pricing'),
   
   listUserPricing: () => 
     api.get<ApiResponseSchema<UserPlanSchemaResponse>>(`${BASE_ROUTE}/pricing`),

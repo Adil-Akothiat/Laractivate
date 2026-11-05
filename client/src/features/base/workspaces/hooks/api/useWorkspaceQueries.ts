@@ -9,7 +9,7 @@ export const useWorkspacesQueries = {
   }),
   verifySlug: (slug: string)=> useQuery({
     queryKey: clientKeys.slug(slug),
-    queryFn: ()=> workspaceApi.verifySlug.call(this, slug),
+    queryFn: ()=> workspaceApi.verifySlug(slug),
     select: (res)=> res?.data?.data 
   })
 

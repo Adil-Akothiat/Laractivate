@@ -22,7 +22,7 @@ class AuthSuccessResource extends JsonResource
         ]);
 
         return [
-            'redirect_path'=> "/workspaces/$slug"
+            'redirect_path'=> "/$slug/dashboard"
         ];
     }
 }

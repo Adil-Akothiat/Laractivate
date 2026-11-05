@@ -1,13 +1,14 @@
 import { Select } from "@/components";
 import { WorkspaceSchema } from "../types";
 import { useWorkspacesMutations } from "../hooks/api/useWorkspaceMutations";
+import { useNavigate } from "react-router-dom";
 
 type WorkspacesListProps = {
     workspaces: WorkspaceSchema[],
     currentClientId: number | null
 }
 export const WorkspacesList = ({ workspaces, currentClientId }: WorkspacesListProps) => {
-
+    const navigate = useNavigate();
     const { mutate, isPending } = useWorkspacesMutations.switch();
     const currentClient = workspaces.find((c) => c.id === currentClientId) || workspaces[0];
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -15,7 +16,7 @@ export const WorkspacesList = ({ workspaces, currentClientId }: WorkspacesListPr
         if (selectedId !== currentClient?.id) {
             mutate(selectedId, {
                 onSuccess: (res)=> {
-                    window.location.href = res.redirect_path;
+                    navigate(res.redirect_path);
                 }
             });
         }

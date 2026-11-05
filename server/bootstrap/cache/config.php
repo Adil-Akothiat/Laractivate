@@ -960,47 +960,61 @@
       ),
       9 => 
       array (
-        'name' => 'client.accounts.view',
+        'name' => 'client.workspaces.view',
         'group' => 'User Management',
         'scope' => 'client',
         'is_locked' => false,
       ),
       10 => 
       array (
-        'name' => 'client.accounts.manage',
+        'name' => 'client.workspaces.manage',
         'group' => 'User Management',
         'scope' => 'client',
         'is_locked' => false,
       ),
       11 => 
       array (
+        'name' => 'client.members.view',
+        'group' => 'Members Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      12 => 
+      array (
+        'name' => 'client.members.manage',
+        'group' => 'Members Management',
+        'scope' => 'client',
+        'is_locked' => false,
+      ),
+      13 => 
+      array (
         'name' => 'client.logs.view',
         'group' => 'User Management',
         'scope' => 'client',
         'is_locked' => false,
       ),
-      12 => 
+      14 => 
       array (
         'name' => 'client.roles.view',
         'group' => 'Security',
         'scope' => 'client',
         'is_locked' => false,
       ),
-      13 => 
+      15 => 
       array (
         'name' => 'client.roles.manage',
         'group' => 'Security',
         'scope' => 'client',
         'is_locked' => false,
       ),
-      14 => 
+      16 => 
       array (
         'name' => 'client.billing.view',
         'group' => 'Billing',
         'scope' => 'client',
         'is_locked' => false,
       ),
-      15 => 
+      17 => 
       array (
         'name' => 'client.billing.manage',
         'group' => 'Billing',
@@ -1028,13 +1042,15 @@
         'permissions' => 
         array (
           0 => 'client.dashboard.view',
-          1 => 'client.accounts.view',
-          2 => 'client.accounts.manage',
-          3 => 'client.roles.view',
-          4 => 'client.roles.manage',
-          5 => 'client.logs.view',
-          6 => 'client.billing.view',
-          7 => 'client.billing.manage',
+          1 => 'client.workspaces.view',
+          2 => 'client.workspaces.manage',
+          3 => 'client.members.view',
+          4 => 'client.members.manage',
+          5 => 'client.roles.view',
+          6 => 'client.roles.manage',
+          7 => 'client.logs.view',
+          8 => 'client.billing.view',
+          9 => 'client.billing.manage',
         ),
       ),
       2 => 
