@@ -1,6 +1,6 @@
 import { api } from '@/app/services/api';
 import type { ApiResponseSchema, ResourceSchema } from '@/app/types';
-import type { UserSchema } from '@/features/base/shared';
+import type { UserSchema } from '@/features/shared';
 
 export const authCoreApi = {
   /**

@@ -24,13 +24,25 @@ class InvitationController extends Controller
 
     }
 
+    public function isValidToken(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'token'=> ['required', 'string']
+        ]);
+        $invitation = ClientInvitation::where('token', $validated['token'])->first();
+        if(!$invitation || $invitation->accepted_at || $invitation->declined_at || $invitation->isExpired()):
+            return (new BaseResource(['valid'=> false]))->withMessage('This invitation is invalid or has expired.')->response()->setStatusCode(422);
+        endif;
+
+        return (new BaseResource(['valid'=> true]))->response()->setStatusCode(200);
+    }
+
     public function accept(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'token'=> ['required', 'string']
         ]);
         $invitation = ClientInvitation::where('token', $validated['token'])->first();
-        
         if (!$invitation || $invitation->accepted_at || $invitation->isExpired()) {
             return (new BaseResource([]))
                 ->withMessage('This invitation is invalid or has expired.')
@@ -46,11 +58,12 @@ class InvitationController extends Controller
 
         DB::transaction(function () use ($user, $invitation) {
             $user->clients()->syncWithoutDetaching([
-                $invitation->client_id => ['role'=> 'member']
+                $invitation->client_id => [
+                    'role_id'=> $invitation->role_id
+                ]
             ]);
 
             $user->roles()->syncWithoutDetaching([$invitation->role_id]);
-
             $invitation->update(['accepted_at'=> now()]);
         });
 

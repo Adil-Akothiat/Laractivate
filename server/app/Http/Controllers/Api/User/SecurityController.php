@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Security\SessionCollection;
+use App\Http\Resources\System\ActivityLogCollection;
 use App\Http\Resources\System\BaseResource;
 use App\Services\Auth\{ JwtService, TwoFactorAuthService };
+use App\Services\System\SystemActivityLogService;
 use App\Services\User\UserService;
 use App\Services\User\UserSessionService;
 use Illuminate\Http\{Request, JsonResponse};
@@ -17,7 +19,8 @@ class SecurityController extends Controller
         protected JwtService $jwtService,
         protected UserService $userService,
         protected TwoFactorAuthService $tfaService,
-        protected UserSessionService $userSession
+        protected UserSessionService $userSession,
+        protected SystemActivityLogService $activityLogService
     ) {}
 
     public function changePassword(Request $request):JsonResponse
@@ -126,6 +129,15 @@ class SecurityController extends Controller
         return response()->json(['message' => 'History cleared successfully!']);
     }
 
+    public function getActivityLogs(Request $request)
+    {
+        $logs = $this->activityLogService->getActivities(
+            $request->user(), 
+            $request->all()
+        );
+        return new ActivityLogCollection($logs);
+    }
+
     // billing
     // public function invoicesHistory(Request $request)
     // {
@@ -138,4 +150,16 @@ class SecurityController extends Controller
 
     //     return new InvoiceCollection($invoices);
     // }
+
+    public function deactivateUser(Request $request)
+    {
+        $request->validate(['password' => 'required|string']);
+
+        $this->userService->deactivate(
+            $request->user(),
+            $request->password
+        );
+
+        return response()->json(['message' => 'Account deactivated successfully.'], 200);
+    }
 }

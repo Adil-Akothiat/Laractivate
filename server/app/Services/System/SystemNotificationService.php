@@ -17,14 +17,14 @@ class SystemNotificationService
             'message' => $message,
             'url'     => $url,
             'type'    => 'success',
-            'icon'    => 'check' // Matches your React iconMap
+            'icon'    => 'check'
         ]);
     }
 
     /**
      * Send a security or warning alert
      */
-    public function security(User $user, string $title, string $message, string $url='/settings/activity-logs'): void
+    public function security(User $user, string $title, string $message, string $url='/settings/security/activity-logs'): void
     {
         $this->send($user, [
             'title'   => $title,
@@ -61,7 +61,7 @@ class SystemNotificationService
         $this->send($user, [
             'title'   => $title,
             'message' => $message,
-            'url'     => '/workspace/dashboard',
+            'url'     => '/workspaces',
             'type'    => 'success',
             'icon'    => 'user-plus' // Matches your React iconMap
         ]);

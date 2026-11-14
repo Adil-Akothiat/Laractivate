@@ -67,7 +67,7 @@ class UserObserver
                 $user->id
             );
             // notify
-            $notificationService->security(
+            $this->notificationService->security(
                 $user,
                 'Password changed!',
                 'Your password was successfully updated. If this wasn’t you, please secure your account immediately.'
@@ -86,11 +86,11 @@ class UserObserver
                 $user->id
             );
             // notify
-            $notificationService->success(
+            $this->notificationService->success(
                 $user,
                 'Account Information Changed',
                 "We noticed a change to your account details. If this wasn't you, please review your security settings.",
-                '/settings/activity-logs'
+                '/settings/security/activity-logs'
             );
         }
 
@@ -105,7 +105,7 @@ class UserObserver
                 $user->id
             );
             // notify
-            $notificationService->security(
+            $this->notificationService->security(
                 $user,
                 'Security Alert: Two-Factor Authentication '.ucfirst($enableOrDisable),
                 'Two-factor authentication has been successfully '. $enableOrDisable .' on your account. If this wasn’t you, please secure your account immediately.'

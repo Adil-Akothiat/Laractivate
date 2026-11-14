@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { DataLoader } from "@/components/Loaders/DataLoader";
+import { LogoutModal } from "@/features/auth/logout";
 import { X } from "lucide-react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { Modal } from "@/components";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useMe } from "../hooks";
 import PageHeader from "./components/PageHeader";
 import SidebarContent from "./components/SidebarContent";
-import { useToastContext } from "../hooks/common";
-import { getErrorsMessagesStr } from "../utils/errorsHandling";
-import { useMe } from "../hooks";
-import { DataLoader } from "@/components/Loaders/DataLoader";
-import { useAuthMutations } from "@/features/public/hooks/api/usePublicMutations";
 
 const ISDEVELOPMENT = import.meta.env.DEV;
 const BACKENDURL = import.meta.env.VITE_PUBLIC_API || 'http://localhost:8000';
@@ -16,19 +13,7 @@ const BACKENDURL = import.meta.env.VITE_PUBLIC_API || 'http://localhost:8000';
 export default function Sidebar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const query = useMe();
-  const { mutate, isPending } = useAuthMutations.logout();
-  const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const { toast } = useToastContext();
-
-  const handleLogout = () => {
-    mutate(undefined, {
-      onSuccess: () => navigate("/login"),
-      onError: (err: any) => {
-        toast.error(getErrorsMessagesStr(err));
-      },
-    });
-  };
 
   return (
     <DataLoader query={query}>
@@ -65,17 +50,7 @@ export default function Sidebar() {
               <SidebarContent />
             </aside>
             <div className="flex-1 flex flex-col min-w-0">
-              <Modal
-                isOpen={isLogoutModalOpen}
-                title="Confirm Logout"
-                onConfirm={handleLogout}
-                onClose={() => setIsLogoutModalOpen(false)}
-                confirmText="Logout"
-                cancelText="Cancel"
-                isConfirming={isPending}
-              >
-                <p>Are you sure you want to log out?</p>
-              </Modal>
+              <LogoutModal isOpen={isLogoutModalOpen} setIsOpen={setIsLogoutModalOpen} />
               <PageHeader
                 setDrawerOpen={(open) => setDrawerOpen(open)}
                 setIsLogoutModalOpen={(open) => setIsLogoutModalOpen(open)}
@@ -84,9 +59,9 @@ export default function Sidebar() {
               <main className="flex-1">
                 <div>
                   {ISDEVELOPMENT && (
-                    <a 
-                      href={`${BACKENDURL}/telescope`} 
-                      target="_blank" 
+                    <a
+                      href={`${BACKENDURL}/telescope`}
+                      target="_blank"
                       rel="noopener noreferrer"
                       style={{ zIndex: 9999 }}
                       className="fixed bottom-5 right-5 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs px-3 py-2 rounded-full shadow-2xl transition-all duration-200 hover:scale-105"

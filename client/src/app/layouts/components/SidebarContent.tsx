@@ -1,7 +1,7 @@
+import { useNavLinks } from "@/app/hooks/ui/useNavLinks";
+import { WorkspacesManager } from "@/features/workspace/manageWorkspaces/components/Manage";
 import { ShieldIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useNavLinks } from "@/app/hooks/ui/useNavLinks";
-import { WorkspacesManager } from "@/features/base/workspaces/components/Manage";
 
 export default function SidebarContent() {
     const navLinks = useNavLinks();

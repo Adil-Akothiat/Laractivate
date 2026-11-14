@@ -26,9 +26,10 @@ class MembersController extends Controller
                 ->response()->setStatusCode(400);
         }
         $client = Client::findOrFail($currentClientId);
-    
+        
         $clientInvitations = $client->clientInvitations;
         // Scope users strictly to the active workspace
+        Log::info('Clients', ['clts'=> $client]);
         $members = $client->users()
             ->select('users.*')
             ->selectRaw('users.id = ? as is_owner', [$client->owner_id])
@@ -53,12 +54,6 @@ class MembersController extends Controller
 
         // Eager load relations for performance
         $members->load(['roles.permissions']);
-
-        Log::info('data', [
-            'members'=> $client->users,
-            'invitations' => $clientInvitations
-        ]);
-
         return (new MemberCollection($members))->additional([
             'invitations'=> $clientInvitations
         ]);
@@ -69,7 +64,7 @@ class MembersController extends Controller
     public function invite(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email'=> ['required', 'email'],
+            'email'=> ['required', 'email', 'exists:users,email'],
             'role_id'=> ['required', 'exists:roles,id']
         ]);
 
@@ -77,11 +72,6 @@ class MembersController extends Controller
         $client = Client::findOrFail($currentClientId);
         $user = $request->user();
 
-        $exitingMember = $client->users()->where('email', $validated['email'])->exists();
-        if($exitingMember):
-            return (new BaseResource([]))
-                ->withMessage('This user is already a member of this workspace.')->response()->setStatusCode(422);
-        endif;
         $invitation = ClientInvitation::updateOrCreate(
             [
                 'client_id'=> $client->id,
@@ -95,7 +85,7 @@ class MembersController extends Controller
                 'accepted_at'=> null
             ]
         );
-        $acceptUrl = config('app.frontend_url') . '/invitations/accept?token=' . $invitation->token;
+        $acceptUrl = config('app.frontend_url') . '/invitations/process?token=' . $invitation->token;
 
         // send notification
         Notification::route('mail', $invitation->email)

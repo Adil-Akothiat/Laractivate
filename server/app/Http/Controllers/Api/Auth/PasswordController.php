@@ -22,7 +22,7 @@ class PasswordController extends Controller
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $result = $this->passwordService->resetPassword($request->validated());
-        return (new BaseResource($result))->response()->setStatusCode(200);
+        return (new BaseResource())->withMessage('Process done!')->response()->setStatusCode(200);
     }
 
     public function validateToken(Request $request): JsonResponse

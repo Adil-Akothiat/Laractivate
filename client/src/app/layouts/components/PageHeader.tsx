@@ -1,16 +1,16 @@
+import type { UserSchema } from "@/features/shared/types";
+import NotificationBell from "@/features/user/manageNotifications/components/NotificationBell";
 import { Menu, ShieldIcon } from "lucide-react";
-import { ProfileDropdown } from "./ProfileDropdown";
-import { imageRender } from "../../utils/imagePreviewHandler";
 import { useNavigate } from "react-router-dom";
-import type { UserSchema } from "@/features/base/shared/types";
-import NotificationBell from "@/features/base/notifications/components/NotificationBell";
+import { imageRender } from "../../utils/imagePreviewHandler";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 type Props = {
-    setDrawerOpen:(open:boolean)=>void;
-    setIsLogoutModalOpen:(open:boolean)=>void;
-    user:UserSchema;
+    setDrawerOpen: (open: boolean) => void;
+    setIsLogoutModalOpen: (open: boolean) => void;
+    user: UserSchema;
 }
-export default function PageHeader({ setDrawerOpen, setIsLogoutModalOpen, user }:Props) {
+export default function PageHeader({ setDrawerOpen, setIsLogoutModalOpen, user }: Props) {
     const navigate = useNavigate();
     return (
         <div className="flex items-center justify-between md:justify-end gap-3 px-4 py-3 bg-base-100 border-b border-base-300 sticky top-0 z-30">

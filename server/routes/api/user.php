@@ -16,12 +16,8 @@ Route::prefix('user')->group(function(){
             ->name('user.profile.show');
         Route::put('/', [ProfileController::class, 'update'])
             ->name('user.profile.update');
-        Route::delete('/', [ProfileController::class, 'destroy'])
-            ->name('user.profile.destroy');
         Route::put('/update-avatar', [ProfileController::class, 'updateAvatar'])
             ->name('user.profile.updateAvatar');
-        Route::post('/deactivate', [ProfileController::class, 'deactivate'])
-            ->name('user.profile.deactivate');
     });
 
     // Security
@@ -39,7 +35,7 @@ Route::prefix('user')->group(function(){
         });
 
         // activity logs
-        Route::get('/activity-logs', [SecurityController::class, 'activityLogs'])
+        Route::get('/activity-logs', [SecurityController::class, 'getActivityLogs'])
             ->name('user.security.activityLogs');;
         // Password Management
         Route::patch('/password', [SecurityController::class, 'changePassword'])
@@ -56,6 +52,10 @@ Route::prefix('user')->group(function(){
             Route::post('/regenerate-codes', [SecurityController::class, 'regenerateCodes'])
                 ->name('user.security.tfa.regenerateCodes');
         });
+
+        // danger zone
+        Route::post('/deactivate', [SecurityController::class, 'deactivateUser'])
+            ->name('user.profile.deactivate');
     });
 
     // user workspace
@@ -74,10 +74,12 @@ Route::prefix('user')->group(function(){
     Route::prefix('invitations')->group(function () {
         Route::get('/', [InvitationController::class, 'index'])
             ->name('user.invitations.index');
-        Route::post('/{id}/accept', [InvitationController::class, 'accept'])
+        Route::post('/accept', [InvitationController::class, 'accept'])
             ->name('user.invitations.accept');
-        Route::delete('/{id}/decline', [InvitationController::class, 'decline'])
+        Route::delete('/decline', [InvitationController::class, 'decline'])
             ->name('user.invitations.decline');
+        Route::get('/is-valid-token', [InvitationController::class, 'isValidToken'])
+            ->name('user.invitations.isValidToken');
     });
 
     // Notifications    

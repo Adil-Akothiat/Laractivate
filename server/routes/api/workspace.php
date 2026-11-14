@@ -14,7 +14,6 @@ Route::middleware(['client.context', 'scope:client'])->prefix('workspace')->grou
 
     // Billing
     Route::prefix('billing')->group(function () {
-        
         // 1. Plans & Pricing
         Route::get('/pricing', [PlanController::class, 'userPricing']);
 

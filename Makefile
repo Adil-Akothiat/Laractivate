@@ -63,6 +63,8 @@ run:
 
 client:
 	@$(COMPOSE) exec client $(ARGS)
+barrel:
+	@$(COMPOSE) exec client npx barrelsby --directory "$(or $(dir),./src)" $(or $(flags),--local)
 
 db-shell:
 	@$(COMPOSE) exec $(if $(filter app,$(c)),db,$(c)) mysql -u root -p$(ARGS)

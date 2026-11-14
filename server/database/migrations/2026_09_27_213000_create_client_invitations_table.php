@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('token', 64)->unique();
             $table->timestamp('expires_at');
             $table->timestamp('accepted_at')->nullable();
+            $table->timestamp('declined_at')->nullable();
             $table->uuid('invited_by');
             $table->timestamps();
 

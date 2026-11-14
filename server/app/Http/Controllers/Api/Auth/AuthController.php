@@ -11,7 +11,6 @@ use App\Services\Auth\{AuthService, JwtService};
 use App\Services\System\SystemRoleService;
 use App\Support\DeviceDetector;
 use Illuminate\Http\{Request, JsonResponse};
-// use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -62,7 +61,9 @@ class AuthController extends Controller
     public function refreshToken(Request $request): JsonResponse
     {
         $refreshToken = $request->cookie($this->jwtService->refresh_token_key);
-        
+        if(!$refreshToken):
+            return (new BaseResource([]))->withMessage('Unauthorized')->response()->setStatusCode(401);
+        endif;
         $result = $this->jwtService->refresh($refreshToken);
         return $this->respondWithToken(
             $result['access_token'],

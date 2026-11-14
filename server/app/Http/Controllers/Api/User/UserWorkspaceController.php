@@ -8,6 +8,7 @@ use App\Models\{ Client, Role };
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserWorkspaceController extends Controller
@@ -85,6 +86,12 @@ class UserWorkspaceController extends Controller
     public function verifySlug(Request $request, string $slug): JsonResponse
     {
         $user = $request->user();
-        return (new BaseResource(['verified'=> $user->clients()->where('slug', $slug)->exists()]))->response()->setStatusCode(200);
+        $verified = $user->clients()->where('slug', $slug)->exists();
+        if(!$verified):
+            $first_client_slug = $user->clients()->first()?->slug ?? false;
+            $redirect_path = $first_client_slug ? "/$first_client_slug/dashboard" : '/workspaces';
+            return (new BaseResource([ 'verified'=>false, 'redirect_path'=> $redirect_path ]))->response()->setStatusCode(200);
+        endif;
+        return (new BaseResource(['verified'=> true]))->response()->setStatusCode(200);
     }
 }

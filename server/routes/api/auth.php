@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\Auth\{
 };
 
 Route::prefix('auth')->group(function () {
-    
     // ----------------------------------------------------
     // 1. Public Routes (Accessible without authentication)
     // ----------------------------------------------------
@@ -20,7 +19,6 @@ Route::prefix('auth')->group(function () {
         ->middleware(['throttle:5000,1']);
     
     Route::middleware(['auth:api', 'check.revocation'])->post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-         
     Route::post('/forgot-password', [PasswordController::class, 'forgotPassword'])
         ->name('auth.forgotPassword');
     Route::post('/reset-password', [PasswordController::class, 'resetPassword'])

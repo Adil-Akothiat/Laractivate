@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Billable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -185,11 +185,10 @@ class User extends Authenticatable implements JWTSubject
         $membership = $this->clients()
             ->where('clients.id', $clientId)
             ->first();
-
         if (!$membership || !$membership->pivot->role_id) {
             return false;
         }
-        Log::info('members pivot table', [ 'role_id'=> $membership->pivot->role_id ]);
+        // Log::info('members pivot table', [ 'role_id'=> $membership->pivot->role_id ]);
         return Role::where('id', $membership->pivot->role_id)
             ->whereHas('permissions', fn($q) => $q->where('name', $permission))
             ->exists();

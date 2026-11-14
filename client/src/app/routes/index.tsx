@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthGuard from "../guards/AuthGuard";
 import { useToastContext } from "../hooks/common";
-import PublicRoutes from "./public";
-import AuthGuard from "../middlewares/AuthGuard";
 import Sidebar from "../layouts/Sidebar";
-import UserRoutes from "./user";
+import AuthRoutes from "./auth";
+import PublicRoutes from "./public";
 import SystemRoutes from "./system";
+import UserRoutes from "./user";
 import WorkspacesRoutes from "./workspaces";
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {PublicRoutes()}
+                {AuthRoutes()}
                 <Route element={<AuthGuard />}>
                     <Route element={<Sidebar />}>
                         {UserRoutes()}

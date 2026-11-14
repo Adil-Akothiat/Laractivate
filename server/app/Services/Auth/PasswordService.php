@@ -67,7 +67,7 @@ class PasswordService
         return ['token' => $token];
     }
 
-    public function resetPassword(array $credentials): array
+    public function resetPassword(array $credentials): void
     {
         $email = $credentials['email'];
         $token = $credentials['token'];
@@ -95,7 +95,6 @@ class PasswordService
             ->where('email', $email)
             ->delete();
         $this->jwtService->invalidateUserTokens($user->id);
-        return ['message' => 'Password has been reset'];
     }
 
     public function isResetTokenValid(string $email, string $token): bool

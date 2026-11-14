@@ -23,7 +23,6 @@ class TwoFactorAuthService
     public function initializeSetup(User $user): string
     {
         $secret = $this->google2fa->generateSecretKey();
-
         $user->update([
             'two_factor_secret' => encrypt($secret),
         ]);
