@@ -1,6 +1,6 @@
 import { api } from '@/app/services/api';
-import type { ApiResponseSchema, ResourceSchema } from '@/app/types';
-import type { UserSchema } from '@/features/shared';
+import type { ApiResponseSchema } from '@/app/types';
+import { UserSchema } from '@/entities';
 
 export const authCoreApi = {
   /**
@@ -8,7 +8,7 @@ export const authCoreApi = {
    * Consumed globally by layout shells, sidebars, and route guards.
    */
   getMe: () =>
-    api.get<ResourceSchema<UserSchema>>('/user').then((res) => res.data),
+    api.get<ApiResponseSchema<UserSchema>>('/user').then((res) => res.data),
 
   /**
    * Validates a password reset token from URL parameters.

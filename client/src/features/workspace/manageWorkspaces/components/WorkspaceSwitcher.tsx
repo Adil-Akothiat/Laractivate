@@ -1,7 +1,7 @@
-import { DataLoader } from '@/components/Loaders/DataLoader';
+import { DataLoader } from '@/components/ui/feedback/DataLoader';
 import React from 'react';
-import { WorkspacesList } from './WorkspacesList';
 import { useWorkspacesQueries } from '../hooks/api/useWorkspaceQueries';
+import { WorkspacesList } from './WorkspacesList';
 
 export const WorkspaceSwitcher: React.FC = () => {
     const query = useWorkspacesQueries.list();

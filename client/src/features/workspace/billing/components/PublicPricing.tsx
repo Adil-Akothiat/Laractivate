@@ -1,4 +1,4 @@
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { usePricingQuery } from "@/features/workspace/billing/hooks/api/useBillingQueries";
 import { useNavigate } from "react-router-dom";
 import { PricingGrid } from "./PricingGrid";

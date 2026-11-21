@@ -1,6 +1,5 @@
 import { getErrorsMessages } from "@/app/utils";
-import { Alert, Button, Input } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { Alert, Button, FormControl, Input } from "@/components";
 import { useRegisterForm } from "../model";
 
 export function RegisterForm() {
@@ -18,7 +17,7 @@ export function RegisterForm() {
                         type="text"
                         placeholder="Mohamed"
                         value={form.first_name}
-                        onChange={(e) => setValue("firstName", e.target.value)}
+                        onChange={(e) => setValue("first_name", e.target.value)}
                         disabled={isPending}
                         required
                         className="bg-base-200/40 h-11"
@@ -30,7 +29,7 @@ export function RegisterForm() {
                         type="text"
                         placeholder="Ali"
                         value={form.last_name}
-                        onChange={(e) => setValue("lastName", e.target.value)}
+                        onChange={(e) => setValue("last_name", e.target.value)}
                         disabled={isPending}
                         required
                         className="bg-base-200/40 h-11"
@@ -72,7 +71,7 @@ export function RegisterForm() {
                         type="password"
                         placeholder="••••••••"
                         value={form.password_confirmation}
-                        onChange={(e) => setValue("passwordConfirmation", e.target.value)}
+                        onChange={(e) => setValue("password_confirmation", e.target.value)}
                         disabled={isPending}
                         required
                         className="bg-base-200/40 h-11"

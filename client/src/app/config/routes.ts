@@ -33,4 +33,17 @@ export const API_ROUTES = {
             }
         },
     },
+    workspace: {
+        base: '/workspace',
+        roles: {
+            getRoles: '/workspace/roles',
+            getRole: (id: string) => `/workspace/roles/${id}`,
+            createRole: '/workspace/roles',
+            updateRole: (id: string) => `/workspace/roles/${id}`,
+            removeRole: (id: string) => `/workspace/roles/${id}`,
+        },
+        permissions: {
+            getPermissions: '/workspace/permissions'
+        }
+    }
 } as const;

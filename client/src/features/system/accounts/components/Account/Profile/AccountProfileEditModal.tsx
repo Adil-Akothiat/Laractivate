@@ -1,10 +1,10 @@
 import { Button, Input, Modal, Switch } from "@/components";
-import { FormControl } from "@/components/FormControls";
-import type { UserSchema } from "@/features/shared";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAccountMutations } from "../../../hooks";
+import { UserSchema } from "@/entities/user";
 
 type Props = {
     user: UserSchema;

@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import type { ToastItem } from "@/components/Alert";
+import type { ToastItem } from "@/components/ui/feedback/Alert";
+import { useCallback, useState } from "react";
 
 type ToastVariant = "info" | "success" | "warning" | "error";
 

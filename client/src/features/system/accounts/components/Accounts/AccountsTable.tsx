@@ -1,13 +1,13 @@
 import { useDebounce } from '@/app/hooks/common/useDebounce';
 import { Pagination } from '@/components';
-import { ScrollContainer } from '@/components/ScrollContainer';
-import { DataTable } from '@/components/Table/index';
-import type { UserSchema } from '@/features/shared';
+import { ScrollContainer } from '@/components';
+import { DataTable } from '@/components';
 import { useAccounts, useAccountsFilter } from '@/features/system/accounts';
 import { useState } from 'react';
 import { columns } from './AccountColumns';
 import AccountsHeader from './AccountsHeader';
 import CreateAccount from './CreateAccount';
+import { UserSchema } from '@/entities/user';
 
 export default function AccountsTable() {
   const [open, setOpen] = useState(false);

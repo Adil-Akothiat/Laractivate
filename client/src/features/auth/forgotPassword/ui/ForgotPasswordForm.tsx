@@ -1,5 +1,5 @@
 import { Button, Input } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForgotPasswordMutation } from "../api";

@@ -1,9 +1,8 @@
 import type { SetStateProps } from "@/app/types";
-import { Button, Input } from "@/components";
-import { FormControl } from "@/components/FormControls";
-import Switch from "@/components/Switch";
-import type { RoleSchema } from "@/features/shared";
+import { Button, Input, Switch } from "@/components";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import type { AccountFormValues } from "../../types";
+import { RoleSchema } from "@/entities/role/model/role.types";
 
 type Props = {
   handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;

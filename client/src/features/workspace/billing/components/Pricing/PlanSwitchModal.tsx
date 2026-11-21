@@ -1,10 +1,8 @@
-// components/PlanSwitchModal.tsx
-import { Modal } from "@/components";
-import Button from "@/components/Button";
-import { ArrowRight, CreditCard, AlertTriangle, CalendarClock, CheckCircle, XCircle } from "lucide-react";
-import ProrationBreakdown from "../ProrationBreakdown";
+import { Button, Modal } from "@/components";
+import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle, CreditCard, XCircle } from "lucide-react";
+import type { DowngradeResult } from "../../hooks/ui/usePlanSwitch";
 import type { ProrationResponseSchema } from "../../types";
-import type { DowngradeResult } from "../../hooks/ui/usePlanSwitch"
+import ProrationBreakdown from "../ProrationBreakdown";
 
 interface PlanSwitchModalProps {
   isOpen: boolean;
@@ -35,8 +33,8 @@ export function PlanSwitchModal({
       ? "Downgrade Scheduled"
       : "Already Scheduled"
     : isDowngrade
-    ? "Schedule Plan Downgrade"
-    : "Confirm Plan Switch";
+      ? "Schedule Plan Downgrade"
+      : "Confirm Plan Switch";
 
   // Modal Footer Buttons
   const renderFooter = () => {
@@ -97,11 +95,10 @@ export function PlanSwitchModal({
       const isSuccess = downgradeResult.status === "success";
       return (
         <div
-          className={`flex items-start gap-3 rounded-lg border p-4 ${
-            isSuccess
-              ? "border-success/30 bg-success/10 text-success"
-              : "border-warning/30 bg-warning/10 text-warning"
-          }`}
+          className={`flex items-start gap-3 rounded-lg border p-4 ${isSuccess
+            ? "border-success/30 bg-success/10 text-success"
+            : "border-warning/30 bg-warning/10 text-warning"
+            }`}
         >
           {isSuccess ? <CheckCircle size={18} className="mt-0.5 shrink-0" /> : <XCircle size={18} className="mt-0.5 shrink-0" />}
           <p className="text-sm">{downgradeResult.message}</p>

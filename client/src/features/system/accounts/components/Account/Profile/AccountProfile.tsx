@@ -1,4 +1,4 @@
-import type { UserSchema } from "@/features/shared";
+import { UserSchema } from "@/entities/user";
 import { useState } from "react";
 import AccountProfileCard from "./AccountProfileCard";
 import AccountProfileEditModal from "./AccountProfileEditModal";

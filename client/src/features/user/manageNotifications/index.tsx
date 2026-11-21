@@ -1,11 +1,11 @@
-import { ScrollContainer } from "@/components/ScrollContainer";
-import { Bell, RefreshCw } from "lucide-react";
-import { groupByDate } from "./utils/notification";
 import { Button } from "@/components";
+import { ScrollContainer } from "@/components";
+import { Bell, RefreshCw } from "lucide-react";
 import { NotificationItem } from "./components/NotificationItem";
-import type { NotificationSchema } from "./types";
-import { useNotifications } from "./hooks/useNotificationQueries";
 import { useNotificationMutations } from "./hooks/useNotificationMutations";
+import { useNotifications } from "./hooks/useNotificationQueries";
+import type { NotificationSchema } from "./types";
+import { groupByDate } from "./utils/notification";
 
 export default function Notifications() {
     const { data, isPending, refetch, isFetching } = useNotifications();
@@ -45,7 +45,7 @@ export default function Notifications() {
                         circle={true}
                         variant="ghost"
                         disabled={isFetching}
-                        onClick={()=> refetch()}
+                        onClick={() => refetch()}
                         title="Refresh"
                     >
                         <RefreshCw size={15} className={isFetching ? "animate-spin" : ""} />
@@ -54,7 +54,7 @@ export default function Notifications() {
                         <Button
                             variant="ghost"
                             size="xs"
-                            onClick={()=> markAllRead.mutate()}
+                            onClick={() => markAllRead.mutate()}
                             loading={markAllRead.isPending}
                         >
                             Mark all as Read

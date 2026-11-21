@@ -16,9 +16,6 @@ export function useLoginTfaVerification(token: string) {
     const { mutate, reset } = verifyTfaMutation;
 
     const switchMode = (next: TfaModeProps) => {
-        reset(); // Clear query state metadata on toggle
-        setOtp('');
-        setRecoveryCode('');
         setMode(next);
     };
 

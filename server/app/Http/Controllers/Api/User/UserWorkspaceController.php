@@ -88,8 +88,13 @@ class UserWorkspaceController extends Controller
         $user = $request->user();
         $verified = $user->clients()->where('slug', $slug)->exists();
         if(!$verified):
-            $first_client_slug = $user->clients()->first()?->slug ?? false;
-            $redirect_path = $first_client_slug ? "/$first_client_slug/dashboard" : '/workspaces';
+            $client = $user->clients()->first();
+            $redirect_path = "/workspaces";
+            if($client):
+                session(['current_client_id'=> $client->id]);
+                session()->save();
+                $redirect_path = "/$client->slug/dashboard";
+            endif;
             return (new BaseResource([ 'verified'=>false, 'redirect_path'=> $redirect_path ]))->response()->setStatusCode(200);
         endif;
         return (new BaseResource(['verified'=> true]))->response()->setStatusCode(200);

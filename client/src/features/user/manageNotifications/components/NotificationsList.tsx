@@ -1,4 +1,4 @@
-import { ScrollContainer } from "@/components/ScrollContainer";
+import { ScrollContainer } from "@/components";
 import type { NotificationSchema } from "../types/index";
 import { NotificationItem } from "./NotificationItem";
 

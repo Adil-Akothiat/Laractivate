@@ -1,7 +1,7 @@
 import { Button, Select } from "@/components";
 import { useState } from "react";
-import type { PermissionSchema } from "../../shared";
 import { usePermissions, useRolesFilter } from "../hooks";
+import { PermissionSchema } from "@/entities/role";
 
 interface FilterRolesProps {
     onApply?: () => void;
@@ -62,7 +62,7 @@ export default function FilterRoles({ onApply }: FilterRolesProps) {
                 <Select
                     selectSize="sm"
                     label="Permission"
-                    options={filteredPermissions.map((p: PermissionSchema) => ({
+                    options={permissions.map((p: PermissionSchema) => ({
                         label: p.name,
                         value: p.id,
                     }))}

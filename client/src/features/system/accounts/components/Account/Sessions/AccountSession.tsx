@@ -1,5 +1,5 @@
 import { ConfirmModal } from "@/components";
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import type { SessionSchema } from "@/features/shared";
 import {
   useAccountMutations,

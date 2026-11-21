@@ -1,7 +1,7 @@
-import { UserSchema } from "@/features/shared";
 import { useEffect, useState } from "react";
 import { useUpdateProfileDetails, useUpdateUserAvatar } from "../api";
 import { UpdateProfilePayload } from "./profile.types";
+import { UserSchema } from "@/entities";
 
 export const useUpdateUserProfile = (user: UserSchema) => {
     const [form, setForm] = useState<UpdateProfilePayload>({

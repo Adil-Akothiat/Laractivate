@@ -5,7 +5,7 @@ import {
     Input,
     Modal
 } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import { useAccountMutations } from "@/features/system/accounts";
 import { Key, Lock } from "lucide-react";
 import { useState } from "react";

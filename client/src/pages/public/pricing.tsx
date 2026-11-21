@@ -1,4 +1,4 @@
-import { ScrollContainer } from '@/components/ScrollContainer';
+import { ScrollContainer } from '@/components';
 import PublicPricing from '@/features/workspace/billing/components/PublicPricing';
 
 export default function PricingPage() {

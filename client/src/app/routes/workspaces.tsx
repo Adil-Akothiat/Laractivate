@@ -1,11 +1,12 @@
 import { client } from "@/app/config/permissions.json";
-import PermissionGuard from "@/app/guards/PermissionGuard";
 import { WorkspaceGuard } from "@/app/guards/WorkspaceGuard";
-import UserPricingPage from "@/pages/workspaces/billing/UserPricingPage";
 import InvoicePage from "@/pages/workspaces/dashboard-pending/InvoicePage";
 import MembersPage from "@/pages/workspaces/members/MembersPage";
+import { WorkspaceRolesPage } from "@/pages/workspaces/roles/WorkspaceRolesPage";
+import UserPricingPage from "@/pages/workspaces/UserPricingPage";
 import WorkspacesPage from "@/pages/workspaces/WorkspacesPage";
 import { Route } from "react-router-dom";
+import { PermissionGuard } from "../guards";
 
 export default function WorkspacesRoutes() {
     return (
@@ -37,7 +38,7 @@ export default function WorkspacesRoutes() {
                     }
                 />
                 <Route path="members" element={<MembersPage />} />
-                <Route path="roles-permissions" element={<h1>Workspace roles&permissions managements</h1>} />
+                <Route path="roles-permissions" element={<WorkspaceRolesPage />} />
             </Route>
         </>
     );

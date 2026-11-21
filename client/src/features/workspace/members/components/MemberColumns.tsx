@@ -1,6 +1,6 @@
-import { Crown, ShieldCheck, ShieldOff } from "lucide-react";
-import { imageRender } from "@/app/utils/imagePreviewHandler";
+import { imageRender } from "@/app/utils";
 import { Avatar, Badge, type Column } from "@/components";
+import { Crown, ShieldCheck, ShieldOff } from "lucide-react";
 import { MemberSchema } from "../types";
 
 export const memberColumns: Column<MemberSchema>[] = [
@@ -24,17 +24,17 @@ export const memberColumns: Column<MemberSchema>[] = [
           />
           <div>
             <div className="flex items-center gap-1.5">
-                <span className="font-medium text-sm text-base-content">
+              <span className="font-medium text-sm text-base-content">
                 {fullName || '—'}
-                </span>
-                {row.membership === 'owner' && (
+              </span>
+              {row.membership === 'owner' && (
                 <span className="badge badge-warning badge-sm gap-1">
-                    <Crown size={9} /> Owner
+                  <Crown size={9} /> Owner
                 </span>
-                )}
+              )}
             </div>
             <div>
-                <span className="text-gray-400 font-sm">{row.email}</span>
+              <span className="text-gray-400 font-sm">{row.email}</span>
             </div>
           </div>
         </div>
@@ -71,8 +71,8 @@ export const memberColumns: Column<MemberSchema>[] = [
       ),
   },
   {
-    key:"joined_at",
+    key: "joined_at",
     header: 'Joined/Created',
-    render: (row: MemberSchema)=> row.joined_at
+    render: (row: MemberSchema) => row.joined_at
   }
 ];

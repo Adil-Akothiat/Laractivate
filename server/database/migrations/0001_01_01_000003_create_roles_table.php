@@ -18,6 +18,14 @@ return new class extends Migration
             $table->enum('scope', ['system', 'client'])->default('client');
             $table->timestamps();
         });
+
+        Schema::create('client_role', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
+            $table->foreignUuid('role_id')->constrained('roles')->cascadeOnDelete();
+            $table->unique(['client_id', 'role_id']);
+            $table->timestamps();
+        });
     }
 
     /**

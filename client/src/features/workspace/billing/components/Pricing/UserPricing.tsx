@@ -1,11 +1,11 @@
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { useUserPricingQuery } from "../../hooks/api/useBillingQueries";
-import { PricingGrid } from "../PricingGrid";
-import { PlanSwitchModal } from "./PlanSwitchModal";
-import { PlanActionButton } from "./PlanActionButton";
 import { usePlanSwitch } from "../../hooks/ui/usePlanSwitch";
 import type { UserPlanSchema } from "../../types";
+import { PricingGrid } from "../PricingGrid";
 import { CheckoutAlert } from "./CheckoutAlert";
+import { PlanActionButton } from "./PlanActionButton";
+import { PlanSwitchModal } from "./PlanSwitchModal";
 
 export default function UserPricing() {
   const query = useUserPricingQuery();

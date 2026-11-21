@@ -1,5 +1,5 @@
-import { DataLoader } from "@/components/Loaders/DataLoader";
-import { EmptyState, Button } from "@/components";
+import { Button, EmptyState } from "@/components";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { ShieldAlert } from "lucide-react";
 import { useSubscriptionQuery } from "../../hooks/api/useBillingQueries";
 import SubscriptionDetails from "./Details";
@@ -27,7 +27,7 @@ export default function SubscriptionOverview() {
       {
         (data) => {
           const sub = data.data;
-          if(!sub) return <NoSubscription />;
+          if (!sub) return <NoSubscription />;
           return <SubscriptionDetails sub={sub} />;
         }
       }

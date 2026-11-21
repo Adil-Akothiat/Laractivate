@@ -1,4 +1,4 @@
-import type { UserSchema } from "@/features/shared";
+import { UserSchema } from "@/entities/user";
 import AccountPermissions from "./AccountPermissions";
 import AccountRoles from "./AccountRoles";
 

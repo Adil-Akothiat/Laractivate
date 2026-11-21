@@ -1,5 +1,5 @@
 import { Button, Input, LoadingOverlay, Modal, Select } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import { FormEvent, useState } from "react";
 import { useRoles } from "../../../rbac";
 import { useMemberMutations } from "../hooks/api/useMemberMutations";

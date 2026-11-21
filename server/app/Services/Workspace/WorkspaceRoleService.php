@@ -2,8 +2,9 @@
 
 namespace App\Services\Workspace;
 
-use App\Models\{Role};
-use App\Models\User;
+use App\Http\Resources\Security\PermissionResource;
+use App\Models\{Role, Permission};
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,44 +14,66 @@ class WorkspaceRoleService
     /**
      * List roles with filtering and user counts.
     */
-    public function rolesList(array $filters): LengthAwarePaginator
+    public function getRoles(Request $request): LengthAwarePaginator
     {
-        return Role::withCount('users')
-            ->when($filters['search'] ?? null, function ($q, $search) {
-                $q->where('name', 'like', "%{$search}%");
+        $allowedQueries = ["search", "order", "sort"];
+        $clientId = $request->attributes->get('current_client_id');
+        $query = Role::query()
+            ->where('scope', 'client')
+            ->whereHas('clients', function($query) use ($clientId) {
+                $query->where('clients.id', $clientId);
             })
-            ->when($filters['group'] ?? null, function ($q, $group) {
-                $q->whereHas('permissions', fn($q) => $q->where('group', $group));
-            })
-            ->when($filters['permission'] ?? null, function ($q, $permission) {
-                $q->whereHas('permissions', fn($q) => $q->where('id', $permission));
-            })
-            ->when($filters['scope'] ?? null, function ($q, $scope) {
-                    $q->where('scope', $scope);
-            })
-            ->orderByRaw("name = 'Super Admin' DESC")
-            ->orderBy('created_at', 'desc')
-            ->paginate(3)
-            ->withQueryString();
+            ->withCount(['clients as users_count']);
+        $queries = $request->query();
+        if(!$request->has('all')):
+            foreach($queries as $key=>$value):
+                switch($key) {
+                    case 'search':
+                        if ($request->filled('search')):
+                            $query->where('name', 'like', '%' . $value . '%');
+                        endif;
+                        break;
+                    case 'sort':
+                        if($value === 'latest'):
+                            $query->latest();
+                        elseif ($value === 'oldest'):
+                            $query->oldest();
+                        endif;
+                        break;
+                    case 'order':
+                        if(in_array($value, ['asc', 'desc'])):
+                            $query->orderBy('name', $value);
+                        endif;
+                        break;   
+                }
+            endforeach;
+        endif;
+        $roles = $query->paginate(10)->withQueryString();
+        $roles->load('permissions');
+        return $roles;
     }
 
     /**
      * Create a new role and attach permissions.
      */
-    public function createRole(array $data): Role
+    public function store(Request $request, array $data): Role
     {
-        return DB::transaction(function () use ($data) {
+        $clientId = $request->attributes->get('current_client_id');
+        return DB::transaction(function () use ($clientId, $data) {
             $role = Role::create([
                 'id' => (string) Str::uuid(),
                 'name' => $data['name'],
+                'scope' => 'client',
                 'is_locked' => false
             ]);
+
+            $role->clients()->attach($clientId);
 
             if (!empty($data['permissions'])) {
                 $role->permissions()->sync($data['permissions']);
             }
 
-            return $role;
+            return $role->load('permissions');
         });
     }
 
@@ -92,32 +115,24 @@ class WorkspaceRoleService
 
         $role->delete();
     }
-
-    public function getRole(string $id): Role
-    {
-        $role = Role::findOrFail($id);
-        return $role;
-    }
-
     
-    public function permissionResolver(User $user, ?int $clientId): array
+    public function getPermissions(): array
     {
-        $systemRoles = $user->roles;
-        $systemPermissions = $systemRoles->flatMap->permissions->pluck('name');
-
-        $clientRole = null;
-        $clientPermissions = collect();
-
-        if ($clientId) {
-            $roleId = $user->clients()->find($clientId)?->pivot?->role_id;
-            $clientRole = $roleId ? Role::with('permissions')->find($roleId) : null;
-            $clientPermissions = $clientRole ? $clientRole->permissions->pluck('name') : collect();
-        }
-
+        $permissions = Permission::query()
+            ->where('scope', "client")
+            ->orderBy('group')
+            ->orderBy('name')
+            ->get();
+        $grouped =  $permissions
+            ->groupBy(fn (Permission $permission) => $permission->group ?: 'Other')
+            ->map(fn ($items, string $group) => [
+                'group' => $group,
+                'permissions' => PermissionResource::collection($items),
+            ])
+            ->values();
         return [
-            'system_roles' => $systemRoles,
-            'client_role' => $clientRole,
-            'permissions' => $systemPermissions->merge($clientPermissions)->unique()->values(),
+            'permissions'=> $permissions,
+            'groupedPermissions'=> $grouped,
         ];
     }
 }

@@ -3,9 +3,10 @@
 namespace App\Http\Resources\Security;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\System\BasePaginatedCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+// use App\Http\Resources\System\BasePaginatedCollection;
 
-class RoleCollection extends BasePaginatedCollection
+class RoleCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

@@ -1,6 +1,5 @@
-import { Badge, Button, Card } from "@/components";
-import AvatarUploader from "@/components/FileUploader/AvatarUploader";
-import type { UserSchema } from "@/features/shared";
+import { Badge, Button, Card, AvatarUploader } from "@/components";
+import { UserSchema } from "@/entities/user";
 import { useAccountMutations } from "@/features/system/accounts";
 import { CheckCircle, Edit, Mail, XCircle } from "lucide-react";
 import { useParams } from "react-router-dom";

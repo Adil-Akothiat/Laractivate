@@ -1,6 +1,7 @@
 import { Button, Input } from '@/components';
-import OtpInput from '@/features/shared/components/2FA/OtpInput';
+import OtpInput from '@/components/ui/forms/OtpInput';
 import { KeyRound, ShieldCheck, Smartphone, X } from 'lucide-react';
+import { Activity } from 'react';
 import { useLoginTfaVerification } from '../model/useLoginTfaVerification';
 
 interface Props {
@@ -66,31 +67,28 @@ export function LoginTfaVerification({ onCancel, token }: Props) {
 
                 {/* Body */}
                 <form onSubmit={handleSubmit} className="px-5 py-6 flex flex-col items-center gap-5">
-                    {mode === 'otp' ? (
-                        <>
-                            <p className="text-xs text-base-content/60 text-center leading-relaxed">
-                                Enter the 6-digit code from your authenticator app to complete sign in.
-                            </p>
-                            {/* Make sure OtpInput properly accepts and utilizes the disabled prop internally */}
-                            <OtpInput value={otp} onChange={setOtp} disabled={isPending} />
-                        </>
-                    ) : (
-                        <>
-                            <p className="text-xs text-base-content/60 text-center leading-relaxed">
-                                Enter one of your saved recovery codes. Each code can only be used once.
-                            </p>
-                            <Input
-                                value={recoveryCode}
-                                onChange={(e) => setRecoveryCode(e.target.value)}
-                                disabled={isPending}
-                                placeholder="e.g. ku2HNXTRjD-Dt6Usz29DE"
-                                leftIcon={<KeyRound size={14} />}
-                                autoComplete="off"
-                                spellCheck={false}
-                                className="font-mono tracking-wider text-xs"
-                            />
-                        </>
-                    )}
+                    <Activity mode={mode === "otp" ? "visible" : "hidden"}>
+                        <p className="text-xs text-base-content/60 text-center leading-relaxed">
+                            Enter the 6-digit code from your authenticator app to complete sign in.
+                        </p>
+                        {/* Make sure OtpInput properly accepts and utilizes the disabled prop internally */}
+                        <OtpInput value={otp} onChange={setOtp} disabled={isPending} />
+                    </Activity>
+                    <Activity mode={mode === "recovery" ? "visible" : "hidden"}>
+                        <p className="text-xs text-base-content/60 text-center leading-relaxed">
+                            Enter one of your saved recovery codes. Each code can only be used once.
+                        </p>
+                        <Input
+                            value={recoveryCode}
+                            onChange={(e) => setRecoveryCode(e.target.value)}
+                            disabled={isPending}
+                            placeholder="e.g. ku2HNXTRjD-Dt6Usz29DE"
+                            leftIcon={<KeyRound size={14} />}
+                            autoComplete="off"
+                            spellCheck={false}
+                            className="font-mono tracking-wider text-xs"
+                        />
+                    </Activity>
 
                     <Button
                         type="submit"

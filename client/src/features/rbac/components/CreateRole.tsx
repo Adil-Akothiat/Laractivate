@@ -1,20 +1,17 @@
+import { Button, Can, FormControl, Input, Modal } from "@/components";
 import { useEffect, useState } from "react";
-import { useRoleMutations, usePermissions } from "../hooks";
-import { Input, Button, Modal } from "@/components";
-import { FormControl } from "@/components/FormControls";
-import PermissionsCheckbox from "./PermissionsCheckBox";
-import { Can } from "@/components/Guard/Can";
+import { usePermissions, useRoleMutations } from "../hooks";
 import { toSnakeCase } from "../utils";
 
 export function CreateRole() {
-    const [open, setOpen]               = useState(false);
-    const [name, setName]               = useState("");
+    const [open, setOpen] = useState(false);
+    const [name, setName] = useState("");
 
-    const { create }                    = useRoleMutations();
-    const { data }                      = usePermissions();
-    const permissions                   = data?.permissions  ?? [];
-    const grouped                       = data?.grouped      ?? {};
-    const defaultPermission             = data?.default;
+    const { create } = useRoleMutations();
+    const { data } = usePermissions();
+    const permissions = data?.permissions ?? [];
+    const grouped = data?.grouped ?? {};
+    const defaultPermission = data?.default;
     const [attachedIds, setAttachedIds] = useState<string[]>([]);
 
     useEffect(() => {
@@ -34,7 +31,7 @@ export function CreateRole() {
         create.mutate(
             { name, permissions: attachedIds },
             {
-                onSuccess:()=> handleClose()
+                onSuccess: () => handleClose()
             }
         );
     };
@@ -92,13 +89,14 @@ export function CreateRole() {
 
                     {permissions.length > 0 && (
                         <FormControl>
-                            <PermissionsCheckbox
+                            {/* <PermissionsCheckbox
                                 permissions={permissions}
                                 grouped={grouped}
                                 selectedIds={attachedIds}
                                 onChange={setAttachedIds}
                                 disabled={create.isPending}
-                            />
+                            /> */}
+                            "test"
                         </FormControl>
                     )}
                 </form>

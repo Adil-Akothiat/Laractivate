@@ -1,7 +1,7 @@
 import { api } from "@/app/services/api";
 import { PaginatedResponseSchema } from "@/app/types";
-import { LogSchema } from "@/features/shared";
 import { useQuery } from "@tanstack/react-query";
+import { LogSchema } from "../model";
 import { activityLogKeys } from "./keys";
 
 const getActivityLogs = () => api.get<PaginatedResponseSchema<LogSchema>>('/user/security/activity-logs');

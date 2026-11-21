@@ -1,4 +1,5 @@
-import Container from "@/components/Container";
+import Container from "@/components/layouts/Container";
+
 
 export function ProcessInvitationPage() {
     return (

@@ -1,5 +1,5 @@
 import { Button } from "@/components";
-import { ScrollContainer } from "@/components/ScrollContainer";
+import { ScrollContainer } from "@/components";
 import {
     ChevronDown,
     FingerprintPattern,

@@ -1,6 +1,6 @@
-import { imageRender } from "@/app/utils/imagePreviewHandler";
+import { imageRender } from "@/app/utils";
 import { Avatar, Badge, type Column } from "@/components";
-import type { UserSchema } from "@/features/shared";
+import { UserSchema } from "@/entities/user";
 import { Crown, ShieldCheck, ShieldOff } from "lucide-react";
 
 export const columns: Column<UserSchema>[] = [

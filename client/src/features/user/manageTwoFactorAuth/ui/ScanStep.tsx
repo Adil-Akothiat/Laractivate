@@ -1,10 +1,9 @@
 import { ShieldCheck } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useTfaStepperContext } from '../model/TfaStepperContext';
+import { useTfaContext } from '../model/useTfaContext';
 
 export const ScanStep = () => {
-  const { setStep, qrUrl } = useTfaStepperContext();
-
+  const { dispatch, qrUrl } = useTfaContext();
   return (
     <div className="flex flex-col items-center gap-5">
       <div className="bg-primary/10 text-primary rounded-full p-4">
@@ -27,7 +26,7 @@ export const ScanStep = () => {
         )}
       </div>
 
-      <button onClick={() => setStep('verify')} className="btn btn-primary w-full" disabled={!qrUrl}>
+      <button onClick={() => dispatch({ type: "scan" })} className="btn btn-primary w-full" disabled={!qrUrl}>
         Next — Enter Code
       </button>
     </div>

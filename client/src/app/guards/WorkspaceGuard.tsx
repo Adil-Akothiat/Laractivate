@@ -1,30 +1,38 @@
-import { GlobalPageLoader } from '@/components/Loaders/Loaders';
+import { GlobalPageLoader } from '@/components/ui/feedback/Loaders';
 import { useWorkspacesQueries } from '@/features/workspace/manageWorkspaces/hooks/api/useWorkspaceQueries';
-import { useEffect } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import ErrorPage from '../../pages/public/404';
 
 export function WorkspaceGuard() {
     const params = useParams();
-    const workspaceSlug = params?.workspaceSlug ?? '';
+    const workspaceSlug = params?.workspaceSlug || window.localStorage.getItem('workspace_slug') || "";
     const { data, isPending, isError } = useWorkspacesQueries.verifySlug(workspaceSlug);
-
-    useEffect(() => {
-        if (data?.verified) {
-            window.localStorage.setItem('workspace_slug', workspaceSlug);
-        }
-    }, [data?.verified, workspaceSlug]);
-
     if (isPending) return <GlobalPageLoader isLoading={isPending} />;
-    if (data?.verified === false || isError) {
+
+    if (isError || !data) {
         window.localStorage.removeItem('workspace_slug');
-        const redirectPath = data?.redirect_path;
         return (
             <ErrorPage
-                redirectTo={redirectPath}
+                redirectTo='/workspaces'
                 redirectLabel='Workspaces'
             />
         );
     }
-    return <Outlet />;
+
+    if (data.verified) {
+        return <Outlet />;
+    }
+
+    if (data?.redirect_path) {
+        if (data?.redirect_path !== "/workspaces") {
+            window.localStorage.setItem('workspace_slug', data.redirect_path.split("/")[1]);
+        }
+        return (
+            <ErrorPage
+                redirectTo={data.redirect_path}
+                redirectLabel={data.redirect_path === "/workspaces" ? "Workspaces" : "Dashboard"}
+            />
+        );
+    }
+
 }

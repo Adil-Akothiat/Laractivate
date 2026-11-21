@@ -1,7 +1,6 @@
-import { Pagination } from "@/components";
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader, Pagination } from "@/components";
+import { useGetActivityLogs } from "@/entities/activityLog";
 import { LogSchema } from "@/entities/activityLog/model/activityLog.types";
-import { useGetActivityLogs } from "@/entities/activityLog/model/api/activityLog.queries";
 import ActivityLogCard from "@/entities/activityLog/ui/ActivityLogCard";
 import { SettingsContainer } from "@/pages/user";
 import { useState } from "react";

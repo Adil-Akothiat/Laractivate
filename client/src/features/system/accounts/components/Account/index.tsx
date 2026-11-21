@@ -1,7 +1,6 @@
-import { Breadcrumb } from "@/components";
-import Container from "@/components/Container";
-import { DataLoader } from "@/components/Loaders/DataLoader";
-import Tabs from "@/components/Tabs/Tabs";
+import { Breadcrumb, Tabs } from "@/components";
+import Container from "@/components/layouts/Container";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { useAccount } from "@/features/system/accounts";
 import {
   Globe,

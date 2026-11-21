@@ -1,0 +1,24 @@
+import { getErrorsMessagesStr } from '@/app/utils';
+import type { UseQueryResult } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import { Alert, type AlertVariant } from './Alert';
+import { ComponentLoader } from './Loaders';
+
+interface DataLoaderProps<T> {
+  query: UseQueryResult<T>;
+  children: (data: T) => ReactNode;
+  fallback?: ReactNode;
+  fallbackVariant?: AlertVariant;
+}
+
+export function DataLoader<T>({ query, children, fallback, fallbackVariant = "error" }: DataLoaderProps<T>) {
+  if (query.isPending) return <ComponentLoader isLoading={query.isPending} />;
+  if (query.isError) {
+    if (fallback) return fallback;
+    return <Alert variant={fallbackVariant} className='alert-outline' message={getErrorsMessagesStr(query.error)} />
+  }
+
+  if (query.data === undefined || query.data === null) return null;
+
+  return <>{children(query.data)}</>;
+}

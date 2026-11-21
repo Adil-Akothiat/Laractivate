@@ -71,6 +71,8 @@ db-shell:
 
 stripe-cli:
 	@$(COMPOSE) exec stripe-cli stripe $(ARGS)
+root-perm:
+	sudo chown -R $$USER:$$USER .
 
 # ==============================================================================
 # 5. THE SILENT CATCH-ALL (Crucial for arguments like db:seed)

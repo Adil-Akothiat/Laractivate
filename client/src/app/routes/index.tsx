@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Sidebar from "../../components/layouts/Sidebar";
 import AuthGuard from "../guards/AuthGuard";
 import { useToastContext } from "../hooks/common";
-import Sidebar from "../layouts/Sidebar";
 import AuthRoutes from "./auth";
 import PublicRoutes from "./public";
 import SystemRoutes from "./system";

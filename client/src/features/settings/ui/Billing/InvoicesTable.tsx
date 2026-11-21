@@ -1,5 +1,4 @@
-import type { Column } from "@/components/Table/DataTable";
-import { DataTable } from "@/components/Table/index";
+import { Column, DataTable } from "@/components/ui/data-display/Table/DataTable";
 import type { InvoiceSchema } from "@/features/workspace/billing/types";
 import { Download, ExternalLink } from "lucide-react";
 

@@ -1,5 +1,4 @@
-import { Button, Input } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { Button, FormControl, Input } from "@/components";
 import { useResetPasswordForm } from "../model/useResetPasswordForm";
 
 export function ResetPasswordForm() {

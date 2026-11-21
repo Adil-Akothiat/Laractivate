@@ -1,9 +1,9 @@
-import { Button, Input, Modal } from "@/components";
-import { FormControl } from "@/components/FormControls";
-import { UserRoundPlus } from "lucide-react";
-import { FormEvent, useState } from "react";
 import { useToastContext } from "@/app/hooks";
 import { getErrorsMessagesStr } from "@/app/utils";
+import { Button, Input, Modal } from "@/components";
+import { FormControl } from "@/components/ui/forms/FormControls";
+import { UserRoundPlus } from "lucide-react";
+import { FormEvent, useState } from "react";
 import { useWorkspacesMutations } from "../hooks/api/useWorkspaceMutations";
 
 export const AddWorkspace = () => {
@@ -13,16 +13,16 @@ export const AddWorkspace = () => {
     const { toast } = useToastContext();
 
 
-    const submitClientHandler = (e:FormEvent<HTMLFormElement>)=> {
+    const submitClientHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate(workSpaceName, {
-            onSuccess: (data)=> {
+            onSuccess: (data) => {
                 toast.success(data.message || '');
             },
-            onError: (err)=> {
+            onError: (err) => {
                 toast.error(getErrorsMessagesStr(err))
             },
-            onSettled:()=> {
+            onSettled: () => {
                 setIsOpened(false);
                 setWorkSpaceName('');
             }

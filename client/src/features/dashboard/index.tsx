@@ -1,5 +1,5 @@
 import { LoadingOverlay } from "@/components";
-import { ScrollContainer } from "@/components/ScrollContainer";
+import { ScrollContainer } from "@/components";
 import { PersonalDashboard } from "./components/personal/PersonalDashboard";
 import { SystemDashboard } from "./components/system/SystemDashboard";
 import { useDashboard } from "./hooks/useDashboard";

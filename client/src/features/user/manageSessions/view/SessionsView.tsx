@@ -1,4 +1,4 @@
-import { DataLoader } from '@/components/Loaders/DataLoader';
+import { DataLoader } from '@/components/ui/feedback/DataLoader';
 import { useGetSessions } from '@/entities/session';
 import { SettingsContainer } from '@/pages/user';
 import { ActiveSessions, SessionHistory } from "..";

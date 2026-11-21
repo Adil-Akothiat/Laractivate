@@ -1,34 +1,33 @@
-import { useState, useEffect } from "react";
-import { useRole, useRoleMutations, usePermissions } from "../hooks";
-import { LoadingOverlay, Input, Button } from "@/components";
-import { FormControl } from "@/components/FormControls";
-import PermissionsCheckbox from "./PermissionsCheckBox";
+import { Button, FormControl, Input, LoadingOverlay } from "@/components";
+import { useEffect, useState } from "react";
+// import PermissionsCheckbox from "../../../entities/role/ui/PermissionsCheckBox";
+import { usePermissions, useRole, useRoleMutations } from "../hooks";
 import { toSnakeCase } from "../utils";
 
 interface Props {
-    roleId:    string;
+    roleId: string;
     onSuccess: () => void;
-    onCancel:  () => void;
+    onCancel: () => void;
 }
 
 export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
-    const [name, setName]               = useState("");
+    const [name, setName] = useState("");
     const [attachedIds, setAttachedIds] = useState<string[]>([]);
 
     const { data, isPending: isFetching } = useRole(roleId);
-    const { data: permissionsData }       = usePermissions();
-    const { update }                      = useRoleMutations();
+    const { data: permissionsData } = usePermissions();
+    const { update } = useRoleMutations();
 
     const permissions = permissionsData?.permissions ?? [];
-    const grouped     = permissionsData?.grouped     ?? {};
-    const isLocked    = data?.is_locked;
+    const grouped = permissionsData?.grouped ?? {};
+    const isLocked = data?.is_locked;
 
 
     // Seed form with existing role data
     useEffect(() => {
         if (data) {
             setName(data.name);
-            setAttachedIds(data.permissions?.map(({id}:{id:string})=> id) as string[]);
+            setAttachedIds(data.permissions?.map(({ id }: { id: string }) => id) as string[]);
         }
     }, [data]);
 
@@ -68,13 +67,14 @@ export function UpdateRole({ roleId, onSuccess, onCancel }: Props) {
 
             {permissions.length > 0 && (
                 <FormControl>
-                    <PermissionsCheckbox
+                    {/* <PermissionsCheckbox
                         permissions={permissions}
                         grouped={grouped}
                         selectedIds={attachedIds}
                         onChange={setAttachedIds}
                         disabled={update.isPending || !!isLocked}
-                    />
+                    /> */}
+                    es
                 </FormControl>
             )}
 

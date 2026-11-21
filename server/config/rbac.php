@@ -149,7 +149,7 @@ return [
         [
             'name'        => 'ADMINISTRATOR',
             'scope'       => 'client',
-            'is_locked'   => false,
+            'is_locked'   => true,
             'permissions' => [
                 'client.dashboard.view',
                 'client.workspaces.view',
@@ -162,25 +162,6 @@ return [
                 'client.billing.view',
                 'client.billing.manage',
             ],
-        ],
-        [
-            'name'        => 'MANAGER',
-            'scope'       => 'client',
-            'is_locked'   => false,
-            'permissions' => [
-                'client.dashboard.view',
-                'client.accounts.view',
-                'client.logs.view',
-                'client.billing.view',
-            ],
-        ],
-        [
-            'name'        => 'MEMBER',
-            'scope'       => 'client',
-            'is_locked'   => false,
-            'permissions' => [
-                'client.dashboard.view',
-            ],
-        ],
+        ]
     ],
 ];

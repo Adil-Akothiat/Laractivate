@@ -1,6 +1,6 @@
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button, Input } from "@/components";
-import { FormControl } from "@/components/FormControls";
+import { FormControl } from "@/components/ui/forms/FormControls";
 import { Link } from "react-router-dom";
 import { useLoginForm } from "../model/useLoginForm";
 import { LoginTfaVerification } from "./LoginTfaVerification";

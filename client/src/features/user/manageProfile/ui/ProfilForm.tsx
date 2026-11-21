@@ -1,6 +1,5 @@
-import { Button, Input } from "@/components";
-import AvatarUploader from "@/components/FileUploader/AvatarUploader";
-import type { UserSchema } from "@/features/shared";
+import { AvatarUploader, Button, Input } from "@/components";
+import { UserSchema } from "@/entities/user";
 import { useUpdateUserProfile } from "../model";
 
 export default function ProfilForm({ user }: { user: UserSchema }) {

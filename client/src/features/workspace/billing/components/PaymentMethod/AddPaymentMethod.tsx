@@ -1,14 +1,14 @@
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSetupPaymentMethodIntent } from "../../hooks/api/useBillingQueries";
-import { DataLoader } from "@/components/Loaders/DataLoader";
 import { PaymentMethodIntentSchema } from "../../types";
 import PaymentMethodForm from "./PaymentMethodForm";
 
 export const stripePromise = loadStripe(import.meta.env.VITE_PUBLIC_STRIPE_KEY!);
 
 type AddPaymentMethodProps = {
-  onSuccess: ()=> void;
+  onSuccess: () => void;
 }
 
 export default function AddPaymentMethod({ onSuccess }: AddPaymentMethodProps) {

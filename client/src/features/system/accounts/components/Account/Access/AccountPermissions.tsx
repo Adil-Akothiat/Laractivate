@@ -1,5 +1,5 @@
-import { ShieldOff } from "lucide-react";
 import { EmptyState } from "@/components";
+import { ShieldOff } from "lucide-react";
 // import type { PermissionSchema } from "@/features/base/shared";
 
 interface Props {

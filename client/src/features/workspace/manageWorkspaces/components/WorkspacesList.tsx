@@ -30,5 +30,4 @@ export const WorkspacesList = ({ workspaces, currentClientId }: WorkspacesListPr
             onChange={handleSelect}
         />
     );
-
 }

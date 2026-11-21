@@ -1,8 +1,8 @@
-import { useSearchParams, useNavigate, Outlet } from "react-router-dom";
+import { GlobalPageLoader } from "@/components/ui/feedback/Loaders";
 import { useEffect } from "react";
-import { GlobalPageLoader } from "@/components/Loaders/Loaders";
-import { useToastContext } from "../hooks/common";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import { useValidateResetToken } from "../hooks";
+import { useToastContext } from "../hooks/common";
 
 export function ResetPasswordGuard() {
     const [searchParams] = useSearchParams();
@@ -10,8 +10,8 @@ export function ResetPasswordGuard() {
     const { toast } = useToastContext();
 
     // 1. Grab params from URL
-    const email:string|null = searchParams.get("email");
-    const token:string|null = searchParams.get("token");
+    const email: string | null = searchParams.get("email");
+    const token: string | null = searchParams.get("token");
 
     // 2. Use the TanStack Query hook
     const { isPending, isError, isSuccess } = useValidateResetToken(email, token);

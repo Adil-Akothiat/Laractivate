@@ -1053,29 +1053,6 @@
           9 => 'client.billing.manage',
         ),
       ),
-      2 => 
-      array (
-        'name' => 'MANAGER',
-        'scope' => 'client',
-        'is_locked' => false,
-        'permissions' => 
-        array (
-          0 => 'client.dashboard.view',
-          1 => 'client.accounts.view',
-          2 => 'client.logs.view',
-          3 => 'client.billing.view',
-        ),
-      ),
-      3 => 
-      array (
-        'name' => 'MEMBER',
-        'scope' => 'client',
-        'is_locked' => false,
-        'permissions' => 
-        array (
-          0 => 'client.dashboard.view',
-        ),
-      ),
     ),
   ),
   'sanctum' => 

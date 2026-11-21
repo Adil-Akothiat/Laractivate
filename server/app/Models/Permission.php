@@ -22,6 +22,9 @@ class Permission extends Model
         'id',
         'name',
     ];
+    protected $casts = [
+        'is_locked'=> 'boolean'
+    ];
 
     /**
      * Get the roles for the permission.

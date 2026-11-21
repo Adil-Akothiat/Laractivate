@@ -23,6 +23,10 @@ class Role extends Model
         'name',
     ];
 
+    protected $casts = [
+        'is_locked'=> 'boolean'
+    ];
+
 
     /**
      * Get the users for the role.
@@ -43,5 +47,11 @@ class Role extends Model
     public function clientInvitations(): HasMany
     {
         return $this->hasMany(ClientInvitation::class);
+    }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class, 'client_role')
+        ->withTimestamps();
     }
 }

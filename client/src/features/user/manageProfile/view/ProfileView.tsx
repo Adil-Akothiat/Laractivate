@@ -1,4 +1,4 @@
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
 import { useGetUser } from "@/entities/user";
 import { SettingsContainer } from "@/pages/user";
 import ProfilForm from "../ui/ProfilForm";

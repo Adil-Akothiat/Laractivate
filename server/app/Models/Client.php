@@ -34,4 +34,9 @@ class Client extends Model
     {
         return $this->hasMany(ClientInvitation::class);
     }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'client_role')->withTimestamps();
+    }
 }

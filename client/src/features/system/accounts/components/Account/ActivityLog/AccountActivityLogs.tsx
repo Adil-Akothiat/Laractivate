@@ -1,7 +1,7 @@
 import { getErrorsMessagesStr } from "@/app/utils";
 import { Alert, Pagination } from "@/components";
-import { Can } from "@/components/Guard/Can";
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
+import { Can } from "@/components/ui/security/Can";
 import ActivityLogCard from "@/entities/activityLog/ui/ActivityLogCard";
 import type { LogSchema } from "@/features/shared";
 import { useAccountLogs } from "@/features/system/accounts";

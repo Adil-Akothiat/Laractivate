@@ -1,7 +1,7 @@
 import { Badge, Card } from "@/components"; // Assuming this handles padding/layout basics
 import type { UserSchema } from "@/features/shared";
-import Disable2FA from "@/features/shared/components/2FA/Disable2FA";
 import { useAccountMutations } from "@/features/system/accounts";
+import Disable2FA from "@/features/user/manageTwoFactorAuth/ui/Disable2FA";
 import { useState } from "react";
 
 interface Props {

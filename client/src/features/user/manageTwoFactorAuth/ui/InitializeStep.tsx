@@ -1,26 +1,25 @@
 import { Badge, Button } from "@/components";
-import Disable2FA from "@/features/shared/components/2FA/Disable2FA";
+import { useGetUser } from "@/entities/user";
+import Disable2FA from "@/features/user/manageTwoFactorAuth/ui/Disable2FA";
 import { ShieldCheck } from "lucide-react";
+import { useState } from "react";
 import { useDisableTfa, useInitTfa } from "../api";
-import { useTfaStepperContext } from "../model/TfaStepperContext";
+import { useTfaContext } from "../model/useTfaContext";
+import { TfaRecoveryCodes } from "./TfaRecoveryCodes";
 import TwoFactorGuide from "./TwoFactorGuide";
-import TwoFactorRecoveryCodes from "./TwoFactorRecoveryCodes";
 
-interface Props {
-  recoveryCodes: string[];
-  isEnabled: boolean;
-}
+export const InitializeStep = () => {
+  const { data: user } = useGetUser();
+  const isEnabled = user?.two_factor_enabled ?? false;
 
-export const InitializeStep = ({ recoveryCodes, isEnabled }: Props) => {
   const init = useInitTfa();
   const disable = useDisableTfa();
-  const { modalOpened, setModalOpened, setQrUrl, setStep } = useTfaStepperContext();
-
+  const [modalOpened, setModalOpened] = useState<boolean>(false);
+  const { dispatch } = useTfaContext();
   const handleInit = () => {
     init.mutate(undefined, {
       onSuccess: (res) => {
-        setQrUrl(res.data.data.tfaQrcode);
-        setStep("scan");
+        dispatch({ type: "init", payload: { qrUrl: res.data.data.tfaQrcode } });
       }
     })
   }
@@ -48,18 +47,12 @@ export const InitializeStep = ({ recoveryCodes, isEnabled }: Props) => {
         </div>
 
         <div className="h-px bg-base-content/10" />
-        {/* 2-col: recovery codes left · manage actions right */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-start">
-          {/* Left — recovery codes */}
-          {recoveryCodes.length > 0 && (
-            <TwoFactorRecoveryCodes
-              recoveryCodes={recoveryCodes}
-            />
-          )}
-
-          {/* Right — manage actions */}
-          <div className="flex flex-col gap-2 shrink-0">
-            <p className="text-xs font-semibold uppercase tracking-widest text-base-content/40 mb-1">
+        <div className="grid md:grid-cols-[80%_20%] gap-x-4 gap-y-3">
+          <div className="order-1 md:order-2">
+            <TfaRecoveryCodes />
+          </div>
+          <div className="md:order-2 flex justify-between md:block md:ml-auto">
+            <p className="order-2 md:order-1 text-xs font-semibold uppercase tracking-widest text-base-content/40 mb-1">
               Manage
             </p>
             <Disable2FA

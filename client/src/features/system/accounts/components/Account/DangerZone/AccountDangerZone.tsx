@@ -5,7 +5,7 @@ import {
     Input,
     Modal,
 } from "@/components";
-import { Can } from "@/components/Guard/Can";
+import { Can } from "@/components/ui/security/Can";
 import type { UserSchema } from "@/features/shared";
 import { useAccountMutations } from "@/features/system/accounts";
 import { Trash2 } from "lucide-react";

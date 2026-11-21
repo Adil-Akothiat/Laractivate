@@ -35,11 +35,11 @@ export interface PaginatedResponseSchema<T> {
   meta: PaginationMetaSchema
 }
 
-export interface ResourceSchema<T> {
-  data: T;
-  message?: string; // Useful for success messages from the server
-  meta?: Record<string, any>; // For extra context like permissions
-}
+// export interface ResourceSchema<T> {
+//   data: T;
+//   message?: string; // Useful for success messages from the server
+//   meta?: Record<string, any>; // For extra context like permissions
+// }
 
 export interface PasswordSchema {
   password:string;

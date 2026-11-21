@@ -4,7 +4,6 @@ namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class AuthSuccessResource extends JsonResource
 {
@@ -17,10 +16,6 @@ class AuthSuccessResource extends JsonResource
     {
         $currentClientId = $this->last_active_client_id;
         $slug = $currentClientId ? $this->getActiveClient($currentClientId)->slug : $this->clients()->first()->slug;
-        Log::info('user info', [
-            'id' => $this->last
-        ]);
-
         return [
             'redirect_path'=> "/$slug/dashboard"
         ];

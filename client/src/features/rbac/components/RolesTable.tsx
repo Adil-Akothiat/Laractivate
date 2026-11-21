@@ -1,9 +1,7 @@
 import { useDebounce } from "@/app/hooks/common/useDebounce";
-import { type Column, ConfirmModal, Modal, Pagination } from "@/components";
-import { ScrollContainer } from "@/components/ScrollContainer";
-import { DataTable } from "@/components/Table";
+import { type Column, ConfirmModal, DataTable, Modal, Pagination, ScrollContainer } from "@/components";
+import { RoleSchema } from "@/entities/role/model/role.types";
 import { useState } from "react";
-import type { RoleSchema } from "../../shared";
 import { useRoleMutations, useRoles, useRolesFilter } from "../hooks";
 import RbacHeader from "./RbacHeader";
 import { UpdateRole } from "./UpdateRole";
@@ -58,7 +56,6 @@ export function RolesTable() {
     } | null>(null);
 
     const closeModal = () => setModal(null);
-
     const handleDelete = () => {
         if (!modal?.roleId) return;
         remove.mutate(modal.roleId, { onSuccess: () => closeModal() });

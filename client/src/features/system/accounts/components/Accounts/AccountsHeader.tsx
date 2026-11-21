@@ -1,5 +1,5 @@
 import { Breadcrumb, Button } from "@/components";
-import { Can } from "@/components/Guard/Can";
+import { Can } from "@/components/ui/security/Can";
 import type { RoleSchema } from "@/features/shared";
 import { LayoutDashboard, UserPlus, Users } from "lucide-react";
 import FilterAndSearchAccounts from "./FilterAndSearchAccounts";

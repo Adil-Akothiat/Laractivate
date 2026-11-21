@@ -1,4 +1,4 @@
-import { AppChart } from "@/components/Chart";
+import { AppChart } from "@/components/ui/data-display/Chart/Chart";
 import type { CompositionItem } from "@/features/dashboard/types";
 import { Users } from "lucide-react";
 

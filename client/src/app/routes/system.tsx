@@ -1,8 +1,8 @@
-import PermissionGuard from "@/app/guards/PermissionGuard";
 import AccountDetailsPage from "@/pages/system/accounts/AccountDetailsPage";
 import { AccountsPage } from "@/pages/system/accounts/AccountsPage";
 import RolesPermissionsPage from "@/pages/system/RolesPermissionsPage";
 import { Route } from "react-router-dom";
+import { PermissionGuard } from "../guards";
 
 export default function SystemRoutes() {
     return (

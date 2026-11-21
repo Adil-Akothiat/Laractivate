@@ -38,15 +38,17 @@ class UserObserver
                 'slug'=> Str::slug($name . '-' . Str::random(5)),
                 'owner_id' => $user->id
             ]);
-
-            // Role scope must be "client" not "system"
-            $ownerRole = Role::where('name', 'ADMINISTRATOR')
+            
+            $ownerRole = Role::query()
                 ->where('scope', 'client')
+                ->where('name', 'ADMINISTRATOR')
                 ->first();
             
             if (!$ownerRole) {
                 throw new \Exception("Default workspace 'ADMINISTRATOR' role not found. Please run seeders.");
             }
+            $client->roles()->attach($ownerRole->id);
+            
             $user->clients()->attach($client->id, [
                 'role_id'=> $ownerRole->id
             ]);

@@ -1,8 +1,7 @@
-import { Tabs } from "@/components";
+import { Tabs,  } from "@/components";
 import ManagePaymentMethod from "@/features/workspace/billing/components/PaymentMethod/Manage";
 import SubscriptionOverview from "@/features/workspace/billing/components/Subscription/Overview";
 import { CreditCard, Receipt } from "lucide-react";
-import SettingsContainer from "../../../../pages/user/settings/layouts/SettingsContainer";
 import InvoiceHistory from "./InvoiceHistory";
 
 const tabs = [
@@ -27,9 +26,10 @@ const tabs = [
 ];
 
 export default function BillingSettings() {
-  return (
-    <SettingsContainer settingsType="billing">
-      <Tabs tabs={tabs} variant="bordered" size="sm" />
-    </SettingsContainer>
-  );
+  // return (
+  //   <SettingsContainer settingsType="billing">
+  //     <Tabs tabs={tabs} variant="bordered" size="sm" />
+  //   </SettingsContainer>
+  // );
+  return "must be moved to workspace settings billing";
 }

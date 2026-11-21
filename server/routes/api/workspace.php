@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Workspace\Billing\PaymentMethodController;
 use App\Http\Controllers\Api\Workspace\Billing\PlanController;
 use App\Http\Controllers\Api\Workspace\Billing\SubscriptionController;
 use App\Http\Controllers\Api\Workspace\MembersController;
+use App\Http\Controllers\Api\Workspace\WorkspaceRoleController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Cashier\Http\Controllers\WebhookController;
 
@@ -57,7 +58,15 @@ Route::middleware(['client.context', 'scope:client'])->prefix('workspace')->grou
     });
 
     // Roles
+    Route::prefix('roles')->group(function() {
+        Route::get('/', [WorkspaceRoleController::class, 'index']);
+        Route::post('/', [WorkspaceRoleController::class, 'store']);
+        Route::put('/{role}', [WorkspaceRoleController::class, 'update']);
+    });
     
+    // Permissions
+    Route::get('/permissions', [WorkspaceRoleController::class, 'getPermissions']);
+        
     // Settings
 
 });

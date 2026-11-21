@@ -1,4 +1,4 @@
-import type { LogSchema } from "@/features/settings";
+import { LogSchema } from "@/entities/activityLog";
 import { Activity, ArrowRight, Clock, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 

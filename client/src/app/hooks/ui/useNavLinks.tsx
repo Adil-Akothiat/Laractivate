@@ -1,10 +1,12 @@
-import { useCan } from "./useCan";
+import { client, system } from "@/app/config/permissions.json";
+import { getLocalWorkspaceSlug } from "@/app/utils";
 import { Bell, Folder, LayoutDashboard, Settings, UserGroup, UserKey, Users } from "lucide-react";
-import { system, client } from "@/app/config/permissions.json";
+import { useCan } from "./useCan";
 
-export const useNavLinks = ()=> {
+export const useNavLinks = () => {
     const { canAny, can } = useCan();
-    const workspaceSlug = window.localStorage.getItem('workspace_slug') ?? 'any';
+    const workspaceSlug = getLocalWorkspaceSlug();
+
     return [
         {
             section: "Workspace",
@@ -30,8 +32,8 @@ export const useNavLinks = ()=> {
                 },
                 {
                     label: "Roles & Permissions",
-                    href: `${workspaceSlug}/roles-permissions`,
-                    icon: <Folder size={16} />,
+                    href: `/${workspaceSlug}/roles-permissions`,
+                    icon: <UserKey size={16} />,
                     show: canAny([client.roles.view, client.roles.manage])
                 },
             ],
@@ -40,15 +42,15 @@ export const useNavLinks = ()=> {
             section: "System",
             show: canAny(system.all),
             items: [
-                { 
-                    label: "Accounts", 
-                    href: "/accounts", 
+                {
+                    label: "Accounts",
+                    href: "/accounts",
                     icon: <Users size={16} />,
-                    show: canAny([system.accounts.view, system.accounts.manage]) 
+                    show: canAny([system.accounts.view, system.accounts.manage])
                 },
-                { 
-                    label: "System Roles", 
-                    href: "/roles-permissions", 
+                {
+                    label: "System Roles",
+                    href: "/roles-permissions",
                     icon: <UserKey size={16} />,
                     show: canAny([system.roles.view, system.roles.manage])
                 },

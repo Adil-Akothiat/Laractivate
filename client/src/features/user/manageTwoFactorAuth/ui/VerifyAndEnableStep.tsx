@@ -1,13 +1,57 @@
 import { getErrorsMessages } from "@/app/utils";
 import { Alert, Button } from "@/components";
-import OtpInput from "@/features/shared/components/2FA/OtpInput";
+import OtpInput from "@/components/ui/forms/OtpInput";
+import { UserSchema } from "@/features/shared";
+import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCw, ShieldCheck } from "lucide-react";
-import { useVerifyAndEnableTfa } from "../model";
-import { useTfaStepperContext } from "../model/TfaStepperContext";
+import { SubmitEventHandler, useState } from "react";
+import { useEnableTfa } from "../api";
+import { useTfaContext } from "../model/useTfaContext";
 
 export default function VerifyAndEnableTfa() {
-  const { isInvalid, onBack } = useTfaStepperContext();
-  const { handleSubmit, enable, code, setCode } = useVerifyAndEnableTfa();
+  const { mutate, isPending, isError, error, reset } = useEnableTfa();
+  const { dispatch } = useTfaContext();
+  const [validOtp, setValidOtp] = useState<boolean>(true);
+  const queryClient = useQueryClient();
+  const handleEnable = (otp: string) => {
+    const sanitized = otp.replace(/\D/g, "").trim();
+    if (sanitized.length !== 6) return;
+
+    setValidOtp(true);
+    mutate(
+      { otp: sanitized },
+      {
+        onSuccess: (res) => {
+          dispatch({ type: "verify", payload: { recoveryCodes: res.data.data.recoveryCodes } });
+          queryClient.setQueryData<UserSchema>(['user'], (oldUser) => {
+            if (!oldUser) return oldUser;
+            return {
+              ...oldUser,
+              two_factor_recovery_codes: res.data.data.recoveryCodes ?? []
+            }
+          })
+          reset();
+        },
+        onError: () => {
+          setValidOtp(false);
+        },
+      }
+    );
+  };
+
+  const [code, setCode] = useState<string>("");
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (code.length === 6) {
+      handleEnable(code);
+    }
+  };
+
+  const rescanHandler = () => {
+    setCode("");
+    dispatch({ type: "back-to-scan" });
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-5">
       <div className="bg-primary/10 text-primary rounded-full p-4">
@@ -20,30 +64,29 @@ export default function VerifyAndEnableTfa() {
         </p>
       </div>
 
-      {isInvalid && (
+      {!validOtp && (
         <div className="alert alert-error w-full text-sm py-2">
           Invalid code. Please try again.
         </div>
       )}
 
-      {enable.isError &&
-        getErrorsMessages(enable.error).map((msg: string, i: number) => (
+      {isError &&
+        getErrorsMessages(error).map((msg: string, i: number) => (
           <Alert key={i} variant="error" message={msg} />
         ))}
 
-      <OtpInput value={code} onChange={setCode} disabled={enable.isPending} />
-
+      <OtpInput value={code} onChange={setCode} disabled={isPending} />
       <Button
         type="submit"
         variant="primary"
-        loading={enable.isPending}
+        loading={isPending}
         disabled={code.length < 6}
       >
-        {enable.isPending && <span className="loading loading-xs" />}
+        {isPending && <span className="loading loading-xs" />}
         Verify & Activate
       </Button>
 
-      <Button type="button" onClick={() => onBack(enable.reset)} variant="ghost" size="sm" disabled={enable.isPending}>
+      <Button type="button" onClick={rescanHandler} variant="ghost" size="sm" disabled={isPending}>
         <RefreshCw size={13} /> Re-scan QR Code
       </Button>
     </form>

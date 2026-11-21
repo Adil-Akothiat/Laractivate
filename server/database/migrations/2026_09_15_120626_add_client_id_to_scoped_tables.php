@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('client_id')->after('id')->constrained()->onDelete('cascade');
         });
 
-        // 3. Activity Logs (Nullable في حال كان هناك لوج عام للنظام)
         Schema::table('activity_logs', function (Blueprint $table) {
             $table->foreignId('client_id')->nullable()->after('id')->constrained()->onDelete('cascade');
         });
@@ -37,6 +36,11 @@ return new class extends Migration
         });
 
         Schema::table('activity_logs', function (Blueprint $table) {
+            $table->dropForeign(['client_id']);
+            $table->dropColumn('client_id');
+        });
+
+        Schema::table('roles', function (Blueprint $table) {
             $table->dropForeign(['client_id']);
             $table->dropColumn('client_id');
         });

@@ -1,7 +1,7 @@
 import { EmptyState } from "@/components";
-import Button from "@/components/Button";
-import Card from "@/components/Card";
-import { DataLoader } from "@/components/Loaders/DataLoader";
+import Card from "@/components/ui/data-display/Card";
+import { DataLoader } from "@/components/ui/feedback/DataLoader";
+import Button from "@/components/ui/forms/Button";
 import { usePaymentMethodsQuery } from "../../hooks/api/useBillingQueries";
 import { PaymentMethodSchema } from "../../types";
 import PaymentMethodCard from "./PaymentMethodCard";
