@@ -21,4 +21,7 @@ export interface FilterQueriesProps {
 
 export interface WorkspaceRolesTableProps {
   actions: Action<RoleSchema>[];
+  filterQueries: FilterQueriesProps & {
+    setFilters: (filters: Partial<FilterQueriesProps>) => void;
+  };
 }

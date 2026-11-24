@@ -26,10 +26,12 @@ class MembersController extends Controller
                 ->response()->setStatusCode(400);
         }
         $client = Client::findOrFail($currentClientId);
+        $client->users();
+        Log::info('Clients', ['clts'=> $client, '']);
+        
         
         $clientInvitations = $client->clientInvitations;
         // Scope users strictly to the active workspace
-        Log::info('Clients', ['clts'=> $client]);
         $members = $client->users()
             ->select('users.*')
             ->selectRaw('users.id = ? as is_owner', [$client->owner_id])

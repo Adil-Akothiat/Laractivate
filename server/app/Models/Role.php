@@ -36,6 +36,11 @@ class Role extends Model
         return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id');
     }
 
+    public function clientUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'client_user', 'role_id', 'user_id')->withPivot('client_id');
+    }
+
     /**
      * Get the permissions for the role.
      */

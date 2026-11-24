@@ -1,12 +1,10 @@
 import { DataTable, Pagination } from "@/components";
-import { useWorkspaceRoleContext } from "@/features/workspace/manageRoles/model";
 import { useGetWorkspacePermissions } from "../api";
 import { useGetWorkspaceRoles } from "../api/getWorkspaceRoles.api";
 import { RoleSchema, WorkspaceRolesTableProps } from "../model";
 import { roleColumns } from "../model/roleColumns";
 
-export function WorkspaceRolesTable({ actions }: WorkspaceRolesTableProps) {
-    const { filterQueries } = useWorkspaceRoleContext();
+export function WorkspaceRolesTable({ actions, filterQueries }: WorkspaceRolesTableProps) {
     const { page, search, sort, order, setFilters } = filterQueries;
     const { data, isPending: rolesPending } = useGetWorkspaceRoles({ page, search, sort, order });
     const { isPending: permissionsPending } = useGetWorkspacePermissions();

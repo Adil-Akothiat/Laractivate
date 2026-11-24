@@ -6,7 +6,6 @@ use App\Services\System\SystemActivityLogService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\{TokenExpiredException, TokenInvalidException};
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -35,12 +34,12 @@ class ApiExceptionHandler
     /**
      * Handle the ValidationExceptions thrown by our Services.
      */
-    public static function handleValidationException(ValidationException $e)
+    public static function handleBusinessException(BusinessRuleException $e)
     {
         return response()->json([
-            'code' => 'VALIDATION_FAILED',
-            'errors' => $e->errors()
-        ], 422);
+            'code' => $exception->code,
+            'message' => $exception->getMessage(),
+        ], $exception->status);
     }
 
     public static function handleThrottleException(ThrottleRequestsException $e, Request $request)

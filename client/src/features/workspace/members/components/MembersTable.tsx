@@ -15,7 +15,7 @@ export default function MembersTable() {
     const response = data?.data;
     const members = response?.data || [];
     const meta = response?.meta;
-    console.log(members);
+    
     return (
         <ScrollContainer>
             <MembersHeader

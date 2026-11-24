@@ -1,7 +1,7 @@
 import { Button, Input, LoadingOverlay, Modal, Select } from "@/components";
 import { FormControl } from "@/components/ui/forms/FormControls";
+import { useGetWorkspaceRoles } from "@/entities";
 import { FormEvent, useState } from "react";
-import { useRoles } from "../../../rbac";
 import { useMemberMutations } from "../hooks/api/useMemberMutations";
 import { InviteMemberPayload } from "../types";
 
@@ -12,7 +12,7 @@ type InviteMemberProps = {
 
 export default function InviteMember({ open, onClose }: InviteMemberProps) {
     const invite = useMemberMutations.invite();
-    const { data, isPending } = useRoles({ all: true, scope: 'client' });
+    const { data, isPending } = useGetWorkspaceRoles({ all: true });
     const [form, setForm] = useState<InviteMemberPayload>({
         email: '',
         role_id: ''

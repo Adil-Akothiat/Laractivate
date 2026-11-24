@@ -21,7 +21,7 @@ export type RolePayload = Pick<RoleSchema, 'name'> & {
 
 // 2. Bind both Store and Update to the base type
 export type StoreRolePayload = RolePayload;
-export type UpdateRolePayload = RolePayload;
+export type UpdateRolePayload = RolePayload & { id: string };
 
 
 
@@ -39,6 +39,10 @@ export interface ManageRolesProps {
   name: string;
   setName: SetStateProps<string>;
   resetForm: () => void;
+  role: RoleSchema | null;
+  setRole: SetStateProps<RoleSchema | null>;
+  confirmModalOpen: boolean;
+  setConfirmModalOpen: SetStateProps<boolean>;
 }
 
 export interface WorkspaceRoleContextProps {

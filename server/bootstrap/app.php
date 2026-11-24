@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\ApiExceptionHandler;
+use App\Exceptions\BusinessRuleException;
 use App\Http\Middleware\{ PermissionMiddleware, JwtFromCookie, TokenRevocationMiddleware, Validate2FAPendingState, EnsureUserIsSubscribed, EnsureFeatureAccess, SetCurrentClientContext };
 use App\Http\Middleware\CheckScope;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -12,7 +13,6 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -57,9 +57,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // 1. Handle Validation Errors (from Service/Request)
-        $exceptions->render(function (ValidationException $e, Request $request) {
+        $exceptions->render(function (BusinessRuleException $e, Request $request) {
             if ($request->is('api/*')) {
-                return ApiExceptionHandler::handleValidationException($e);
+                return ApiExceptionHandler::handleBusinessException($e);
             }
         });
 

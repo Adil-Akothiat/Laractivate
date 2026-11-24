@@ -1,23 +1,20 @@
 import permissionsConfig from "@/app/config/permissions.json";
-import { Button, Can, Modal } from "@/components";
+import { Button, Can } from "@/components";
 import { WorkspaceRolesTable } from "@/entities";
 import { useWorkspaceRoleContext } from "../model";
-import { RoleForm } from "./RoleForm";
+import { DeleteRole } from "./DeleteRole";
+import { RoleFormModal } from "./RoleFormModal";
 import { SearchAndFilterRoles } from "./SearchAndFilterRoles";
 
 const { roles } = permissionsConfig.client
 export function ManageWorkspaceRoles() {
-    const { manageRoleStates } = useWorkspaceRoleContext();
-    const { modalOpen, setModalOpen } = manageRoleStates;
+    const { manageRoleStates, filterQueries } = useWorkspaceRoleContext();
+    const { setModalOpen, setRole, setConfirmModalOpen } = manageRoleStates;
 
     return (
         <div>
-            <Modal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-            >
-                <RoleForm />
-            </Modal>
+            <RoleFormModal />
+            <DeleteRole />
             <div>
                 <h1 className="text-2xl font-bold text-base-content">Roles & Permissions</h1>
                 <Can
@@ -36,22 +33,34 @@ export function ManageWorkspaceRoles() {
             <div className="flex justify-between mt-4 mb-3">
                 <SearchAndFilterRoles />
                 <Can permission={roles.manage}>
-                    <Button size="sm" onClick={() => setModalOpen(true)}>
+                    <Button size="sm" onClick={() => {
+                        setRole(null);
+                        setModalOpen(true);
+                    }}>
                         + New role
                     </Button>
                 </Can>
             </div>
             <WorkspaceRolesTable
+                filterQueries={filterQueries}
                 actions={[
                     {
                         label: "Edit",
                         permission: roles.manage,
-                        hidden: (role) => role.is_locked
+                        hidden: (role) => role.is_locked,
+                        onClick: (role) => {
+                            setRole(role);
+                            setModalOpen(true);
+                        }
                     },
                     {
                         label: "Delete",
                         permission: roles.manage,
-                        hidden: (role) => role.is_locked
+                        hidden: (role) => role.is_locked,
+                        onClick: (role) => {
+                            setRole(role);
+                            setConfirmModalOpen(true);
+                        }
                     }
                 ]}
             />

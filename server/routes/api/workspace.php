@@ -62,6 +62,7 @@ Route::middleware(['client.context', 'scope:client'])->prefix('workspace')->grou
         Route::get('/', [WorkspaceRoleController::class, 'index']);
         Route::post('/', [WorkspaceRoleController::class, 'store']);
         Route::put('/{role}', [WorkspaceRoleController::class, 'update']);
+        Route::delete('/{role}', [WorkspaceRoleController::class, 'destroy']);
     });
     
     // Permissions

@@ -1038,7 +1038,7 @@
       array (
         'name' => 'ADMINISTRATOR',
         'scope' => 'client',
-        'is_locked' => false,
+        'is_locked' => true,
         'permissions' => 
         array (
           0 => 'client.dashboard.view',
