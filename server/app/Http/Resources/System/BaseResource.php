@@ -47,4 +47,9 @@ class BaseResource extends JsonResource
             'meta' => $this->extraMeta ?? [],
         ];
     }
+
+    protected static function newCollection($resource): BaseCollection
+    {
+        return new BaseCollection($resource, static::class);
+    }
 }

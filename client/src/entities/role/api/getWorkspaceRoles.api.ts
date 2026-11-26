@@ -10,5 +10,7 @@ const getWorkspaceRoles = (params: FilterRolesParams) => api.get<PaginatedRespon
 export const useGetWorkspaceRoles = (params: FilterRolesParams) => useQuery({
     queryKey: roleKeys.workspace.list(params),
     queryFn: () => getWorkspaceRoles(params),
-    select: (res) => res.data
+    select: (res) => {
+        return res.data
+    }
 });

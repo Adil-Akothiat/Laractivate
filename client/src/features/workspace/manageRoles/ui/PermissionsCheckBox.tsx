@@ -27,7 +27,7 @@ export const PermissionsCheckbox = memo(function ({ groupedPermissions, attached
                             <div key={j} className="mb-3">
                                 <h4>{group}</h4>
                                 {
-                                    permissions.map(({ name, id }, i) => (
+                                    permissions?.map(({ name, id }, i) => (
                                         <Checkbox
                                             key={`${j}-${i}`}
                                             label={name}

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\Workspace;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Security\RoleCollection;
+use App\Http\Resources\System\BaseCollection;
+use App\Http\Resources\System\BasePaginatedCollection;
 use App\Http\Resources\System\BaseResource;
 use App\Models\Role;
 use App\Services\Workspace\WorkspaceRoleService;
 use Illuminate\Http\{JsonResponse, Request};
-// use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class WorkspaceRoleController extends Controller
@@ -34,7 +34,9 @@ class WorkspaceRoleController extends Controller
         );
 
         $roles->withQueryString();
-        return (new RoleCollection($roles))->response()->setStatusCode(200);
+        return (new BaseCollection($roles))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function getPermissions(Request $request) : JsonResponse

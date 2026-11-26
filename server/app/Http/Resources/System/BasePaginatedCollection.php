@@ -17,6 +17,14 @@ class BasePaginatedCollection extends ResourceCollection
     * @param mixed $_paginated  <-- Ignored because it's an array
     * @param array $default
     */
+
+    public function __construct($resource, ?string $collects = null) {
+        if ($collects !== null) {
+            $this->collects = $collects;
+        }
+
+        parent::__construct($resource);
+    }
     public function paginationInformation(Request $request, $_paginated, $default): array
     {
         $resource = $this->resource;

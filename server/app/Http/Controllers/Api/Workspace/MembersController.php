@@ -3,62 +3,42 @@
 namespace App\Http\Controllers\Api\Workspace;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\System\BasePaginatedCollection;
 use App\Http\Resources\System\BaseResource;
-use App\Http\Resources\User\MemberCollection;
+use App\Http\Resources\User\MemberResource;
 use App\Models\Client;
 use App\Models\ClientInvitation;
 use App\Notifications\GeneralAppNotification;
+use App\Services\Workspace\WorkspaceMemberService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class MembersController extends Controller
 {
+    public function __construct(
+        protected WorkspaceMemberService $memberService
+    ) {
+        // 
+    }
     public function index(Request $request)
     {
-        $currentClientId = $request->attributes->get('current_client_id');
+        $user = $request->user();
+        $clientId = $request->attributes->get('current_client_id');
 
-        if (!$currentClientId) {
+        if (!$clientId) {
             return (new BaseResource([]))
                 ->withMessage('No active workspace selected.')
                 ->response()->setStatusCode(400);
         }
-        $client = Client::findOrFail($currentClientId);
-        $client->users();
-        Log::info('Clients', ['clts'=> $client, '']);
-        
-        
-        $clientInvitations = $client->clientInvitations;
-        // Scope users strictly to the active workspace
-        $members = $client->users()
-            ->select('users.*')
-            ->selectRaw('users.id = ? as is_owner', [$client->owner_id])
-            ->latest('client_user.created_at')
-            ->when($request->search, function ($q, $search) {
-                $q->where(function ($q) use ($search) {
-                    $q->where('first_name', 'like', "%{$search}%")
-                      ->orWhere('last_name',  'like', "%{$search}%")
-                      ->orWhere('email',      'like', "%{$search}%");
-                });
-            })
-            ->when($request->role, function ($q, $role) {
-                $q->whereHas('roles', fn($q) => $q->where('name', $role));
-            })
-            ->when($request->status, function ($q, $status) {
-                $q->where('is_active', $status === 'active');
-            })
-            ->paginate(10)
-            ->withQueryString();
 
+        $members = $this->memberService->getMembers($user, $clientId, [
+            'search' => $request->string('search')->toString(),
+            'role_id' => $request->get('role_id')
+        ], 10);
 
-
-        // Eager load relations for performance
-        $members->load(['roles.permissions']);
-        return (new MemberCollection($members))->additional([
-            'invitations'=> $clientInvitations
-        ]);
+        return (new BasePaginatedCollection($members, MemberResource::class))->response()->setStatusCode(200);
     }
 
 

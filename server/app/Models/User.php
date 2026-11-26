@@ -170,6 +170,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ClientInvitation::class, 'invited_by');
     }
 
+    public function clientRoles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'client_user', 'user_id', 'role_id')
+            ->withPivot('client_id');
+    }
+
     // check for system permission
     public function hasSystemPermission(string $permission):bool
     {
@@ -192,5 +198,5 @@ class User extends Authenticatable implements JWTSubject
         return Role::where('id', $membership->pivot->role_id)
             ->whereHas('permissions', fn($q) => $q->where('name', $permission))
             ->exists();
-}
+    }
 }

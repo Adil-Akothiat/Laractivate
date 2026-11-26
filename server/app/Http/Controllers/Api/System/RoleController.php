@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\System;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
-use App\Http\Resources\Security\{PermissionCollection,  RoleResource, RoleCollection};
+use App\Http\Resources\Security\{PermissionCollection};
+use App\Http\Resources\System\BasePaginatedCollection;
+use App\Http\Resources\System\BaseResource;
 use App\Models\{Role, Permission, User};
 use App\Services\System\SystemRoleService;
 use Illuminate\Http\{Request, JsonResponse};
@@ -20,27 +22,29 @@ class RoleController extends Controller
         if($request->has('all') && !$request->has('scope')):
             $roles = Role::all();
             $roles->load('permissions');
-            return (new RoleResource($roles))->response();
+            return (new BaseResource($roles))->response();
         endif;
         if($request->has('scope')):
 
         endif;
         $roles = $this->systemRole->rolesList($request->all());
         $roles->load('permissions');
-        return (new RoleCollection($roles))->response()->setStatusCode(200);
+        return (new BasePaginatedCollection($roles))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function store(RoleRequest $request): JsonResponse
     {
         $role = $this->systemRole->createRole($request->validated());
-        return (new RoleResource($role))->withMessage('Role created successfully.')->response()->setStatusCode(201);
+        return (new BaseResource($role))->withMessage('Role created successfully.')->response()->setStatusCode(201);
     }
 
     public function update(RoleRequest $request, string $id): JsonResponse
     {
 
         $role = $this->systemRole->updateRole($id, $request->validated());
-        return (new RoleResource($role))->withMessage('Role updated successfully.')->response()->setStatusCode(200);
+        return (new BaseResource($role))->withMessage('Role updated successfully.')->response()->setStatusCode(200);
     }
 
     public function destroy(string $id): JsonResponse
@@ -54,7 +58,7 @@ class RoleController extends Controller
     {
         $role = $this->systemRole->getRole($id);
         $role->load('permissions');
-        return (new RoleResource($role))->response()->setStatusCode(200);
+        return (new BaseResource($role))->response()->setStatusCode(200);
     }
 
     public function getPermissions(): JsonResponse

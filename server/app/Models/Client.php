@@ -12,7 +12,8 @@ class Client extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'client_user');
+        return $this->belongsToMany(User::class, 'client_user')
+            ->withPivot('role_id');
     }
 
     public function invoices(): HasMany

@@ -2,9 +2,7 @@
 
 namespace App\Services\Workspace;
 
-use App\Http\Resources\Security\PermissionResource;
 use App\Models\{Role, Permission};
-// use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -125,15 +123,21 @@ class WorkspaceRoleService
     public function getPermissions(): array
     {
         $permissions = Permission::query()
+            ->select(['id', 'name', 'group'])
             ->where('scope', "client")
             ->orderBy('group')
             ->orderBy('name')
             ->get();
         $grouped =  $permissions
             ->groupBy(fn (Permission $permission) => $permission->group ?: 'Other')
-            ->map(fn ($items, string $group) => [
+            ->map(fn ($permissions, string $group) => [
                 'group' => $group,
-                'permissions' => PermissionResource::collection($items),
+                'permissions' => $permissions->map(fn(object $perm)=> 
+                    [
+                        'id'=> $perm->id,
+                        'name'=> $perm->name
+                    ]
+                )->values(),
             ])
             ->values();
         return [
